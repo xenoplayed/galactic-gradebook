@@ -1,0 +1,50 @@
+{
+  "name": "Datapad",
+  "image": "mcr.microsoft.com/devcontainers/typescript-node:24-bookworm",
+
+  // Zu den Ports steht hier bewusst NICHTS.
+  //
+  // VS Code erkennt selbst, dass Vite im Container auf 5173 lauscht, und
+  // leitet automatisch weiter. Traegt man daneben noch appPort und/oder
+  // forwardPorts ein, entstehen zwei konkurrierende Weiterleitungen auf
+  // demselben Port - und das Fehlerbild ist gemein: localhost:5173 antwortet
+  // (macOS loest zuerst nach ::1 auf), 127.0.0.1:5173 laeuft in den Timeout.
+  //
+  // Damit die automatische Weiterleitung greifen kann, muss Vite auf 0.0.0.0
+  // lauschen - siehe server.host in reference/vite.config.ts.
+
+  // node_modules gehoert NICHT in den Bind-Mount. Zwei Gruende:
+  //  1. Tempo. 3000 kleine Dateien schreiben: Bind-Mount ~3060 ms,
+  //     Named Volume ~86 ms. node_modules hat hier ueber 10.000 Dateien.
+  //  2. Auf dem Host installierte native Binaries (esbuild, rollup ->
+  //     darwin-arm64) sind im Linux-Container unbrauchbar.
+  //
+  // Ein Volume je Teilprojekt - sie haben unterschiedliche Abhaengigkeiten.
+  "mounts": [
+    "source=datapad-reference-node-modules,target=${containerWorkspaceFolder}/reference/node_modules,type=volume",
+    "source=datapad-playground-node-modules,target=${containerWorkspaceFolder}/tutorial/playground/node_modules,type=volume"
+  ],
+  "postCreateCommand": "bash .devcontainer/post-create.sh",
+
+  "remoteUser": "node",
+
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "Vue.volar",
+        "dbaeumer.vscode-eslint",
+        "esbenp.prettier-vscode",
+        "bradlc.vscode-tailwindcss",
+        "vitest.explorer",
+        "yzhang.markdown-all-in-one"
+      ],
+      "settings": {
+        "editor.formatOnSave": true,
+        "editor.defaultFormatter": "esbenp.prettier-vscode",
+        "editor.codeActionsOnSave": {
+          "source.fixAll.eslint": "explicit"
+        }
+      }
+    }
+  }
+}

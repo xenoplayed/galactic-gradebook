@@ -1,0 +1,18 @@
+{
+  "name": "datapad-playground",
+  "private": true,
+  "type": "module",
+  "description": "\u00dcbungen zu den Crashkurs-Kapiteln 01-03",
+  "scripts": {
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:loesungen": "PLAYGROUND_TARGET=loesungen vitest run",
+    "type-check": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@types/node": "^24.13.3",
+    "tsx": "^4.20.7",
+    "typescript": "~6.0.0",
+    "vitest": "^4.1.11"
+  }
+}

@@ -1,0 +1,36 @@
+@import 'tailwindcss';
+
+/*
+  Tailwind 4 wird CSS-first konfiguriert: kein tailwind.config.js mehr.
+  Alles in @theme wird zu CSS-Custom-Properties UND zu Utility-Klassen,
+  d.h. --color-grade-1 erzeugt automatisch bg-grade-1, text-grade-1, ...
+*/
+@theme {
+  --color-brand-50: oklch(0.97 0.02 255);
+  --color-brand-100: oklch(0.93 0.04 255);
+  --color-brand-500: oklch(0.58 0.16 255);
+  --color-brand-600: oklch(0.51 0.16 255);
+  --color-brand-700: oklch(0.44 0.14 255);
+
+  /* Notenfarben: 1 = sehr gut (gruen) bis 5 = nicht bestanden (rot) */
+  --color-grade-1: oklch(0.65 0.16 155);
+  --color-grade-2: oklch(0.72 0.16 130);
+  --color-grade-3: oklch(0.78 0.15 85);
+  --color-grade-4: oklch(0.7 0.16 55);
+  --color-grade-5: oklch(0.62 0.19 25);
+
+  --font-sans: 'Inter', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+}
+
+html {
+  color-scheme: light dark;
+}
+
+body {
+  @apply bg-slate-50 text-slate-900 antialiased dark:bg-slate-950 dark:text-slate-100;
+}
+
+/* Sichtbarer Fokus fuer Tastaturnutzung - nicht wegoptimieren. */
+:focus-visible {
+  @apply outline-2 outline-offset-2 outline-brand-500;
+}
