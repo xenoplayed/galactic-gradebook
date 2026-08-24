@@ -1,5 +1,7 @@
 # 03 — TypeScript
 
+> **Zeitbedarf:** ca. 2–3 Stunden · die Generics-Übung ist die längste im Playground
+
 ## Ziel
 
 Du kannst Typen lesen und schreiben, kennst Union- und Literal-Typen, verstehst Narrowing und

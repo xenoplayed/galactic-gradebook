@@ -1,5 +1,7 @@
 # 04 — Vue: Reaktivität und Templates
 
+> **Zeitbedarf:** ca. 1,5–2 Stunden · viel Lesen, wenig Tippen
+
 ## Ziel
 
 Du verstehst, wie eine Single-File-Komponente aufgebaut ist, kennst den Unterschied zwischen

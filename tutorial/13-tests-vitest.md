@@ -1,5 +1,7 @@
 # 13 — Tests mit Vitest
 
+> **Zeitbedarf:** ca. 2–3 Stunden
+
 ## Ziel
 
 Du testest die vier Schichten deiner App mit je einem Vertreter: reine Funktionen, einen
@@ -194,6 +196,55 @@ von vorher — der häufigste Grund für einen Komponententest, der „grundlos�
 **Teste, was die Komponente zusagt, nicht wie sie es macht.** „Meldet eine gültige Note nach
 oben“ überlebt einen Umbau; „hat ein `<div>` mit der Klasse `wrapper`“ nicht.
 
+## Wenn die Testumgebung nicht mitspielt
+
+jsdom ist kein Browser. Es bildet das DOM sehr weitgehend nach — aber nicht vollständig. Das
+native `<dialog>` gehört zu den Lücken:
+
+```ts
+const d = document.createElement('dialog')
+typeof d.showModal   // 'undefined'  (jsdom 29)
+```
+
+Der Komponententest zu `BaseDialog` läuft damit sofort auf einen `TypeError`. Die Versuchung
+ist groß, die Komponente „defensiv" zu machen (`if (typeof el.showModal === 'function')`).
+**Tu das nicht** — dann trägt der Produktionscode dauerhaft Ballast für ein Problem, das nur
+im Test existiert, und jeder Leser fragt sich später, welchen Browser das betrifft.
+
+Repariert wird, wo der Fehler herkommt: in der Testumgebung.
+
+```ts
+// vitest.setup.ts
+if (typeof HTMLDialogElement !== 'undefined' && !HTMLDialogElement.prototype.showModal) {
+  HTMLDialogElement.prototype.showModal = function () {
+    this.open = true
+  }
+  HTMLDialogElement.prototype.close = function () {
+    this.open = false
+    // Das echte <dialog> feuert `close` - ohne dieses Ereignis liesse sich
+    // nicht testen, dass die Komponente den Zustand zurueckmeldet.
+    this.dispatchEvent(new Event('close'))
+  }
+}
+```
+
+Registriert wird die Datei in `vitest.config.ts`:
+
+```ts
+test: {
+  environment: 'jsdom',
+  setupFiles: ['./vitest.setup.ts'],
+}
+```
+
+Die Prüfung `!HTMLDialogElement.prototype.showModal` ist Absicht: sobald jsdom es nachliefert,
+verschwindet der Ersatz von selbst.
+
+> **Die allgemeine Lehre:** Wenn ein Test an der Umgebung scheitert und nicht an deinem Code,
+> repariere die Umgebung. Und prüf das **früh** — ich habe die jsdom-Lücke bewusst
+> nachgemessen, bevor ich die Komponente gebaut habe, statt am Ende vor einer roten Suite zu
+> stehen und zu rätseln.
+
 ## Was du dir sparen kannst
 
 - Das Framework testen (`v-if` funktioniert).
@@ -226,7 +277,11 @@ Schreib mindestens je einen Test pro Schicht:
 5. **`src/composables/__tests__/useGradeStats.spec.ts`** — der Reaktivitätstest oben.
 6. **`src/components/__tests__/GradeInput.spec.ts`** — gültig, leer, ungültig, Änderung von
    außen.
-7. **`src/data/__tests__/academies.spec.ts`** — der wichtigste neue Test: dass
+7. **`src/components/__tests__/BaseDialog.spec.ts`** — öffnen, schließen, und vor allem:
+   dass ein natives `close`-Ereignis das Model zurücksetzt.
+8. **`src/composables/__tests__/useAcademyTheme.spec.ts`** — Standard, Auswahl, angemeldete
+   Akademie schlägt die Vorschau, und dass die Vorschau nach dem Abmelden stehen bleibt.
+9. **`src/data/__tests__/academies.spec.ts`** — der wichtigste neue Test: dass
    `createGradeBook()` je Fach **genau** die Lernenden der eigenen Akademie enthält, keine
    fremden und keine fehlenden. Dazu die Eindeutigkeit der Login-Namen.
 
@@ -253,6 +308,8 @@ ebenfalls.
 | `localStorage` leer, obwohl gespeichert wurde | `await nextTick()` fehlt |
 | DOM zeigt den alten Stand | `await` vor `trigger`/`setValue`/`setProps` fehlt |
 | `Property 'at' does not exist` | `tsconfig.vitest.json` hat `"lib": []` — setz es auf `["ESNext"]` |
+| `showModal is not a function` | jsdom-Lücke — Ersatz in `vitest.setup.ts`, nicht in der Komponente |
+| „no active effect scope" beim Composable-Test | Composable mit Watchern außerhalb einer Komponente aufgerufen — in `effectScope()` verpacken |
 
 ## Selbstcheck
 
@@ -266,3 +323,4 @@ ebenfalls.
 - `reference/src/lib/__tests__/`, `reference/src/stores/__tests__/`, `reference/src/composables/__tests__/`,
   `reference/src/components/__tests__/` — 41 Tests
 - `reference/tsconfig.vitest.json` — inklusive der `lib`-Korrektur
+- `reference/vitest.setup.ts` — der jsdom-Ersatz für `<dialog>`

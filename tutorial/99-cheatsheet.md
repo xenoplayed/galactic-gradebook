@@ -135,6 +135,23 @@ v-for="f in liste" :key="f.id"   <!-- key = ID, nie der Index -->
 <Komp :model-value="x" @update:model-value="v => x = v" />
 ```
 
+### Modal ohne Bibliothek
+
+```vue
+<dialog ref="d" @close="open = false" @click.self="open = false" class="m-auto backdrop:bg-black/60">
+```
+`showModal()` gibt Fokusfalle, Escape und Abdunklung. `@close` ist Pflicht (Escape schließt
+nativ), `m-auto` auch (Preflight killt die UA-Zentrierung). jsdom kennt `showModal` nicht →
+Ersatz in `vitest.setup.ts`.
+
+### Zustand im Composable: eigener oder geteilter?
+
+```ts
+export function useX() { const s = ref(0); … }   // ref DRINNEN  -> je Aufruf eigener
+const shared = ref(0)                            // ref DRAUSSEN -> alle teilen ihn
+export function useY() { return { shared } }
+```
+
 ## Router
 
 ```ts
@@ -280,3 +297,5 @@ podman run --rm -p 8080:80 app:1.0
 13. Zwei Portweiterleitungen im DevContainer → `localhost` geht, `127.0.0.1` hängt
 14. Bezeichner aus der URL ungeprüft nachschlagen → fremde Daten sichtbar
 15. Kontrast geschätzt statt gemessen → auf dunklem Grund fällt Text durch
+16. `@close` am `<dialog>` vergessen → nach Escape geht es nicht mehr auf
+17. `ref` außerhalb der Funktion, wo eigener Zustand gemeint war → Werte überleben die Seite

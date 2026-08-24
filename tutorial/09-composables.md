@@ -1,5 +1,7 @@
 # 09 — Composables
 
+> **Zeitbedarf:** ca. 2–3 Stunden · das generische `useLocalStorage` braucht Ruhe
+
 ## Ziel
 
 Du schreibst eigene Composables: gebündelte Statistik zu einer Notenliste, ein generisches
@@ -86,6 +88,43 @@ expect(stats.average.value).toBe(5)
 grades.value = [1, 1]
 expect(stats.average.value).toBe(1)   // ohne toValue bliebe es 5
 ```
+
+## Eigener Zustand oder geteilter?
+
+Das ist die Unterscheidung, an der man beim zweiten eigenen Composable hängenbleibt — und sie
+hängt an genau einer Zeile: **wo der `ref` steht.**
+
+```ts
+// A) INNERHALB der Funktion -> jeder Aufruf bekommt seinen eigenen
+export function useGradeStats(source) {
+  const grades = computed(() => toValue(source))
+  return { … }
+}
+
+// B) AUSSERHALB der Funktion -> alle Aufrufer teilen sich denselben
+const previewAcademyId = ref<AcademyId>('jedi')
+
+export function useAcademyPreview() {
+  return { previewAcademyId }
+}
+```
+
+**A ist der Normalfall.** Zwei Diagramme auf einer Seite brauchen zwei unabhängige Statistiken.
+
+**B ist eine bewusste Entscheidung.** Die Akademie, die auf dem Anmeldebildschirm vorgemerkt
+ist, muss überall dieselbe sein: die Karten zeigen die Auswahl an, das Theme-Composable liest
+sie, der Knopf für die Zugangsliste beschriftet sich danach. Drei Stellen, ein Wert.
+
+Das Modul wird in JavaScript **einmal** ausgewertet, egal wie oft es importiert wird — deshalb
+gibt es den `ref` genau einmal. Das ist im Grunde ein Store, nur ohne Pinia.
+
+> **Wann dann doch Pinia?** Sobald mehr dazukommt als ein Wert: mehrere zusammenhängende
+> Felder, abgeleitete Werte, Aktionen — oder wenn du die Devtools-Zeitreise willst. Für einen
+> einzelnen `ref` wäre ein Store Zeremonie ohne Gewinn.
+
+Die Falle dabei: **geteilter Zustand überlebt das Aushängen der Komponente.** Wer B benutzt,
+wo A gemeint war, sieht beim zweiten Öffnen einer Seite noch die Werte vom ersten Mal. Frag
+dich bei jedem `ref` außerhalb einer Funktion, ob genau das gewollt ist.
 
 ## Ein generisches Composable
 
@@ -204,9 +243,11 @@ negativ wird. Die Trefferwahrscheinlichkeit jeder Note ist dann genau ihr Gewich
 1. `src/composables/useLocalStorage.ts` — generisch, mit `parse`-Parameter.
 2. `src/composables/useGradeStats.ts` — mit `MaybeRefOrGetter` und `toValue`.
 3. `src/composables/useRandomGrades.ts`.
-4. Beide Stores auf `useLocalStorage` umstellen: `auth` speichert nur die ID,
+4. `src/composables/useAcademyTheme.ts` — mit **modulweitem** `previewAcademyId` und der
+   Umschaltung über `data-academy`. Mehr dazu in [Kapitel 12](12-styling-tailwind.md).
+5. Beide Stores auf `useLocalStorage` umstellen: `auth` speichert nur die ID,
    `grades` die Matrix mit `mergeWithSeed`.
-5. Im Browser prüfen: anmelden, Seite neu laden — du bist noch angemeldet.
+6. Im Browser prüfen: anmelden, Seite neu laden — du bist noch angemeldet.
 
 ## Stolperfallen
 
@@ -226,9 +267,13 @@ negativ wird. Die Trefferwahrscheinlichkeit jeder Note ist dann genau ihr Gewich
 - [ ] `localStorage` enthält nur die User-**ID**, nicht Name und Rolle
 - [ ] `localStorage` mit Müll füllen und neu laden: App startet trotzdem
 - [ ] `useGradeStats` mit einem `ref` gefüttert: Zahlen aktualisieren sich
+- [ ] Du kannst erklären, warum `previewAcademyId` außerhalb der Funktion steht und
+      `useGradeStats` seinen Zustand innerhalb erzeugt
 
 ## In der Referenz
 
 - `reference/src/composables/useLocalStorage.ts`, `useGradeStats.ts`, `useRandomGrades.ts`
+- `reference/src/composables/useAcademyTheme.ts` — geteilter Zustand
+- `reference/src/composables/__tests__/useAcademyTheme.spec.ts`
 - `reference/src/stores/grades.ts` — `mergeWithSeed` am Ende der Datei
 - `reference/src/composables/__tests__/useGradeStats.spec.ts` — der Reaktivitätstest

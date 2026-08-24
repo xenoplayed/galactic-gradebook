@@ -1,5 +1,7 @@
 # 12 — Styling mit Tailwind CSS 4
 
+> **Zeitbedarf:** ca. 3–4 Stunden · Design frisst Zeit, das ist normal
+
 ## Ziel
 
 Du verstehst, wie Tailwind 4 konfiguriert wird (nämlich in CSS), definierst eigene
@@ -111,22 +113,49 @@ anzufassen.
 Umgeschaltet wird in einem Composable:
 
 ```ts
+// Modulweit: EIN Wert fuer die ganze App (siehe Kapitel 09).
+const previewAcademyId = ref<AcademyId>('jedi')
+
+export function useAcademyPreview() {
+  return { previewAcademyId }
+}
+
 export function useAcademyTheme(): void {
   const { academy } = storeToRefs(useAuthStore())
 
+  // Nach dem Anmelden die echte Akademie als Vorschau merken - sonst waere
+  // das Abmelden ein optischer Sprung zurueck auf Jedi.
+  watch(academy, (value) => {
+    if (value !== null) previewAcademyId.value = value.id
+  })
+
   watchEffect(() => {
-    const root = document.documentElement
-    if (academy.value === null) {
-      delete root.dataset.academy      // abgemeldet -> neutral
-      return
-    }
-    root.dataset.academy = academy.value.id
+    document.documentElement.dataset.academy = academy.value?.id ?? previewAcademyId.value
   })
 }
 ```
 
-Ein Aufruf in `App.vue`, das war es. `watchEffect` statt `watch`, weil die Abhängigkeit
-offensichtlich ist und der erste Lauf sofort passieren soll.
+Ein Aufruf in `App.vue`, das war es. `watchEffect` statt `watch`, weil die Abhängigkeiten
+offensichtlich sind und der erste Lauf sofort passieren soll.
+
+**Das Attribut wird nie gelöscht.** Angemeldet gilt die echte Akademie, sonst die vorgemerkte
+— dadurch zeigt schon der Anmeldebildschirm ein vollständiges Design, statt neutral zu bleiben.
+Die Werte im `@theme`-Block sind damit nur noch Rückfallebene.
+
+### Das Aufblitzen beim Laden
+
+Ein Detail, das man erst sieht, wenn man darauf achtet: Zwischen dem Anzeigen des HTML und dem
+Moment, in dem Vue gemountet ist und `data-academy` setzt, vergehen ein paar Millisekunden. In
+denen gilt die neutrale Palette — es blitzt kurz auf.
+
+Die Lösung steht nicht in JavaScript, sondern im HTML:
+
+```html
+<html lang="de" data-academy="jedi">
+```
+
+Damit ist die Palette gesetzt, bevor die erste Zeile JavaScript läuft. Dasselbe Muster
+benutzen Seiten mit Dark Mode, um genau dieses Flackern zu vermeiden.
 
 ### Semantische Tokens statt Farbnamen
 
@@ -185,6 +214,12 @@ ratio(cs.getPropertyValue('--color-link'), cs.getPropertyValue('--color-surface'
 
 Der Umweg über Canvas ist nötig, weil moderne Browser `oklch()` als solches zurückgeben —
 eine Farbe „von Hand" zu parsen scheitert daran.
+
+> **Miss gegen die Tokens, nicht gegen `getComputedStyle(element).backgroundColor`.** Beim
+> Bauen der Referenz habe ich beides gemischt und dabei Kontrastwerte von 1,17 gemessen, wo in
+> Wirklichkeit 16,25 anstanden — die Seite sah völlig korrekt aus, nur die Messung war Unfug.
+> Die Tokens am `<html>` sind die verlässliche Quelle: sie sind genau das, was die Utilities
+> per `var()` einsetzen.
 
 ### Zwei dunkle Themes auseinanderhalten
 
@@ -420,7 +455,8 @@ eingerückt bleibt.
 2. **Prüf zuerst nach**, dass `bg-brand-600` zu `var(…)` kompiliert. Alles Weitere hängt daran.
 3. Vier `[data-academy='…']`-Blöcke, die dieselben Tokens neu belegen — Farbe, Radius,
    Schrift.
-4. `useAcademyTheme()` schreiben und in `App.vue` aufrufen.
+4. `useAcademyTheme()` schreiben und in `App.vue` aufrufen. Startwert `data-academy="jedi"`
+   zusätzlich fest ins `index.html`.
 5. Alle Komponenten durchgehen: feste Farben (`bg-white`, `text-slate-500`, `dark:*`) durch
    semantische Tokens ersetzen.
 6. Vier Wappen als Inline-SVG, Auswahl über ein `Record<AcademyId, …>`.
@@ -438,6 +474,8 @@ eingerückt bleibt.
 | Farbe ändert sich beim Akademiewechsel nicht | feste Farbe statt Token, oder Token nicht im `[data-academy]`-Block überschrieben |
 | Sith und Imperium sehen gleich aus | nur der Farbton unterscheidet sich — Fläche, Form und Schrift müssen mit |
 | Text auf dem Kopfband kaum lesbar | Abdunklung fehlt oder zu schwach; gegen das **hellste** Pixel prüfen |
+| Beim Laden blitzt kurz eine andere Palette auf | `data-academy` fehlt im `index.html` |
+| Modal klebt oben links statt zentriert | `m-auto` fehlt — Tailwinds Preflight setzt `margin: 0` |
 | Ganze Seite scrollt horizontal | Tabelle ohne `overflow-x-auto` |
 | Zahlen springen | `tabular-nums` fehlt |
 
@@ -447,7 +485,10 @@ eingerückt bleibt.
 - [ ] Anmelden als `yoda`, `bane`, `thrawn`, `organa` — vier klar verschiedene Bilder
 - [ ] Sith und Imperium nebeneinander: unterscheiden sich in Fläche, Form **und** Schrift
 - [ ] Alle Textfarben erreichen 4,5:1 in allen vier Akademien (gemessen, nicht geschätzt)
-- [ ] Nach dem Abmelden ist `data-academy` weg und das Bild wieder neutral
+- [ ] Der Anmeldebildschirm zeigt beim Laden das Jedi-Design, nicht die neutrale Palette
+- [ ] Eine andere Akademie anklicken schaltet sofort um
+- [ ] Nach dem Abmelden bleibt das Design der zuletzt angemeldeten Akademie stehen
+- [ ] Beim harten Neuladen blitzt nichts auf
 - [ ] Mit Tab durch das Login-Formular: der Fokus ist überall sichtbar
 - [ ] Bei 375 px Breite kein horizontales Scrollen der Seite
 - [ ] `npm run build`: das CSS ist ein paar Dutzend Kilobyte, nicht mehrere hundert
@@ -455,7 +496,9 @@ eingerückt bleibt.
 ## In der Referenz
 
 - `reference/src/assets/main.css` — `@theme`, die vier Paletten, `color-scheme`
-- `reference/src/composables/useAcademyTheme.ts` — die Umschaltung
+- `reference/src/composables/useAcademyTheme.ts` — die Umschaltung samt Vorschau
+- `reference/index.html` — der Startwert gegen das Aufblitzen
+- `reference/src/views/LoginView.vue` — die Akademiewahl als Radio-Gruppe
 - `reference/src/components/emblems/` — die vier Wappen
 - `reference/src/components/AcademyBanner.vue` — Kopfband mit Abdunklung
 - `reference/src/components/GradeBadge.vue`, `GradeDistributionChart.vue` — die Farbzuordnungen

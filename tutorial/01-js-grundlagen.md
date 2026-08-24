@@ -1,5 +1,7 @@
 # 01 — JavaScript-Grundlagen
 
+> **Zeitbedarf:** ca. 2–3 Stunden · gut die Hälfte davon in den Übungen
+
 ## Ziel
 
 Du kennst die Stellen, an denen JavaScript sich anders verhält, als du es erwartest, und

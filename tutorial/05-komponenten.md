@@ -1,5 +1,7 @@
 # 05 — Komponenten
 
+> **Zeitbedarf:** ca. 2–3 Stunden · vier eigene Komponenten
+
 ## Ziel
 
 Du kannst Komponenten schreiben, die Daten entgegennehmen (Props), Ereignisse melden (Emits)
@@ -153,6 +155,58 @@ Komponente ein `click`-Emit deklariert.
 Das setzt **ein** Wurzelelement voraus. Bei mehreren musst du `inheritAttrs: false` setzen und
 `v-bind="$attrs"` selbst platzieren.
 
+## Ein Modal ohne Bibliothek: das native `<dialog>`
+
+Für „Fenster geht auf, Hintergrund wird dunkel" greift man reflexhaft zu einer Bibliothek.
+Braucht man nicht — der Browser kann das seit Jahren:
+
+```vue
+<script setup lang="ts">
+const open = defineModel<boolean>({ required: true })
+const dialog = useTemplateRef<HTMLDialogElement>('dialog')
+
+watch(open, (isOpen) => {
+  const element = dialog.value
+  if (element === null) return
+
+  if (isOpen) element.showModal()
+  else if (element.open) element.close()
+})
+</script>
+
+<template>
+  <dialog ref="dialog" @close="open = false" @click.self="open = false">
+    <slot />
+  </dialog>
+</template>
+```
+
+`showModal()` bringt drei Dinge mit, die man sonst mühsam nachbaut:
+
+- eine **Fokusfalle** — Tab bleibt im Fenster
+- **Escape** zum Schließen
+- die **Abdunklung**, ansprechbar über `::backdrop` (in Tailwind: `backdrop:bg-black/60`)
+
+Vier Details, die man beim ersten Mal übersieht:
+
+**`@close` ist Pflicht.** Escape schließt das Fenster *nativ* — Vue erfährt davon nichts. Ohne
+diesen Handler bliebe das Model auf `true` stehen, und der Knopf zum Öffnen täte danach
+scheinbar nichts. Ein Fehler, der sich furchtbar schwer erklären lässt, wenn man ihn nicht
+kennt.
+
+**`else if (element.open)`.** Ohne die Prüfung dreht sich die Sache im Kreis: `close()` feuert
+`close`, der Handler setzt das Model auf `false`, der Watcher läuft erneut.
+
+**`@click.self` schließt bei Klick daneben.** Das `<dialog>` füllt die ganze Fläche; `.self`
+unterscheidet den Rand vom Inhalt, der in Kindelementen liegt.
+
+**`m-auto` nicht vergessen.** Browser zentrieren ein modales `<dialog>` über `margin: auto`
+bei `inset: 0`. Tailwinds Preflight setzt aber `margin: 0` auf alles — ohne `m-auto` klebt
+dein Fenster in der oberen linken Ecke. Genau das ist mir beim Bauen der Referenz passiert.
+
+> **Und ein Hinweis für Kapitel 13:** jsdom, die Testumgebung, kennt `showModal()` nicht.
+> Der Test braucht deshalb einen kleinen Ersatz — nachzulesen dort.
+
 ## Warum überhaupt Basiskomponenten
 
 Statt
@@ -220,6 +274,8 @@ Lege `src/components/base/` an und baue:
    `error`; `useId()` für die Label-Verknüpfung; Fehlermeldung darunter.
 3. **`BaseCard.vue`** — Props `title`, `subtitle`; Standard-Slot plus benannter Slot `header`.
 4. **`EmptyState.vue`** — Props `title`, `description`, Slot für eine Aktion.
+5. **`BaseDialog.vue`** — `defineModel<boolean>()` für offen/zu, Prop `title`, Standard-Slot.
+   Prüf danach zu Fuß: Escape schließt, Klick daneben schließt, Tab bleibt im Fenster.
 
 Baue sie in deinem Bildschirm aus Kapitel 04 ein und prüfe, dass `@click` auf `BaseButton`
 funktioniert, obwohl die Komponente kein `click`-Emit deklariert.
@@ -239,9 +295,11 @@ funktioniert, obwohl die Komponente kein `click`-Emit deklariert.
 - [ ] `v-model` auf `BaseInput` funktioniert in beide Richtungen
 - [ ] `BaseCard` ohne `header`-Slot zeigt keinen leeren Kartenkopf
 - [ ] Zwei `BaseInput` auf einer Seite: Klick aufs Label fokussiert das *richtige* Feld
+- [ ] `BaseDialog` öffnet zentriert, Escape schließt, danach lässt es sich erneut öffnen
 
 ## In der Referenz
 
 - `reference/src/components/base/` — alle Basiskomponenten
+- `reference/src/components/base/BaseDialog.vue` — das native `<dialog>`
 - `reference/src/components/base/BaseSelect.vue` — die generische Variante
 - `reference/src/components/base/BaseCard.vue` — `$slots.header`

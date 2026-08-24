@@ -1,5 +1,7 @@
 # 11 — Die Ansicht der Lernenden
 
+> **Zeitbedarf:** ca. 3–4 Stunden · das Diagramm kostet mehr Zeit als es aussieht
+
 ## Ziel
 
 Eigene Noten mit Durchschnitt, und je Fach der **Klassenspiegel**: die anonyme Notenverteilung

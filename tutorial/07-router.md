@@ -1,5 +1,7 @@
 # 07 — Vue Router
 
+> **Zeitbedarf:** ca. 1,5–2 Stunden
+
 ## Ziel
 
 Deine App bekommt echte Adressen: `/login`, `/dozent/faecher`, `/student/noten/f03`. Ein

@@ -1,5 +1,7 @@
 # 06 — Domänenmodell und Daten
 
+> **Zeitbedarf:** ca. 2–3 Stunden · davon rund eine Stunde reines Fixture-Tippen
+
 ## Ziel
 
 Du legst die Fachlichkeit an: Typen, feste Testdaten und Funktionen zum Rechnen mit

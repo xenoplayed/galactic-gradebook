@@ -1,5 +1,7 @@
 # 14 — Build und Deployment
 
+> **Zeitbedarf:** ca. 1–1,5 Stunden · vertrautes Terrain für dich
+
 ## Ziel
 
 Aus deinem Projekt wird ein Produktions-Build, daraus ein Container-Image mit nginx, und du

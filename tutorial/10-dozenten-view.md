@@ -1,5 +1,7 @@
 # 10 — Die Ansicht der Lehrenden
 
+> **Zeitbedarf:** ca. 3–4 Stunden · das umfangreichste Kapitel
+
 ## Ziel
 
 Die Fächerliste mit Fortschrittsanzeige und das Bewertungsformular: eine Zeile je lernender

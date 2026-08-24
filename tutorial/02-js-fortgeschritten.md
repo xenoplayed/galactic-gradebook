@@ -1,5 +1,7 @@
 # 02 — Funktionen, Module, async
 
+> **Zeitbedarf:** ca. 2–3 Stunden · gut die Hälfte davon in den Übungen
+
 ## Ziel
 
 Du verstehst Arrow-Funktionen und `this`, kennst ES-Module und kannst mit Promises und

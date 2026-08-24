@@ -1,5 +1,7 @@
 # 00 — Setup: DevContainer, Podman, Projekt
 
+> **Zeitbedarf:** ca. 45–60 Minuten · einmalige Einrichtung, danach nie wieder
+
 ## Ziel
 
 Am Ende dieses Kapitels läuft ein leeres, aber vollständiges Vue-Projekt in einem

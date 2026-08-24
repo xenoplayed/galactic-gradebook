@@ -1,5 +1,7 @@
 # 08 — Pinia: Zustand über Komponenten hinweg
 
+> **Zeitbedarf:** ca. 1,5–2 Stunden
+
 ## Ziel
 
 Anmeldung und Notenmatrix leben in Stores, auf die jede Komponente zugreifen kann. Am Ende
