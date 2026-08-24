@@ -225,5 +225,5 @@ Dass die letzte Zeile so aussieht, ist genau der Ertrag der Trennung aus
 
 ## In der Referenz
 
-- `Containerfile`, `nginx.conf`, `.containerignore`
-- `package.json` — die Skripte
+- `reference/Containerfile`, `reference/nginx.conf`, `reference/.containerignore`
+- `reference/package.json` — die Skripte

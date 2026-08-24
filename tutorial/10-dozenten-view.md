@@ -1,9 +1,10 @@
-# 10 — Die Dozenten-Ansicht
+# 10 — Die Ansicht der Lehrenden
 
 ## Ziel
 
-Die Fächerliste mit Fortschrittsanzeige und das Notenformular: eine Zeile je Studierende:r,
-ein Knopf füllt alle Felder mit Zufallsnoten, und erst *Speichern* schreibt die Daten.
+Die Fächerliste mit Fortschrittsanzeige und das Bewertungsformular: eine Zeile je lernender
+Person, ein Knopf füllt alle Felder mit Zufallswerten, und erst *Speichern* schreibt die Daten.
+Alles beschränkt auf die **eigene Akademie**.
 
 Das ist das Herzstück der Anwendung — und das Kapitel, in dem die Konzepte der letzten sechs
 zusammenkommen.
@@ -211,8 +212,22 @@ alle auf dieselbe zeigen.
 
 **`components/GradeInput.vue`:** wie oben beschrieben.
 
-**Unbekanntes Fach abfangen:** `/dozent/faecher/f99` darf nicht abstürzen. `subjects.byId(...)`
-gibt `undefined` zurück — zeig einen `EmptyState` mit Link zurück zur Liste.
+**Unbekanntes *und fremdes* Fach abfangen:** `/dozent/faecher/f99` darf nicht abstürzen — und
+`/dozent/faecher/<Sith-Fach>` als Jedi ebenfalls nicht funktionieren:
+
+```ts
+const subject = computed(() => {
+  const found = subjects.byId(props.subjectId)
+  if (found === undefined || academy.value === null) return undefined
+  // Fremdes Fach == nicht vorhandenes Fach.
+  return found.academyId === academy.value.id ? found : undefined
+})
+```
+
+> **Das ist kein hypothetischer Fall.** Beim Bauen der Referenz hatte ich genau diese Prüfung
+> zunächst vergessen: `subjects.byId` findet *jedes* Fach, und die ID kommt aus der URL. Ein
+> Rekrut konnte über die Adresszeile den Sith-Vergleich einsehen. Immer wenn ein Bezeichner
+> aus der URL kommt, gehört dazu die Frage: *Darf diese Person das überhaupt?*
 
 ## Stolperfallen
 
@@ -237,10 +252,11 @@ gibt `undefined` zurück — zeig einen `EmptyState` mit Link zurück zur Liste.
 - [ ] Bei ungespeicherten Änderungen wegnavigieren → Rückfrage
 - [ ] Fachwechsel über die Liste zeigt die richtigen Noten
 - [ ] `/dozent/faecher/f99` zeigt eine freundliche Meldung
+- [ ] Ein Fach einer **fremden** Akademie über die Adresszeile ebenfalls
 
 ## In der Referenz
 
-- `src/views/lecturer/SubjectListView.vue`, `src/views/lecturer/GradeEntryView.vue`
-- `src/components/GradeInput.vue`
-- `src/components/__tests__/GradeInput.spec.ts` — prüft genau die Zusage „ungültige Eingaben
+- `reference/src/views/lecturer/SubjectListView.vue`, `reference/src/views/lecturer/GradeEntryView.vue`
+- `reference/src/components/GradeInput.vue`
+- `reference/src/components/__tests__/GradeInput.spec.ts` — prüft genau die Zusage „ungültige Eingaben
   werden nicht gemeldet“

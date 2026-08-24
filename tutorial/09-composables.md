@@ -229,6 +229,6 @@ negativ wird. Die Trefferwahrscheinlichkeit jeder Note ist dann genau ihr Gewich
 
 ## In der Referenz
 
-- `src/composables/useLocalStorage.ts`, `useGradeStats.ts`, `useRandomGrades.ts`
-- `src/stores/grades.ts` — `mergeWithSeed` am Ende der Datei
-- `src/composables/__tests__/useGradeStats.spec.ts` — der Reaktivitätstest
+- `reference/src/composables/useLocalStorage.ts`, `useGradeStats.ts`, `useRandomGrades.ts`
+- `reference/src/stores/grades.ts` — `mergeWithSeed` am Ende der Datei
+- `reference/src/composables/__tests__/useGradeStats.spec.ts` — der Reaktivitätstest

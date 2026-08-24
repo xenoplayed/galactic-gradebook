@@ -242,6 +242,6 @@ funktioniert, obwohl die Komponente kein `click`-Emit deklariert.
 
 ## In der Referenz
 
-- `src/components/base/` — alle Basiskomponenten
-- `src/components/base/BaseSelect.vue` — die generische Variante
-- `src/components/base/BaseCard.vue` — `$slots.header`
+- `reference/src/components/base/` — alle Basiskomponenten
+- `reference/src/components/base/BaseSelect.vue` — die generische Variante
+- `reference/src/components/base/BaseCard.vue` — `$slots.header`

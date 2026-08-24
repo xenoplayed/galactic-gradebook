@@ -3,7 +3,9 @@
 ## Ziel
 
 Du verstehst, wie Tailwind 4 konfiguriert wird (nämlich in CSS), definierst eigene
-Design-Tokens und bekommst einen funktionierenden Dark Mode.
+Design-Tokens — und baust **vier komplett verschiedene Erscheinungsbilder, die an einem
+einzigen HTML-Attribut hängen**. Keine Komponente muss dafür wissen, in welcher Akademie sie
+gerade gerendert wird.
 
 ---
 
@@ -60,6 +62,158 @@ dabei nicht dekorativ — an ihnen erkennt Tailwind, welche Utilities es erzeuge
 Zwei Farben mit gleicher erster Zahl wirken gleich hell — deshalb passen `grade-1` bis
 `grade-5` als Reihe zusammen, obwohl sie über den halben Farbkreis laufen. Bei Hex-Werten
 müsstest du das nach Augenmaß nachjustieren.
+
+## Vier Themes an einem Attribut
+
+Das ist der interessanteste Teil dieses Kapitels. Die Aufgabe: Jedi hell und blaugrün, Sith
+fast schwarz mit Karmesin, Imperium stahlgrau mit Signalrot, Rebellen warm und sandig. Und
+zwar nicht nur die Farbe — auch Eckenradius und Schriftcharakter.
+
+### Die Beobachtung, auf der alles beruht
+
+Sieh dir an, was Tailwind aus `bg-brand-600` tatsächlich macht. Nach `npm run build` im
+erzeugten CSS nachschauen:
+
+```css
+.bg-brand-600 { background-color: var(--color-brand-600) }
+.rounded-card { border-radius: var(--radius-card) }
+```
+
+**Tailwind setzt den Wert nicht ein, es verweist auf ihn.** Damit gilt: Wer die Custom
+Property neu belegt, ändert jede Verwendung auf der Seite — ohne eine einzige Klasse
+anzufassen.
+
+> Das ist kein Detail, sondern die tragende Annahme. Prüf sie nach, bevor du darauf aufbaust:
+> ```bash
+> npm run build && grep -o '\.bg-brand-600{[^}]*}' dist/assets/*.css
+> ```
+> Stünde dort ein fertiger Farbwert statt `var(…)`, müsstest du einen anderen Weg gehen
+> (Tailwinds `@utility`-Direktive mit explizitem `var(…)`).
+
+### Der Aufbau
+
+```css
+@theme {
+  /* neutral - gilt auf dem Anmeldebildschirm */
+  --color-brand-600: oklch(0.52 0.1 250);
+  --color-surface: oklch(0.99 0 0);
+  --color-ink: oklch(0.25 0.02 250);
+  --radius-card: 0.75rem;
+  --font-display: ui-sans-serif, system-ui, sans-serif;
+}
+
+[data-academy='jedi']   { --color-brand-600: oklch(0.57 0.12 195); --radius-card: 1rem;     … }
+[data-academy='sith']   { --color-brand-600: oklch(0.48 0.22 10);  --radius-card: 0.125rem; … }
+[data-academy='empire'] { --color-brand-600: oklch(0.52 0.23 27);  --radius-card: 0;        … }
+[data-academy='rebels'] { --color-brand-600: oklch(0.62 0.18 50);  --radius-card: 0.5rem;   … }
+```
+
+Umgeschaltet wird in einem Composable:
+
+```ts
+export function useAcademyTheme(): void {
+  const { academy } = storeToRefs(useAuthStore())
+
+  watchEffect(() => {
+    const root = document.documentElement
+    if (academy.value === null) {
+      delete root.dataset.academy      // abgemeldet -> neutral
+      return
+    }
+    root.dataset.academy = academy.value.id
+  })
+}
+```
+
+Ein Aufruf in `App.vue`, das war es. `watchEffect` statt `watch`, weil die Abhängigkeit
+offensichtlich ist und der erste Lauf sofort passieren soll.
+
+### Semantische Tokens statt Farbnamen
+
+Damit das trägt, dürfen die Komponenten **keine konkreten Farben** mehr nennen. Statt
+
+```html
+<div class="bg-white ring-slate-200 dark:bg-slate-900 dark:ring-slate-800">
+```
+
+heißt es
+
+```html
+<div class="bg-surface ring-line">
+```
+
+Der Gewinn ist doppelt: Es funktioniert in vier Paletten, **und** die `dark:`-Varianten fallen
+weg. Die Akademie bestimmt, ob es hell oder dunkel ist — nicht die Systemeinstellung.
+
+Der Satz Tokens, den du brauchst:
+
+| Token | wofür |
+| --- | --- |
+| `--color-surface`, `--color-surface-2` | Karten und Seitenhintergrund |
+| `--color-ink`, `--color-ink-soft` | Text und abgeschwächter Text |
+| `--color-line` | Rahmen und Trennlinien |
+| `--color-brand-*` | die Markenfarbe, trägt **weiße** Schrift |
+| `--color-link` | Textfarbe für Links |
+| `--color-ok`, `--color-warn` | Statusfarben |
+| `--radius-card`, `--font-display` | Form und Schriftcharakter |
+
+### Warum `--color-link` getrennt von `--color-brand-600` sein muss
+
+Das sieht nach Doppelung aus, ist aber der Punkt, an dem ich beim Bauen der Referenz auf die
+Nase gefallen bin. `brand-600` muss zwei unvereinbare Dinge können:
+
+1. als **Fläche** unter weißer Schrift funktionieren (Buttons) → muss dunkel genug sein
+2. als **Schrift** auf der Fläche lesbar sein (Links) → muss hell genug sein
+
+Auf dem fast schwarzen Korriban-Hintergrund erreichte `text-brand-600` gerade mal **2,89:1**.
+Gefordert sind 4,5:1. Mit einem eigenen, deutlich helleren `--color-link` sind es **7,86:1**.
+
+Mess das nach, statt es zu schätzen. In der Konsole der Entwicklerwerkzeuge:
+
+```js
+const cv = document.createElement('canvas'); cv.width = cv.height = 1
+const ctx = cv.getContext('2d', { willReadFrequently: true })
+const rgb = c => { ctx.fillStyle = c; ctx.fillRect(0,0,1,1); return [...ctx.getImageData(0,0,1,1).data] }
+const lum = ([r,g,b]) => { [r,g,b] = [r,g,b].map(v => { v/=255; return v<=0.03928 ? v/12.92 : ((v+0.055)/1.055)**2.4 })
+                           return 0.2126*r + 0.7152*g + 0.0722*b }
+const ratio = (a,b) => { const [x,y] = [lum(rgb(a)), lum(rgb(b))]
+                         return ((Math.max(x,y)+0.05) / (Math.min(x,y)+0.05)).toFixed(2) }
+
+const cs = getComputedStyle(document.documentElement)
+ratio(cs.getPropertyValue('--color-link'), cs.getPropertyValue('--color-surface'))
+```
+
+Der Umweg über Canvas ist nötig, weil moderne Browser `oklch()` als solches zurückgeben —
+eine Farbe „von Hand" zu parsen scheitert daran.
+
+### Zwei dunkle Themes auseinanderhalten
+
+Sith und Imperium sind beide dunkel und beide rot. Wenn die sich ähneln, war die ganze Mühe
+umsonst. Farbe allein reicht dafür nicht — es braucht mehrere Ebenen gleichzeitig:
+
+| | Imperium | Sith |
+| --- | --- | --- |
+| Grundfläche | Stahlgrau, **kein** Farbstich | Tiefschwarz mit Rotstich |
+| Akzent | reines Signalrot (Hue 27) | Karmesin ins Purpur (Hue 10) |
+| Form | `--radius-card: 0` | `0.125rem`, fast eckig |
+| Schrift | Monospace, Versalien, weit gesperrt | Serif, normal |
+
+Die Versalien kommen aus dem CSS, nicht aus den Komponenten:
+
+```css
+[data-academy='empire'] h1,
+[data-academy='empire'] h2 { text-transform: uppercase; }
+```
+
+### `color-scheme` nicht vergessen
+
+```css
+html { color-scheme: light; }
+html[data-academy='sith'],
+html[data-academy='empire'] { color-scheme: dark; }
+```
+
+Ohne das bleiben Scrollbalken und Browser-Formularelemente hell, während der Rest dunkel ist.
 
 ## Utilities oder Komponenten?
 
@@ -124,32 +278,27 @@ Variable dynamisch.
 `false`, `null` und `undefined` in einem Array werden weggelassen — deshalb funktioniert
 `aktiv && 'aktiv'`.
 
-## Dark Mode
+## Was aus dem Dark Mode wurde
+
+In vielen Projekten schreibst du `dark:`-Varianten, die auf die Systemeinstellung reagieren.
+**Hier nicht.** Die Akademie bestimmt, ob es hell oder dunkel ist — Korriban ist immer dunkel,
+Yavin IV immer warm-hell.
+
+Das ist eine bewusste Entscheidung, keine Auslassung: Zwei unabhängige Achsen (Akademie *und*
+Systemeinstellung) ergäben acht Kombinationen, die alle geprüft werden müssten. Bei einer
+Lernanwendung ist das den Aufwand nicht wert.
+
+Für ein Projekt, in dem du beides brauchst, ginge es so — der `dark:`-Präfix belegt dieselben
+Tokens noch einmal:
 
 ```css
-html { color-scheme: light dark; }
-
-body {
-  @apply bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-100;
+@media (prefers-color-scheme: dark) {
+  :root:not([data-academy]) { --color-surface: …; --color-ink: …; }
 }
 ```
 
-Der `dark:`-Präfix richtet sich standardmäßig nach der Systemeinstellung
-(`prefers-color-scheme`). `color-scheme` auf `html` sorgt dafür, dass auch Scrollbalken und
-Formularelemente des Browsers mitziehen.
-
-Für jede Farbe braucht es eine dunkle Entsprechung:
-
-```vue
-<div class="bg-white ring-1 ring-slate-200 dark:bg-slate-900 dark:ring-slate-800">
-```
-
-Zwei Fehler, die man immer wieder sieht: einen Hintergrund abdunkeln, aber den Text vergessen
-(schwarz auf dunkelgrau); und Rahmen vergessen (`ring-slate-200` verschwindet auf dunklem
-Grund).
-
-**Prüf es wirklich nach.** In den Chrome-DevTools: Rendering → *Emulate CSS
-prefers-color-scheme*. Ein Dark Mode, den man nie ansieht, ist keiner.
+Wichtig bleibt: **prüf es wirklich nach.** In den Chrome-Entwicklerwerkzeugen unter
+Rendering → *Emulate CSS prefers-color-scheme*.
 
 ## Zugänglichkeit im Vorbeigehen
 
@@ -169,6 +318,76 @@ Weiteres, das hier gebraucht wird:
 - `tabular-nums` — Ziffern gleich breit. In Zahlenspalten springt sonst alles.
 - `aria-invalid`, `aria-describedby` an fehlerhaften Feldern.
 - Kontrast: `text-slate-400` auf Weiß ist für Fließtext zu schwach.
+
+## Wappen als Inline-SVG statt Icon-Bibliothek
+
+Jede Akademie hat ein Wappen. Naheliegend wäre eine Icon-Bibliothek oder eine PNG-Datei — beides
+ist hier die schlechtere Wahl:
+
+```vue
+<template>
+  <svg viewBox="0 0 64 64" fill="none" aria-hidden="true">
+    <path d="M32 6 L32 44" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" />
+    …
+  </svg>
+</template>
+```
+
+- **`currentColor`** lässt das Wappen die Textfarbe erben. Es färbt sich also automatisch mit
+  der Akademie um, ohne dass irgendwo eine Zuordnung stehen muss.
+- **`aria-hidden="true"`**, weil daneben der Name als Text steht. Ein Screenreader soll nicht
+  „Grafik" vorlesen und dann denselben Namen noch einmal.
+- Keine Netzwerkanfrage, keine Abhängigkeit, gestochen scharf in jeder Größe.
+
+Die Auswahl läuft über ein `Record`, nicht über eine `v-if`-Kette:
+
+```ts
+const EMBLEMS = {
+  jedi: JediEmblem, sith: SithEmblem, empire: EmpireEmblem, rebels: RebelEmblem,
+} as const satisfies Record<AcademyId, unknown>
+```
+
+Kommt eine fünfte Akademie dazu, ist der fehlende Eintrag ein **Compile-Fehler** statt einer
+stillen Lücke in der Anzeige.
+
+## Fotos einbinden, ohne die Lesbarkeit zu ruinieren
+
+Jede Akademie hat ein Kopfband mit einer Weltraumaufnahme. Drei Entscheidungen dazu:
+
+**Ein Band, kein seitenfüllender Hintergrund.** Zwei der vier Akademien sind hell. Ein dunkles
+Foto hinter der ganzen Seite würde dort permanent mit dem Text kämpfen. Als abgegrenztes Band
+funktioniert dasselbe Motiv in allen vier Paletten.
+
+**Eine Abdunklung darüber**, damit weiße Schrift immer trägt:
+
+```html
+<img :src="`/backgrounds/${academy.id}.jpg`" alt="" class="h-40 w-full object-cover" />
+<div class="absolute inset-0 bg-black/55"></div>
+```
+
+`alt=""` ist hier richtig und kein Versehen: Das Bild ist reine Dekoration, der Name steht als
+Text daneben.
+
+Prüfen lässt sich das gegen das **hellste Pixel** des Bildes — nicht gegen den Durchschnitt,
+denn genau an der hellsten Stelle bricht der Kontrast zuerst. Zeichne das Bild verkleinert in
+ein Canvas, multipliziere jeden Pixel mit `1 - 0.55` und such das Maximum. In der Referenz
+liegt der schlechteste Wert bei 5,03:1.
+
+**Bilder verkleinern.** Ein Foto direkt aus einer Bilddatenbank hat schnell mehrere Megabyte.
+Auf macOS reicht das eingebaute `sips`:
+
+```bash
+sips --resampleWidth 1600 bild.jpg
+sips -c 421 1600 bild.jpg                     # mittig auf Bannerformat schneiden
+sips -s format jpeg -s formatOptions 55 bild.jpg --out public/backgrounds/jedi.jpg
+```
+
+Ziel: unter 200 KB je Bild. Bilder in `public/` werden von Vite **nicht** angefasst, sondern
+unverändert kopiert — die Optimierung ist deine Aufgabe.
+
+> **Rechtliches gehört dazu.** Die Bilder in der Referenz stammen aus der gemeinfreien
+> NASA-Bibliothek, die Wappen sind eigene Zeichnungen. Herkunft und Urheber stehen in
+> `CREDITS.md`. Fremde Logos herunterzuladen wäre der bequeme und der falsche Weg.
 
 ## Layout: die drei Werkzeuge, die reichen
 
@@ -196,13 +415,18 @@ eingerückt bleibt.
 
 ## Deine Aufgabe
 
-1. `src/assets/main.css` mit `@import 'tailwindcss'` und einem `@theme`-Block: Markenfarbe,
-   fünf Notenfarben, Schriftfamilie.
-2. `body` mit `@apply` grundstylen, `color-scheme` setzen, Fokus-Ring definieren.
-3. Alle Komponenten und Views durchgehen: für jede helle Farbe eine `dark:`-Entsprechung.
-4. Notenfarben in `GradeBadge` und `GradeDistributionChart` über ein `Record`, nicht
-   zusammengebaut.
-5. Bei 375 px Breite prüfen: nichts läuft über den Rand, die Tabellen scrollen in sich.
+1. `src/assets/main.css` mit `@import 'tailwindcss'` und einem `@theme`-Block: die
+   semantischen Tokens aus der Tabelle oben.
+2. **Prüf zuerst nach**, dass `bg-brand-600` zu `var(…)` kompiliert. Alles Weitere hängt daran.
+3. Vier `[data-academy='…']`-Blöcke, die dieselben Tokens neu belegen — Farbe, Radius,
+   Schrift.
+4. `useAcademyTheme()` schreiben und in `App.vue` aufrufen.
+5. Alle Komponenten durchgehen: feste Farben (`bg-white`, `text-slate-500`, `dark:*`) durch
+   semantische Tokens ersetzen.
+6. Vier Wappen als Inline-SVG, Auswahl über ein `Record<AcademyId, …>`.
+7. Kopfband mit Bild und Abdunklung.
+8. Kontrast messen — alle vier Akademien, Links und Statusfarben.
+9. Bei 375 px Breite prüfen: nichts läuft über den Rand.
 
 ## Stolperfallen
 
@@ -211,21 +435,29 @@ eingerückt bleibt.
 | Farbe wirkt nicht | Klassenname zusammengebaut |
 | Alles unformatiert | `@import 'tailwindcss'` fehlt oder `main.css` nicht in `main.ts` importiert |
 | `tailwind.config.js` wird ignoriert | Version 4 liest sie nicht mehr |
-| Dunkler Text auf dunklem Grund | `dark:text-*` vergessen |
+| Farbe ändert sich beim Akademiewechsel nicht | feste Farbe statt Token, oder Token nicht im `[data-academy]`-Block überschrieben |
+| Sith und Imperium sehen gleich aus | nur der Farbton unterscheidet sich — Fläche, Form und Schrift müssen mit |
+| Text auf dem Kopfband kaum lesbar | Abdunklung fehlt oder zu schwach; gegen das **hellste** Pixel prüfen |
 | Ganze Seite scrollt horizontal | Tabelle ohne `overflow-x-auto` |
 | Zahlen springen | `tabular-nums` fehlt |
 
 ## Selbstcheck
 
 - [ ] `bg-brand-600` und `bg-grade-3` wirken
-- [ ] Dark Mode umschalten: alles bleibt lesbar
+- [ ] Anmelden als `yoda`, `bane`, `thrawn`, `organa` — vier klar verschiedene Bilder
+- [ ] Sith und Imperium nebeneinander: unterscheiden sich in Fläche, Form **und** Schrift
+- [ ] Alle Textfarben erreichen 4,5:1 in allen vier Akademien (gemessen, nicht geschätzt)
+- [ ] Nach dem Abmelden ist `data-academy` weg und das Bild wieder neutral
 - [ ] Mit Tab durch das Login-Formular: der Fokus ist überall sichtbar
 - [ ] Bei 375 px Breite kein horizontales Scrollen der Seite
 - [ ] `npm run build`: das CSS ist ein paar Dutzend Kilobyte, nicht mehrere hundert
 
 ## In der Referenz
 
-- `src/assets/main.css` — `@theme` und die Grundstile
-- `src/components/GradeBadge.vue`, `GradeDistributionChart.vue` — die Farbzuordnungen
-- `src/components/base/BaseButton.vue` — Varianten als `Record`
-- `src/components/base/BaseTable.vue` — der scrollende Rahmen
+- `reference/src/assets/main.css` — `@theme`, die vier Paletten, `color-scheme`
+- `reference/src/composables/useAcademyTheme.ts` — die Umschaltung
+- `reference/src/components/emblems/` — die vier Wappen
+- `reference/src/components/AcademyBanner.vue` — Kopfband mit Abdunklung
+- `reference/src/components/GradeBadge.vue`, `GradeDistributionChart.vue` — die Farbzuordnungen
+- `reference/src/components/base/BaseButton.vue` — Varianten als `Record`
+- `reference/src/components/base/BaseTable.vue` — der scrollende Rahmen

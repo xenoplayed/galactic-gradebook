@@ -10,7 +10,8 @@ mit echten Daten.
 
 ## Wozu ein Store
 
-Wer angemeldet ist, brauchen die Navigation, der Router-Guard und beide Ansichten. Über Props
+Wer angemeldet ist — und **zu welcher Akademie** die Person gehört — brauchen die Navigation,
+der Router-Guard, beide Ansichten und das Theming. Über Props
 durch drei Ebenen zu reichen wäre mühsam („Prop Drilling“), und der Router-Guard ist gar keine
 Komponente — er kommt an Props überhaupt nicht heran.
 
@@ -40,6 +41,15 @@ export const useAuthStore = defineStore('auth', () => {
     currentUserId.value === null ? null : (users.byId(currentUserId.value) ?? null),
   )
   const isLecturer = computed(() => currentUser.value?.role === 'lecturer')
+
+  /**
+   * Der Dreh- und Angelpunkt der App: daraus folgt, welche Fächer sichtbar
+   * sind, wie Lernende heißen, wie Bewertungen benannt werden und welches
+   * Design gilt. Abgeleitet, nicht gespeichert - eine Quelle der Wahrheit.
+   */
+  const academy = computed(() =>
+    currentUser.value === null ? null : (academies.byId(currentUser.value.academyId) ?? null),
+  )
 
   function login(username: string, password: string): boolean {   // action
     // …
@@ -87,6 +97,8 @@ Store-Objekt bleibt immer reaktiv.
 ```ts
 function login(username: string, password: string): boolean {
   const normalized = toUsername(username)
+  // users enthaelt ALLE Personen aller Akademien - deshalb muessen die
+  // Nachnamen akademieuebergreifend eindeutig sein (siehe Kapitel 06).
   const match = users.find((user) => toUsername(user.lastName) === normalized)
 
   if (match === undefined || toUsername(password) !== normalized) {
@@ -102,7 +114,7 @@ function login(username: string, password: string): boolean {
 
 Vier Punkte:
 
-**`toUsername` auf beiden Seiten.** Damit funktioniert `Müller`, `müller` und `mueller`
+**`toUsername` auf beiden Seiten.** Damit funktioniert `Sabé`, `sabé` und `sabe`
 gleichermaßen.
 
 **Rückgabewert `boolean` statt `throw`.** Ein falsches Passwort ist ein normaler Ablauf, keine
@@ -112,9 +124,9 @@ Ausnahmesituation. Ausnahmen sind für Dinge, mit denen der Aufrufer nicht rechn
 Anwendung, welche Konten existieren. Hier ist das ohne Belang, in echten Anmeldungen ist es
 ein Grundprinzip — und es kostet nichts, es sich anzugewöhnen.
 
-**Nur die ID im Zustand.** Das User-Objekt wird bei jedem Zugriff frisch aus den Stammdaten
-gelesen. Persistierte man es, hätte man eine zweite Quelle der Wahrheit, die nach jeder
-Datenänderung veraltet ist.
+**Nur die ID im Zustand.** Das User-Objekt *und* die Akademie werden bei jedem Zugriff frisch
+aus den Stammdaten abgeleitet. Persistierte man sie, hätte man drei Quellen der Wahrheit, die
+nach jeder Datenänderung auseinanderlaufen.
 
 > Das ist **keine** Authentifizierung. Benutzername und Passwort sind identisch, und geprüft
 > wird im Browser — jeder kann in den DevTools den Store ändern. Für eine Lernanwendung ohne
@@ -127,9 +139,18 @@ Datenänderung veraltet ist.
 export const useGradesStore = defineStore('grades', () => {
   const book = ref<GradeBook>(createGradeBook())
 
+  /**
+   * Die Lernenden, die zu einem Fach gehoeren. Genau EIN Ort, an dem
+   * "welches Fach gehoert zu welcher Akademie" steht.
+   */
+  function rosterFor(subjectId: string): readonly Student[] {
+    const subject = subjects.byId(subjectId)
+    return subject === undefined ? [] : studentsOf(subject.academyId)
+  }
+
   function gradesForSubject(subjectId: string): (Grade | null)[] {
     const row = book.value[subjectId] ?? {}
-    return students.map((student) => row[student.id] ?? null)
+    return rosterFor(subjectId).map((student) => row[student.id] ?? null)
   }
 
   function saveSubject(subjectId: string, draft: Record<string, Grade | null>): void {
@@ -144,6 +165,10 @@ export const useGradesStore = defineStore('grades', () => {
   return { book, gradesForSubject, saveSubject /* … */ }
 })
 ```
+
+**`rosterFor` an genau einer Stelle.** Alle vier Zugriffsfunktionen des Stores gehen hier
+durch. Stünde die Abbildung Fach → Akademie an vier Stellen, wäre die vergessene die
+Sicherheitslücke.
 
 **Ein Aufruf für ein ganzes Fach**, nicht fünfzehn einzelne Setter. Das Formular arbeitet auf
 einem lokalen Entwurf und übergibt ihn beim Speichern in einem Stück — ein Schreibvorgang, ein
@@ -183,11 +208,11 @@ function abmelden() {
 ## Deine Aufgabe
 
 1. `src/stores/auth.ts`: `currentUserId`, `error`, die abgeleiteten Werte `currentUser`,
-   `isAuthenticated`, `role`, `isLecturer`, `isStudent`, `greeting` sowie `login`, `logout`,
-   `clearError`.
-2. `src/stores/grades.ts`: `book`, `gradesForSubject`, `gradeMapForSubject`,
-   `gradesForStudent`, `gradeOf`, `saveSubject`, `resetAll` und ein `computed`
-   `gradedCountBySubject` für die Fortschrittsanzeige.
+   **`academy`**, `isAuthenticated`, `role`, `isLecturer`, `isStudent`, `greeting` sowie
+   `login`, `logout`, `clearError`.
+2. `src/stores/grades.ts`: `book`, `rosterFor`, `gradesForSubject`, `gradeMapForSubject`,
+   `gradesForStudent`, `gradeOf`, `saveSubject`, `resetAll`, `studentCountOf` und ein
+   `computed` `gradedCountBySubject` für die Fortschrittsanzeige.
 3. Guard aus Kapitel 07 auf den echten Store umstellen.
 4. `LoginView` mit `BaseInput`, `BaseButton`, `BaseCard` und einem echten `<form>` mit
    `@submit.prevent`.
@@ -206,8 +231,9 @@ Die Begrüßung nutzt nur den **Vornamen** plus die Rollenbezeichnung aus den Da
 
 ## Selbstcheck
 
-- [ ] Login mit `weber`/`weber` führt zur Fächerliste, mit `mueller`/`mueller` zu den Noten
-- [ ] `Müller` und `MUELLER` funktionieren beide
+- [ ] Login mit `yoda`/`yoda` führt zur Fächerliste, mit `tano`/`tano` zu den Bewertungen
+- [ ] `Sabé`, `sabé` und `sabe` funktionieren alle drei
+- [ ] `auth.academy?.id` liefert bei `bane` den Wert `'sith'`, bei `thrawn` `'empire'`
 - [ ] Falsches Passwort zeigt eine Meldung, das Passwortfeld wird geleert, kein Zugang
 - [ ] Nach dem Login zeigt die Navigation sofort den Namen (sonst fehlt `storeToRefs`)
 - [ ] Enter im Passwortfeld sendet das Formular ab
@@ -215,6 +241,6 @@ Die Begrüßung nutzt nur den **Vornamen** plus die Rollenbezeichnung aus den Da
 
 ## In der Referenz
 
-- `src/stores/auth.ts`, `src/stores/grades.ts`
-- `src/views/LoginView.vue`, `src/components/AppNav.vue`
-- `src/stores/__tests__/auth.spec.ts` — beschreibt das erwartete Verhalten präzise
+- `reference/src/stores/auth.ts`, `reference/src/stores/grades.ts`
+- `reference/src/views/LoginView.vue`, `reference/src/components/AppNav.vue`
+- `reference/src/stores/__tests__/auth.spec.ts` — beschreibt das erwartete Verhalten präzise

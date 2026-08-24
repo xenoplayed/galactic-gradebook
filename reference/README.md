@@ -1,7 +1,7 @@
-# Notenverwaltung — Referenzimplementierung
+# Datapad — Referenzimplementierung
 
-Die fertige, lauffähige App zum Tutorial. Sie ist als **Nachschlagewerk** gedacht:
-Wenn dein eigener Nachbau klemmt, schaust du hier nach, wie es gelöst ist.
+Die fertige, lauffähige App zum [Tutorial](../tutorial/). Sie ist als **Nachschlagewerk**
+gedacht: Wenn dein eigener Nachbau klemmt, schaust du hier nach, wie es gelöst ist.
 
 Vue 3 (Composition API) · TypeScript · Vite · Vue Router · Pinia · Tailwind CSS 4 · Vitest.
 Keine Datenbank, kein Backend — die Daten sind fest hinterlegt, Änderungen landen im
@@ -9,31 +9,37 @@ Keine Datenbank, kein Backend — die Daten sind fest hinterlegt, Änderungen la
 
 ## Was die App kann
 
-Zwei Rollen:
+Vier Akademien teilen sich eine Anwendung — Jedi, Sith, Imperium, Rebellen. Jede hat eigene
+Lehrende, Lernende, Fächer, Bezeichnungen, Notenlabels und ein eigenes Erscheinungsbild.
 
-- **Dozent:in** — sieht alle Fächer mit Fortschritt, trägt pro Fach für alle 15 Studierenden
-  Noten von 1–5 ein. Ein Klick auf *Zufällig ausfüllen* füllt alle Felder; gespeichert wird
-  erst mit *Speichern*.
-- **Studierende** — sehen ihre eigenen Noten samt Durchschnitt sowie den **Klassenspiegel**
-  je Fach: die anonyme Notenverteilung, die eigene Note hervorgehoben.
+- **Lehrende** sehen die Fächer **ihrer** Akademie mit Fortschritt und tragen Bewertungen von
+  1–5 für ihre 10 Lernenden ein. *Zufällig ausfüllen* füllt alle Felder; gespeichert wird erst
+  mit *Speichern*.
+- **Lernende** sehen ihre eigenen Bewertungen samt Durchschnitt sowie den **anonymen Vergleich**
+  je Fach: die Verteilung im eigenen Jahrgang, die eigene Bewertung hervorgehoben.
+
+Die Trennung liegt in der Datenstruktur, nicht in Prüfungen in den Views: `createGradeBook()`
+legt je Fach nur Zeilen für die eigene Akademie an, und Views behandeln ein fremdes Fach wie
+ein nicht existierendes.
 
 ### Zugangsdaten
 
-Benutzername und Passwort sind jeweils der **kleingeschriebene Nachname**.
-Umlaute werden ausgeschrieben (`Müller` → `mueller`).
+Benutzername und Passwort sind jeweils der **kleingeschriebene Nachname**. Akzente werden
+ausgeschrieben (`Sabé` → `sabe`).
 
-| Rolle | Benutzer | Passwort |
+| Akademie | Lehrende | Lernende (Auswahl) |
 | --- | --- | --- |
-| Dozentin | `weber` | `weber` |
-| Studentin | `mueller` | `mueller` |
-| weitere Studierende | `ackermann`, `berger`, `conrad`, `doerner`, `engel`, `fischer`, `gross`, `hartmann`, `ilgner`, `jahn`, `koehler`, `lorenz`, `nowak`, `petrov` | jeweils identisch |
+| Jedi-Tempel Coruscant | `yoda` | `tano`, `jarrus`, `kestis`, `bridger`, `vos` |
+| Sith-Akademie Korriban | `bane` | `maul`, `ventress`, `talon`, `malgus`, `kun` |
+| Imperiale Akademie Carida | `thrawn` | `versio`, `ree`, `kyrell`, `sloane`, `piett` |
+| Allianz-Basis Yavin IV | `organa` | `syndulla`, `wren`, `erso`, `andor`, `sabe` |
 
-Vier der zehn Fächer sind bereits benotet (Mathematik I, Datenbanken, Webentwicklung,
-Statistik), sechs sind leer.
+Auf dem Anmeldebildschirm genügt ein Klick auf eine Akademiekarte. Pro Akademie sind zwei der
+sechs Fächer bereits bewertet, vier sind leer.
 
 > Das ist **keine** echte Authentifizierung. Benutzername und Passwort sind identisch und
-> werden im Browser geprüft. Für eine Lernanwendung ohne Backend ist das in Ordnung; für
-> alles andere nicht.
+> werden im Browser geprüft. Für eine Lernanwendung ohne Backend ist das in Ordnung; für alles
+> andere nicht.
 
 ## Starten
 
@@ -107,25 +113,28 @@ Entfern sie im **Ports**-Panel, oder beende VS Code ganz (`Cmd+Q`, nicht nur das
 
 ```
 src/
-  types/domain.ts     Typen der Fachlichkeit (Grade, User, Subject, GradeBook)
-  lib/                Vue-freie Logik: Collection<T>, Notenrechnen, Strings
-  data/               fest hinterlegte Dozentin, 15 Studierende, 10 Fächer, Seed
-  stores/             Pinia: auth (Anmeldung) und grades (Notenmatrix)
-  composables/        useLocalStorage<T>, useGradeStats, useRandomGrades
+  types/domain.ts     Typen der Fachlichkeit (Grade, Academy, User, Subject, GradeBook)
+  lib/                Vue-freie Logik: Collection<T>, Bewertungen rechnen, Strings
+  data/               vier Akademien, 4 Lehrende, 40 Lernende, 24 Fächer, Seed
+  stores/             Pinia: auth (Anmeldung + Akademie) und grades (Bewertungsmatrix)
+  composables/        useLocalStorage<T>, useGradeStats, useRandomGrades, useAcademyTheme
   components/base/    generische Bausteine: Button, Card, Input, Select, Table, Badge
-  components/         fachliche Bausteine: GradeInput, GradeBadge, Diagramm, StatTile
+  components/         fachlich: GradeInput, GradeBadge, Diagramm, Wappen, Kopfband
   router/index.ts     Routen, typisiertes `meta`, Rollen-Guard
   views/              je eine Seite, getrennt nach lecturer/ und student/
+public/backgrounds/   vier NASA-Aufnahmen als Kopfband (siehe ../CREDITS.md)
 ```
 
-Drei Entscheidungen, die den Rest erklären:
+Vier Entscheidungen, die den Rest erklären:
 
 1. **`lib/` und `data/` kennen Vue nicht.** Die Fachlichkeit ist ohne Framework testbar und
    ließe sich gegen ein echtes Backend tauschen, ohne eine View anzufassen.
-2. **Der Entwurf im Notenformular ist lokal, nicht im Store.** Deshalb ändert *Zufällig
+2. **Die Akademie ist eine Datendimension, keine Prüfung.** `academyId` auf Person und Fach
+   genügt — `GradeBook` bleibt zweistufig, weil das Fach die Akademie bereits festlegt.
+3. **Der Entwurf im Bewertungsformular ist lokal, nicht im Store.** Deshalb ändert *Zufällig
    ausfüllen* noch keine Daten — erst *Speichern* schreibt.
-3. **Der Klassenspiegel bekommt nur Noten, keine Namen.** Was die View nie erhält, kann sie
-   auch nicht versehentlich anzeigen.
+4. **Das Theming hängt an einem Attribut.** `data-academy` am `<html>` belegt dieselben
+   CSS-Custom-Properties neu; keine Komponente kennt eine Akademie.
 
 ## Bekannte Eigenheiten
 

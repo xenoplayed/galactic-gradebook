@@ -240,7 +240,7 @@ rendert `<RouterView />`.
 
 ## In der Referenz
 
-- `src/router/index.ts` — Routen, typisiertes `meta`, Guard, `homeRouteFor`
-- `src/App.vue`, `src/components/AppNav.vue`
-- `src/views/LoginView.vue` — Umgang mit `redirect`
-- `src/views/lecturer/GradeEntryView.vue` — `onBeforeRouteLeave`
+- `reference/src/router/index.ts` — Routen, typisiertes `meta`, Guard, `homeRouteFor`
+- `reference/src/App.vue`, `reference/src/components/AppNav.vue`
+- `reference/src/views/LoginView.vue` — Umgang mit `redirect`
+- `reference/src/views/lecturer/GradeEntryView.vue` — `onBeforeRouteLeave`

@@ -1,4 +1,4 @@
-# 11 — Die Studierenden-Ansicht
+# 11 — Die Ansicht der Lernenden
 
 ## Ziel
 
@@ -43,8 +43,8 @@ const classGrades = computed(() => gradesStore.gradesForSubject(props.subjectId)
 const stats = useGradeStats(classGrades)
 ```
 
-`gradesForSubject` liefert **nur die Noten**, in Listenreihenfolge, ohne Zuordnung zu
-Personen. Das ist Absicht: was die Ansicht nie erhält, kann sie auch nicht versehentlich
+`gradesForSubject` liefert **nur die Bewertungen der eigenen Akademie**, in Listenreihenfolge,
+ohne Zuordnung zu Personen. Das ist Absicht: was die Ansicht nie erhält, kann sie auch nicht versehentlich
 anzeigen. Hätte sie die vollständigen Datensätze und filterte die Namen erst im Template
 heraus, wäre die Anonymität eine Frage der Sorgfalt — so ist sie eine Eigenschaft der
 Datenstruktur.
@@ -218,18 +218,20 @@ Ein Diagramm aus fünf Nullbalken ist keine gute Antwort auf „es gibt noch nic
 
 ## Selbstcheck
 
-- [ ] Als `mueller` anmelden: Noten in den vier vorbelegten Fächern, `–` in den übrigen
-- [ ] Klassenspiegel eines benoteten Fachs zeigt **sichtbare** Balken
-- [ ] Die Summe der Balken entspricht der Anzahl vergebener Noten
+- [ ] Als `tano` anmelden: Bewertungen in den zwei vorbelegten Fächern, `–` in den übrigen
+- [ ] Es erscheinen **nur** die 6 Jedi-Fächer, keine der anderen 18
+- [ ] Der Vergleich zeigt **sichtbare** Balken über **10** Bewertungen, nicht 40
+- [ ] Die Summe der Balken entspricht der Anzahl vergebener Bewertungen
 - [ ] Die eigene Note ist umrandet und steht zusätzlich als Kennzahl da
 - [ ] Prozentwerte ergeben zusammen ungefähr 100
 - [ ] Unbenotetes Fach zeigt den leeren Zustand, kein Diagramm aus Nullen
 - [ ] Nirgends steht ein fremder Name
 - [ ] `/student/noten/f99` stürzt nicht ab
+- [ ] Ein Fach einer fremden Akademie ebenfalls nicht — und zeigt **keine** fremden Daten
 - [ ] Als Studentin `/dozent/faecher` aufrufen → Guard leitet zurück
 
 ## In der Referenz
 
-- `src/views/student/DashboardView.vue`, `src/views/student/SubjectMirrorView.vue`
-- `src/components/GradeDistributionChart.vue`, `src/components/GradeBadge.vue`,
-  `src/components/StatTile.vue`
+- `reference/src/views/student/DashboardView.vue`, `reference/src/views/student/SubjectMirrorView.vue`
+- `reference/src/components/GradeDistributionChart.vue`, `reference/src/components/GradeBadge.vue`,
+  `reference/src/components/StatTile.vue`

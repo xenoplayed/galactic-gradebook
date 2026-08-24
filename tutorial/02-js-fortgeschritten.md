@@ -231,7 +231,7 @@ wird er rot. Genau das ist der Punkt der Aufgabe.
 
 ## In der Referenz
 
-- `src/composables/useLocalStorage.ts` — Closure über `key` und `fallback`
-- `src/services`-Ebene gibt es hier nicht: die App holt keine Daten über das Netz. `async`
-  brauchst du trotzdem, sobald du in [Kapitel 14](14-build-deployment.md) über ein echtes
-  Backend nachdenkst.
+- `reference/src/composables/useLocalStorage.ts` — Closure über `key` und `fallback`
+- Eine Service-Ebene für Netzwerkzugriffe gibt es in der Referenz nicht — die App holt keine
+  Daten über das Netz. `async` brauchst du trotzdem, sobald du in
+  [Kapitel 14](14-build-deployment.md) über ein echtes Backend nachdenkst.

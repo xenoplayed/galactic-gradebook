@@ -290,7 +290,7 @@ selbst.
 
 ## In der Referenz
 
-- `src/lib/collection.ts` — die generische Klasse
-- `src/types/domain.ts` — `Grade`, `GRADES` mit `as const satisfies`, `User` als
+- `reference/src/lib/collection.ts` — die generische Klasse
+- `reference/src/types/domain.ts` — `Grade`, `GRADES` mit `as const satisfies`, `User` als
   Discriminated Union, die Type Guards `isStudent`/`isLecturer`
-- `src/lib/grades.ts` — `isGrade` als Type Guard, `filter((g): g is Grade => ...)`
+- `reference/src/lib/grades.ts` — `isGrade` als Type Guard, `filter((g): g is Grade => ...)`

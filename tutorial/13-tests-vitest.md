@@ -84,18 +84,18 @@ describe('useAuthStore', () => {
     setActivePinia(createPinia())
   })
 
-  it('meldet die Dozentin an', () => {
+  it('meldet eine lehrende Person an', () => {
     const auth = useAuthStore()
 
-    expect(auth.login('weber', 'weber')).toBe(true)
+    expect(auth.login('yoda', 'yoda')).toBe(true)
     expect(auth.isLecturer).toBe(true)
-    expect(auth.greeting).toBe('Hallo Martina')
+    expect(auth.academy?.id).toBe('jedi')
   })
 
   it('verrät nicht, ob es den Benutzer gibt', () => {
     const auth = useAuthStore()
 
-    auth.login('weber', 'falsch')
+    auth.login('yoda', 'falsch')
     const bekannt = auth.error
     auth.login('gibtsnicht', 'gibtsnicht')
 
@@ -117,7 +117,7 @@ dich aus.
 ```ts
 it('persistiert nur die ID', async () => {
   const auth = useAuthStore()
-  auth.login('weber', 'weber')
+  auth.login('yoda', 'yoda')
 
   await nextTick()      // ← ohne das steht im localStorage noch nichts
 
@@ -213,11 +213,33 @@ Schreib mindestens je einen Test pro Schicht:
    Akzent und einem mit Apostroph.
 3. **`src/lib/__tests__/collection.spec.ts`** — `byId`, `require` wirft, `filter` lässt das
    Original in Ruhe, `sortBy` sortiert Umlaute deutsch.
-4. **`src/stores/__tests__/auth.spec.ts`** — Login richtig und falsch, Umlaut-Schreibweisen,
-   Abmelden, Persistenz (mit `await nextTick()`).
+4. **`src/stores/__tests__/auth.spec.ts`** — Login richtig und falsch, Akzent-Schreibweisen,
+   Abmelden, Persistenz (mit `await nextTick()`), und je Akademie die richtige Zuordnung.
+   Für die vier Akademien lohnt sich `it.each`:
+
+   ```ts
+   it.each([['yoda','jedi'], ['bane','sith'], ['thrawn','empire'], ['organa','rebels']])(
+     'ordnet %s der Akademie %s zu',
+     (login, academyId) => { … },
+   )
+   ```
 5. **`src/composables/__tests__/useGradeStats.spec.ts`** — der Reaktivitätstest oben.
 6. **`src/components/__tests__/GradeInput.spec.ts`** — gültig, leer, ungültig, Änderung von
    außen.
+7. **`src/data/__tests__/academies.spec.ts`** — der wichtigste neue Test: dass
+   `createGradeBook()` je Fach **genau** die Lernenden der eigenen Akademie enthält, keine
+   fremden und keine fehlenden. Dazu die Eindeutigkeit der Login-Namen.
+
+   ```ts
+   for (const subject of subjects) {
+     const ownIds = studentsOf(subject.academyId).map((s) => s.id)
+     const rowIds = Object.keys(book[subject.id] ?? {})
+     expect(rowIds.sort()).toEqual([...ownIds].sort())
+   }
+   ```
+
+   Solche Tests sind Gold wert: Sie prüfen eine **Zusage der Datenstruktur**, nicht das
+   Verhalten einer Funktion. Wer die Trennung später versehentlich aufweicht, wird hier rot.
 
 Dann: `npm run test:unit` muss grün sein, und `npm run build` (der `type-check` mit ausführt)
 ebenfalls.
@@ -241,6 +263,6 @@ ebenfalls.
 
 ## In der Referenz
 
-- `src/lib/__tests__/`, `src/stores/__tests__/`, `src/composables/__tests__/`,
-  `src/components/__tests__/` — 41 Tests
-- `tsconfig.vitest.json` — inklusive der `lib`-Korrektur
+- `reference/src/lib/__tests__/`, `reference/src/stores/__tests__/`, `reference/src/composables/__tests__/`,
+  `reference/src/components/__tests__/` — 41 Tests
+- `reference/tsconfig.vitest.json` — inklusive der `lib`-Korrektur

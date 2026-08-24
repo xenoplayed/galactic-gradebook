@@ -7,6 +7,26 @@ DevContainer auf Podman, und du erreichst es im Browser deines Rechners. Du wei�
 Zeile der `devcontainer.json` tut und warum in der `vite.config.ts` `host: '0.0.0.0'` stehen
 muss.
 
+## Zwei Repos, nicht eins
+
+Bevor du anfängst: **dein Projekt gehört nicht in dieses Repo.** Leg es daneben an:
+
+```
+~/projects/nodejs/
+  datapad/              ← dieses Repo (Tutorial + Referenz), nur lesen
+    tutorial/
+    reference/
+  mein-datapad/         ← dein Nachbau, eigenes Repo
+```
+
+Der Grund ist nicht Ordnungsliebe: dein Nachbau soll eine eigene Git-Historie bekommen, und du
+sollst ihn wegwerfen und neu anfangen können, ohne dieses Repo anzufassen. Die Vorlagen in
+[`vorlagen/`](vorlagen/) sind genau dafür da.
+
+Dieses Repo hat übrigens **einen** DevContainer an der Wurzel, der Referenz und Playground
+zusammen bedient. Deiner wird einer für ein einzelnes Projekt — das ist der Normalfall und
+etwas einfacher.
+
 ## Warum überhaupt ein Container
 
 Node-Projekte binden **plattformspezifische Binärdateien** ein (esbuild, rollup, sharp …).
@@ -301,5 +321,5 @@ Jede Zeile hat einen Grund:
 ## In der Referenz
 
 - `.devcontainer/devcontainer.json`, `.devcontainer/post-create.sh`
-- `vite.config.ts`
-- `README.md` — Abschnitt *Starten*
+- `reference/vite.config.ts`
+- `reference/README.md` — Abschnitt *Starten*

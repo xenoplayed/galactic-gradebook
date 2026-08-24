@@ -248,6 +248,6 @@ Sobald das läuft, hast du die Bausteine, aus denen der Rest der App besteht.
 
 ## In der Referenz
 
-- `src/components/GradeInput.vue` — `ref` plus zwei `watch` in beide Richtungen
-- `src/composables/useGradeStats.ts` — mehrere `computed` gebündelt
-- `src/views/lecturer/GradeEntryView.vue` — `watch` mit `immediate` auf einem Route-Parameter
+- `reference/src/components/GradeInput.vue` — `ref` plus zwei `watch` in beide Richtungen
+- `reference/src/composables/useGradeStats.ts` — mehrere `computed` gebündelt
+- `reference/src/views/lecturer/GradeEntryView.vue` — `watch` mit `immediate` auf einem Route-Parameter

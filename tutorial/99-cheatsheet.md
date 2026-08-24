@@ -209,6 +209,17 @@ Auf oberster Ebene aufrufen. `MaybeRefOrGetter` + `toValue`, sonst friert der We
 }
 ```
 
+Themes über ein Attribut, ohne eine Komponente anzufassen:
+
+```css
+[data-academy='sith'] { --color-brand-600: …; --radius-card: 0.125rem; }
+```
+```ts
+document.documentElement.dataset.academy = 'sith'
+```
+Funktioniert, weil Tailwind `bg-brand-600` als `var(--color-brand-600)` ausgibt — nachprüfen
+mit `grep -o '\.bg-brand-600{[^}]*}' dist/assets/*.css`.
+
 Keine `tailwind.config.js`. **Klassennamen nie zusammenbauen** — `bg-grade-${n}` findet
 Tailwind nicht; nimm ein `Record<Grade, string>`.
 
@@ -267,3 +278,5 @@ podman run --rm -p 8080:80 app:1.0
 11. `await` in einer Schleife statt `Promise.all`
 12. Composable ohne `toValue` → Wert eingefroren
 13. Zwei Portweiterleitungen im DevContainer → `localhost` geht, `127.0.0.1` hängt
+14. Bezeichner aus der URL ungeprüft nachschlagen → fremde Daten sichtbar
+15. Kontrast geschätzt statt gemessen → auf dunklem Grund fällt Text durch

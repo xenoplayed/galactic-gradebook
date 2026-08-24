@@ -1,8 +1,9 @@
-# Notenverwaltung — Tutorial
+# Datapad — Tutorial
 
-Bau dir eine kleine, vollständige Vue-3-Anwendung von Grund auf: eine
-**Notenverwaltung** mit zwei Rollen. Dozent:innen tragen pro Fach Noten für alle Studierenden
-ein, Studierende sehen ihre eigenen Noten und den anonymen Klassenspiegel.
+Bau dir eine kleine, vollständige Vue-3-Anwendung von Grund auf: **Datapad**, eine
+Ausbildungsverwaltung für vier Star-Wars-Akademien. Lehrende tragen Bewertungen von 1 bis 5
+ein, Lernende sehen ihre eigenen und den anonymen Vergleich mit ihrem Jahrgang. Jede Akademie
+— Jedi, Sith, Imperium, Rebellen — hat ihr eigenes Erscheinungsbild.
 
 Das Ziel ist nicht die App. Das Ziel ist, dass du danach eigene Projekte in JavaScript,
 TypeScript und Vue anfangen kannst, ohne bei jedem zweiten Schritt zu suchen.
@@ -30,11 +31,12 @@ Es gibt **zwei Repos**:
 | `datapad-reference` | die fertige App |
 
 Und dazu **dein eigenes Projekt**, das du in Kapitel 00 anlegst — irgendwo daneben, z. B.
-`~/projects/nodejs/Notenverwaltung/meine-notenverwaltung`.
+`~/projects/nodejs/mein-datapad`.
 
 Die Referenz ist **kein Vorlagenordner zum Kopieren**. Sie ist dein Nachschlagewerk: erst
 selbst versuchen, und wenn es klemmt oder du wissen willst, wie es sauberer ginge, dort
-nachsehen. Jedes Kapitel endet mit den passenden Dateipfaden.
+nachsehen. Jedes Kapitel endet mit den passenden Dateipfaden — die beginnen mit `reference/`
+und meinen immer die fertige App, nie dein Projekt.
 
 Jedes Kapitel ist gleich aufgebaut:
 
@@ -62,13 +64,13 @@ Jedes Kapitel ist gleich aufgebaut:
 | --- | --- |
 | [04 — Vue-Reaktivität](04-vue-reactivity.md) | SFC, `ref`, `computed`, `watch`, Template-Syntax |
 | [05 — Komponenten](05-komponenten.md) | Props, Emits, Slots, `v-model` auf eigenen Komponenten |
-| [06 — Domänenmodell](06-domaenenmodell.md) | Typen, Fixtures, Vue-freie Fachlogik |
+| [06 — Domänenmodell](06-domaenenmodell.md) | Typen, Fixtures, die vier Akademien, Vue-freie Fachlogik |
 | [07 — Router](07-router.md) | Routen, Parameter, Guards, Rollenschutz |
 | [08 — Pinia](08-pinia.md) | Anmeldung als Store, `storeToRefs` |
 | [09 — Composables](09-composables.md) | eigene Composables, generisches `useLocalStorage<T>` |
-| [10 — Dozenten-Ansicht](10-dozenten-view.md) | Notentabelle, Entwurf vs. gespeichert, Zufallsgenerator |
-| [11 — Studierenden-Ansicht](11-studierenden-view.md) | eigene Noten, Klassenspiegel, Balkendiagramm |
-| [12 — Styling](12-styling-tailwind.md) | Tailwind 4, Design-Tokens, Dark Mode |
+| [10 — Ansicht der Lehrenden](10-dozenten-view.md) | Bewertungstabelle, Entwurf vs. gespeichert, Zufallsgenerator |
+| [11 — Ansicht der Lernenden](11-studierenden-view.md) | eigene Bewertungen, Vergleich, Balkendiagramm |
+| [12 — Styling und Theming](12-styling-tailwind.md) | Tailwind 4, Design-Tokens, **vier Akademien in einem Attribut** |
 | [13 — Tests](13-tests-vitest.md) | Vitest, Store-Tests, Komponententests |
 | [14 — Build und Deployment](14-build-deployment.md) | Produktions-Build, Containerfile, nginx, CI |
 | [99 — Spickzettel](99-cheatsheet.md) | alles Wichtige auf einer Seite |
@@ -82,8 +84,8 @@ Die Grundlagenkapitel haben ausführbaren Code. Im Ordner `playground/` liegen A
 alle mit `throw new Error('TODO: ...')` beginnen, und Tests, die deine Lösung prüfen.
 
 ```bash
-cd playground
-npm install
+cd tutorial/playground
+npm install           # im DevContainer schon erledigt
 npm test              # prüft deinen Code in uebungen/
 npm run test:watch    # bleibt laufen und prüft bei jedem Speichern
 npm run test:loesungen # prüft die Musterlösungen in loesungen/
@@ -100,5 +102,13 @@ Lesen fühlt sich nach Verstehen an, ist es aber nicht.
   "dev.containers.dockerPath": "podman"
   ```
 - Node brauchst du auf deinem Rechner **nicht**. Alles läuft im Container.
+
+## Ein Wort zum Thema
+
+Die Akademien sind mehr als Dekoration: sie sind eine echte Dimension im Datenmodell. Ein
+Padawan darf keine imperialen Fächer sehen, und der Vergleich zählt nur den eigenen Jahrgang.
+Genau daran lernst du, wie man so eine Trennung in die *Datenstruktur* legt statt in die
+Sorgfalt beim Programmieren — und wie vier komplett verschiedene Designs aus einem einzigen
+HTML-Attribut entstehen.
 
 Los geht es mit [Kapitel 00](00-setup.md).

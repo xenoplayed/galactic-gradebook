@@ -245,5 +245,5 @@ Vue-Templates ohnehin nur die Methoden verwenden kannst.
 
 ## In der Referenz
 
-- `src/lib/grades.ts` — `average`, `distribution`, `passRate` benutzen genau diese Methoden
-- `src/lib/collection.ts` — `sortBy` mit `[...this.#items].sort(...)` und `localeCompare`
+- `reference/src/lib/grades.ts` — `average`, `distribution`, `passRate` benutzen genau diese Methoden
+- `reference/src/lib/collection.ts` — `sortBy` mit `[...this.#items].sort(...)` und `localeCompare`
