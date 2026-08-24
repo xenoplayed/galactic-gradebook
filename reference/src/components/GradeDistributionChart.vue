@@ -42,7 +42,7 @@ const bars = computed(() =>
   <div>
     <div class="flex items-end gap-2 sm:gap-4">
       <div v-for="bar in bars" :key="bar.grade" class="flex flex-1 flex-col items-center gap-2">
-        <span class="text-xs font-medium text-slate-500 tabular-nums dark:text-slate-400">
+        <span class="text-xs font-medium text-ink-soft tabular-nums">
           {{ bar.count }}
         </span>
 
@@ -60,7 +60,7 @@ const bars = computed(() =>
             :class="[
               BAR_CLASSES[bar.grade],
               bar.count === 0 && 'opacity-25',
-              bar.isOwn && 'ring-2 ring-slate-900 dark:ring-white',
+              bar.isOwn && 'ring-2 ring-ink',
             ]"
             :style="{ height: `${Math.max(bar.heightPercent, 2)}%` }"
             role="img"
@@ -70,17 +70,15 @@ const bars = computed(() =>
 
         <span
           class="text-sm font-semibold tabular-nums"
-          :class="
-            bar.isOwn ? 'text-brand-600 dark:text-brand-100' : 'text-slate-600 dark:text-slate-300'
-          "
+          :class="bar.isOwn ? 'text-link' : 'text-ink-soft'"
         >
           {{ bar.grade }}
         </span>
-        <span class="text-xs text-slate-400 tabular-nums">{{ bar.share }} %</span>
+        <span class="text-xs text-ink-soft tabular-nums">{{ bar.share }} %</span>
       </div>
     </div>
 
-    <p v-if="ownGrade !== null" class="mt-4 text-xs text-slate-500 dark:text-slate-400">
+    <p v-if="ownGrade !== null" class="mt-4 text-xs text-ink-soft">
       Der umrandete Balken enthält deine eigene Note. Alle Angaben sind anonym.
     </p>
   </div>

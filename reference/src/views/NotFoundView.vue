@@ -7,7 +7,7 @@ import EmptyState from '@/components/base/EmptyState.vue'
 <template>
   <BaseCard>
     <EmptyState title="Seite nicht gefunden" description="Diese Adresse gibt es hier nicht.">
-      <RouterLink :to="{ name: 'home' }" class="text-sm font-medium text-brand-600 hover:underline">
+      <RouterLink :to="{ name: 'home' }" class="text-sm font-medium text-link hover:underline">
         Zur Startseite
       </RouterLink>
     </EmptyState>

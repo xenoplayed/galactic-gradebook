@@ -1,7 +1,8 @@
 import type { Lecturer } from '@/types/domain'
 
 /**
- * Erfundene Person - jede Aehnlichkeit mit echten Menschen ist Zufall.
+ * Je eine lehrende Person pro Akademie. Login ist der kleingeschriebene
+ * Nachname - siehe `toUsername` in lib/strings.ts.
  *
  * `satisfies` statt `:` als Typannotation: der Compiler prueft die Struktur
  * gegen `Lecturer`, behaelt aber die *engen* Literaltypen bei. Dadurch weiss
@@ -11,10 +12,38 @@ import type { Lecturer } from '@/types/domain'
 export const LECTURERS = [
   {
     id: 'd01',
-    firstName: 'Martina',
-    lastName: 'Weber',
-    academicTitle: 'Prof. Dr.',
-    roleLabel: 'Dozentin',
+    firstName: 'Yoda',
+    lastName: 'Yoda',
+    academicTitle: 'Großmeister des Ordens',
+    roleLabel: 'Großmeister',
     role: 'lecturer',
+    academyId: 'jedi',
+  },
+  {
+    id: 'd02',
+    firstName: 'Darth',
+    lastName: 'Bane',
+    academicTitle: 'Dunkler Lord der Sith',
+    roleLabel: 'Dunkler Lord',
+    role: 'lecturer',
+    academyId: 'sith',
+  },
+  {
+    id: 'd03',
+    firstName: 'Mitth’raw’nuruodo',
+    lastName: 'Thrawn',
+    academicTitle: 'Großadmiral',
+    roleLabel: 'Großadmiral',
+    role: 'lecturer',
+    academyId: 'empire',
+  },
+  {
+    id: 'd04',
+    firstName: 'Leia',
+    lastName: 'Organa',
+    academicTitle: 'Generalin der Allianz',
+    roleLabel: 'Generalin',
+    role: 'lecturer',
+    academyId: 'rebels',
   },
 ] as const satisfies readonly Lecturer[]

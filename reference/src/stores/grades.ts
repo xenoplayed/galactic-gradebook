@@ -1,9 +1,17 @@
 import { computed } from 'vue'
 import { defineStore } from 'pinia'
-import { createGradeBook, students, subjects } from '@/data/seed'
+import { createGradeBook, studentsOf, subjects, subjectsOf } from '@/data/seed'
 import { isGrade } from '@/lib/grades'
 import { useLocalStorage } from '@/composables/useLocalStorage'
-import type { Grade, GradeBook, StudentId, Subject, SubjectId } from '@/types/domain'
+import type {
+  AcademyId,
+  Grade,
+  GradeBook,
+  Student,
+  StudentId,
+  Subject,
+  SubjectId,
+} from '@/types/domain'
 
 const GRADES_KEY = 'datapad.grades'
 
@@ -25,22 +33,42 @@ export const useGradesStore = defineStore('grades', () => {
    */
   const book = useLocalStorage<GradeBook>(GRADES_KEY, createGradeBook(), mergeWithSeed)
 
-  /** Alle Noten eines Fachs in der Reihenfolge der Studierendenliste. */
+  /**
+   * Die Lernenden, die zu einem Fach gehoeren.
+   *
+   * Genau ein Ort, an dem "welches Fach gehoert zu welcher Akademie" steht -
+   * alle vier Zugriffsfunktionen unten gehen hier durch. Unbekanntes Fach
+   * (z.B. eine ausgedachte ID in der URL) ergibt eine leere Liste statt eines
+   * Absturzes.
+   */
+  function rosterFor(subjectId: SubjectId): readonly Student[] {
+    const subject = subjects.byId(subjectId)
+    return subject === undefined ? [] : studentsOf(subject.academyId)
+  }
+
+  /**
+   * Alle Noten eines Fachs, in der Reihenfolge der Lernenden DIESER Akademie.
+   *
+   * `rosterFor` liefert nur die eigene Akademie - dadurch enthaelt der
+   * Klassenspiegel nie Noten aus einem fremden Ausbildungsweg.
+   */
   function gradesForSubject(subjectId: SubjectId): (Grade | null)[] {
     const row = book.value[subjectId] ?? {}
-    return students.map((student) => row[student.id] ?? null)
+    return rosterFor(subjectId).map((student) => row[student.id] ?? null)
   }
 
   /** Rohform derselben Daten - fuer den Entwurf im Eingabeformular. */
   function gradeMapForSubject(subjectId: SubjectId): Record<StudentId, Grade | null> {
     const row = book.value[subjectId] ?? {}
     // Flache Kopie: der Aufrufer soll den Store nicht versehentlich mutieren.
-    return Object.fromEntries(students.map((student) => [student.id, row[student.id] ?? null]))
+    return Object.fromEntries(
+      rosterFor(subjectId).map((student) => [student.id, row[student.id] ?? null]),
+    )
   }
 
-  /** Alle Faecher mit der Note der/des Studierenden. */
-  function gradesForStudent(studentId: StudentId): StudentGradeRow[] {
-    return subjects.map((subject) => ({
+  /** Alle Faecher der eigenen Akademie mit der jeweiligen Note. */
+  function gradesForStudent(studentId: StudentId, academyId: AcademyId): StudentGradeRow[] {
+    return subjectsOf(academyId).map((subject) => ({
       subject,
       grade: book.value[subject.id]?.[studentId] ?? null,
     }))
@@ -60,7 +88,7 @@ export const useGradesStore = defineStore('grades', () => {
   function saveSubject(subjectId: SubjectId, draft: Record<StudentId, Grade | null>): void {
     const row: Record<StudentId, Grade | null> = {}
 
-    for (const student of students) {
+    for (const student of rosterFor(subjectId)) {
       const value = draft[student.id]
       row[student.id] = isGrade(value) ? value : null
     }
@@ -83,11 +111,14 @@ export const useGradesStore = defineStore('grades', () => {
     ),
   )
 
-  const studentCount = computed(() => students.size)
+  /** Wie viele Lernende eine Akademie hat - der Nenner der Fortschrittsanzeige. */
+  function studentCountOf(academyId: AcademyId): number {
+    return studentsOf(academyId).length
+  }
 
   return {
     book,
-    studentCount,
+    studentCountOf,
     gradedCountBySubject,
     gradesForSubject,
     gradeMapForSubject,

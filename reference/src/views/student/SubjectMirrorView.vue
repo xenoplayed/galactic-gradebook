@@ -17,9 +17,21 @@ const props = defineProps<{ subjectId: string }>()
 
 const auth = useAuthStore()
 const gradesStore = useGradesStore()
-const { currentUser } = storeToRefs(auth)
+const { currentUser, academy } = storeToRefs(auth)
 
-const subject = computed(() => subjects.byId(props.subjectId))
+/**
+ * Das Fach - aber nur, wenn es zur eigenen Akademie gehoert.
+ *
+ * `subjects.byId` findet JEDES Fach, auch das einer fremden Akademie. Die
+ * subjectId kommt aus der URL und ist damit frei waehlbar; ohne diese Pruefung
+ * koennte ein Rekrut per Adresszeile den Sith-Vergleich einsehen. Ein fremdes
+ * Fach wird deshalb behandelt wie ein nicht existierendes.
+ */
+const subject = computed(() => {
+  const found = subjects.byId(props.subjectId)
+  if (found === undefined || academy.value === null) return undefined
+  return found.academyId === academy.value.id ? found : undefined
+})
 
 /**
  * Der Klassenspiegel enthaelt NUR die Noten - keine Namen, keine Zuordnung.
@@ -52,43 +64,38 @@ const rank = computed(() => {
     >
       <RouterLink
         :to="{ name: 'student-dashboard' }"
-        class="text-sm font-medium text-brand-600 hover:underline"
+        class="text-sm font-medium text-link hover:underline"
       >
-        Zu meinen Noten
+        Zu meinen Bewertungen
       </RouterLink>
     </EmptyState>
   </BaseCard>
 
   <div v-else class="space-y-6">
     <div>
-      <RouterLink
-        :to="{ name: 'student-dashboard' }"
-        class="text-sm text-slate-500 hover:underline dark:text-slate-400"
-      >
-        ← Meine Noten
+      <RouterLink :to="{ name: 'student-dashboard' }" class="text-sm text-ink-soft hover:underline">
+        ← Meine Bewertungen
       </RouterLink>
       <h1 class="mt-1 text-2xl font-semibold tracking-tight">{{ subject.name }}</h1>
-      <p class="text-sm text-slate-500 dark:text-slate-400">
+      <p class="text-sm text-ink-soft">
         {{ subject.shortName }} · {{ subject.semester }}. Semester · {{ subject.ects }} ECTS
       </p>
     </div>
 
     <div class="grid gap-4 sm:grid-cols-4">
-      <div
-        class="rounded-xl bg-white p-4 ring-1 ring-slate-200 dark:bg-slate-900 dark:ring-slate-800"
-      >
-        <p class="text-xs font-medium tracking-wide text-slate-500 uppercase dark:text-slate-400">
-          Meine Note
-        </p>
+      <div class="rounded-card bg-surface p-4 ring-1 ring-line">
+        <p class="text-xs font-medium tracking-wide text-ink-soft uppercase">Meine Bewertung</p>
         <div class="mt-2 flex items-center gap-3">
           <GradeBadge :grade="ownGrade" highlight />
-          <span class="text-sm text-slate-600 dark:text-slate-300">
-            {{ ownGrade === null ? 'noch nicht benotet' : gradeLabel(ownGrade) }}
+          <span class="text-sm text-ink-soft">
+            {{
+              ownGrade === null ? 'noch nicht bewertet' : gradeLabel(ownGrade, academy?.gradeLabels)
+            }}
           </span>
         </div>
       </div>
-      <StatTile label="Kursdurchschnitt" :value="formatAverage(stats.average.value)" />
-      <StatTile label="Benotet" :value="`${stats.count.value} / ${stats.total.value}`" />
+      <StatTile label="Durchschnitt" :value="formatAverage(stats.average.value)" />
+      <StatTile label="Bewertet" :value="`${stats.count.value} / ${stats.total.value}`" />
       <StatTile
         label="Platzierung"
         :value="rank === null ? '–' : `${rank.position}. von ${rank.of}`"
@@ -96,11 +103,14 @@ const rank = computed(() => {
       />
     </div>
 
-    <BaseCard title="Klassenspiegel" subtitle="Verteilung aller Noten in diesem Fach – anonym.">
+    <BaseCard
+      title="Vergleich"
+      :subtitle="`Verteilung aller Bewertungen unter den ${academy?.studentPlural ?? 'Lernenden'} – anonym.`"
+    >
       <EmptyState
         v-if="stats.isEmpty.value"
-        title="Noch keine Noten in diesem Fach"
-        description="Der Klassenspiegel erscheint, sobald benotet wurde."
+        title="Hier wurde noch nicht bewertet"
+        description="Der Vergleich erscheint, sobald Bewertungen vorliegen."
       />
       <GradeDistributionChart
         v-else

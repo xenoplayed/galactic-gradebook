@@ -1,7 +1,9 @@
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue'
 import { RouterLink, onBeforeRouteLeave } from 'vue-router'
-import { students, subjects } from '@/data/seed'
+import { storeToRefs } from 'pinia'
+import { studentsOf, subjects } from '@/data/seed'
+import { useAuthStore } from '@/stores/auth'
 import { useGradesStore } from '@/stores/grades'
 import { useGradeStats } from '@/composables/useGradeStats'
 import { useRandomGrades } from '@/composables/useRandomGrades'
@@ -18,11 +20,35 @@ import StatTile from '@/components/StatTile.vue'
 // Kommt aus der Route (`props: true` im Router).
 const props = defineProps<{ subjectId: string }>()
 
+const auth = useAuthStore()
+const { academy } = storeToRefs(auth)
 const gradesStore = useGradesStore()
 const { randomGradesFor } = useRandomGrades()
 
-const subject = computed(() => subjects.byId(props.subjectId))
-const roster = students.sortBy((student) => student.lastName).all()
+/**
+ * Das Fach - aber nur, wenn es zur eigenen Akademie gehoert.
+ *
+ * `subjects.byId` findet JEDES Fach, auch das einer fremden Akademie. Die
+ * subjectId kommt aus der URL und ist damit frei waehlbar; ohne diese Pruefung
+ * koennte ein Rekrut per Adresszeile den Sith-Vergleich einsehen. Ein fremdes
+ * Fach wird deshalb behandelt wie ein nicht existierendes.
+ */
+const subject = computed(() => {
+  const found = subjects.byId(props.subjectId)
+  if (found === undefined || academy.value === null) return undefined
+  return found.academyId === academy.value.id ? found : undefined
+})
+
+/**
+ * Die Lernenden DIESES Fachs - also die der Akademie, zu der es gehoert.
+ *
+ * Ein `computed`, kein konstantes Array wie vorher: beim Fachwechsel kann sich
+ * die Liste aendern. (Die Route-Guards verhindern zwar, dass jemand ein Fach
+ * einer fremden Akademie oeffnet - aber die Liste haengt trotzdem am Fach.)
+ */
+const roster = computed(() =>
+  subject.value === undefined ? [] : studentsOf(subject.value.academyId),
+)
 
 /**
  * Der Entwurf ist eine LOKALE Kopie, kein Store-Zustand.
@@ -46,24 +72,24 @@ function loadDraft() {
 watch(() => props.subjectId, loadDraft, { immediate: true })
 
 /** Noten in Listenreihenfolge - Eingabe fuer die Statistik. */
-const draftGrades = computed(() => roster.map((student) => draft.value[student.id] ?? null))
+const draftGrades = computed(() => roster.value.map((student) => draft.value[student.id] ?? null))
 
 const stats = useGradeStats(draftGrades)
 
 /** Weicht der Entwurf vom gespeicherten Stand ab? */
 const isDirty = computed(() =>
-  roster.some(
+  roster.value.some(
     (student) => draft.value[student.id] !== gradesStore.gradeOf(props.subjectId, student.id),
   ),
 )
 
 function fillRandom() {
   // Neues Objekt statt Einzelzuweisungen: eine Zuweisung, ein Render.
-  draft.value = randomGradesFor(roster.map((student) => student.id))
+  draft.value = randomGradesFor(roster.value.map((student) => student.id))
 }
 
 function clearAll() {
-  draft.value = Object.fromEntries(roster.map((student) => [student.id, null]))
+  draft.value = Object.fromEntries(roster.value.map((student) => [student.id, null]))
 }
 
 function save() {
@@ -82,7 +108,7 @@ onBeforeRouteLeave(() => {
 </script>
 
 <template>
-  <div v-if="subject === undefined">
+  <div v-if="subject === undefined || academy === null">
     <BaseCard>
       <EmptyState
         title="Fach nicht gefunden"
@@ -90,7 +116,7 @@ onBeforeRouteLeave(() => {
       >
         <RouterLink
           :to="{ name: 'lecturer-subjects' }"
-          class="text-sm font-medium text-brand-600 hover:underline"
+          class="text-sm font-medium text-link hover:underline"
         >
           Zur Fächerliste
         </RouterLink>
@@ -100,20 +126,17 @@ onBeforeRouteLeave(() => {
 
   <div v-else class="space-y-6">
     <div>
-      <RouterLink
-        :to="{ name: 'lecturer-subjects' }"
-        class="text-sm text-slate-500 hover:underline dark:text-slate-400"
-      >
+      <RouterLink :to="{ name: 'lecturer-subjects' }" class="text-sm text-ink-soft hover:underline">
         ← Fächer
       </RouterLink>
       <h1 class="mt-1 text-2xl font-semibold tracking-tight">{{ subject.name }}</h1>
-      <p class="text-sm text-slate-500 dark:text-slate-400">
+      <p class="text-sm text-ink-soft">
         {{ subject.shortName }} · {{ subject.semester }}. Semester · {{ subject.ects }} ECTS
       </p>
     </div>
 
     <div class="grid gap-4 sm:grid-cols-3">
-      <StatTile label="Benotet" :value="`${stats.count.value} / ${stats.total.value}`" />
+      <StatTile label="Bewertet" :value="`${stats.count.value} / ${stats.total.value}`" />
       <StatTile label="Durchschnitt" :value="formatAverage(stats.average.value)" />
       <StatTile
         label="Bestanden"
@@ -134,29 +157,26 @@ onBeforeRouteLeave(() => {
         </div>
       </template>
 
-      <div
-        v-if="isDirty"
-        class="mb-4 rounded-lg bg-amber-50 px-3 py-2 text-sm text-amber-800 dark:bg-amber-950/50 dark:text-amber-200"
-      >
+      <div v-if="isDirty" class="mb-4 rounded-card bg-amber-50 px-3 py-2 text-sm text-amber-800">
         Ungespeicherte Änderungen.
       </div>
       <div
         v-else-if="savedAt"
-        class="mb-4 rounded-lg bg-emerald-50 px-3 py-2 text-sm text-emerald-800 dark:bg-emerald-950/50 dark:text-emerald-200"
+        class="mb-4 rounded-card bg-emerald-50 px-3 py-2 text-sm text-emerald-800"
       >
         Gespeichert um {{ savedAt.toLocaleTimeString('de-DE') }}.
       </div>
 
       <BaseTable>
         <template #head>
-          <th class="py-2 pr-4 font-medium">Studierende:r</th>
+          <th class="py-2 pr-4 font-medium">{{ academy.studentLabel }}</th>
           <th class="py-2 pr-4 font-medium">Matrikelnummer</th>
           <th class="py-2 font-medium">Note</th>
         </template>
 
         <tr v-for="student in roster" :key="student.id">
           <td class="py-2 pr-4 font-medium">{{ student.lastName }}, {{ student.firstName }}</td>
-          <td class="py-2 pr-4 text-slate-500 tabular-nums dark:text-slate-400">
+          <td class="py-2 pr-4 text-ink-soft tabular-nums">
             {{ student.matriculationNumber }}
           </td>
           <td class="py-2">
@@ -169,16 +189,14 @@ onBeforeRouteLeave(() => {
             -->
             <GradeInput
               :model-value="draft[student.id] ?? null"
-              :label="`Note für ${student.firstName} ${student.lastName}`"
+              :label="`Bewertung für ${student.firstName} ${student.lastName}`"
               @update:model-value="(value) => (draft[student.id] = value)"
             />
           </td>
         </tr>
       </BaseTable>
 
-      <div
-        class="mt-4 flex flex-wrap items-center gap-2 text-xs text-slate-500 dark:text-slate-400"
-      >
+      <div class="mt-4 flex flex-wrap items-center gap-2 text-xs text-ink-soft">
         <BaseBadge v-for="grade in GRADES" :key="grade" tone="neutral">
           {{ grade }}× {{ stats.distribution.value[grade] }}
         </BaseBadge>

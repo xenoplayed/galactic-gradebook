@@ -13,11 +13,11 @@
   <div class="-mx-5 overflow-x-auto px-5">
     <table class="w-full min-w-lg border-collapse text-sm">
       <thead>
-        <tr class="border-b border-slate-200 text-left dark:border-slate-800">
+        <tr class="border-b border-line text-left">
           <slot name="head" />
         </tr>
       </thead>
-      <tbody class="divide-y divide-slate-100 dark:divide-slate-800">
+      <tbody class="divide-y divide-line">
         <slot />
       </tbody>
     </table>

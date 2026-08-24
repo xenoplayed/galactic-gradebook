@@ -63,11 +63,9 @@ const describedBy = computed(() => (invalid.value ? hintId : undefined))
       :aria-invalid="invalid"
       :aria-describedby="describedBy"
       placeholder="–"
-      class="h-9 w-14 rounded-lg border-0 bg-white text-center text-sm font-semibold tabular-nums text-slate-900 ring-1 ring-slate-300 focus:ring-2 focus:ring-brand-500 dark:bg-slate-800 dark:text-slate-100 dark:ring-slate-600"
-      :class="invalid && 'ring-red-500 dark:ring-red-500'"
+      class="h-9 w-14 rounded-card border-0 bg-surface text-center text-sm font-semibold tabular-nums text-ink ring-1 ring-line focus:ring-2 focus:ring-brand-500"
+      :class="invalid && 'ring-red-500'"
     />
-    <span v-if="invalid" :id="hintId" class="mt-1 text-xs text-red-600 dark:text-red-400">
-      nur 1–5
-    </span>
+    <span v-if="invalid" :id="hintId" class="mt-1 text-xs text-red-600"> nur 1–5 </span>
   </div>
 </template>

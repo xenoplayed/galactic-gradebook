@@ -1,9 +1,9 @@
 import { computed, ref } from 'vue'
 import { defineStore } from 'pinia'
-import { users } from '@/data/seed'
+import { academies, users } from '@/data/seed'
 import { toUsername } from '@/lib/strings'
 import { useLocalStorage } from '@/composables/useLocalStorage'
-import type { User } from '@/types/domain'
+import type { Academy, User } from '@/types/domain'
 
 const SESSION_KEY = 'datapad.session'
 
@@ -30,6 +30,18 @@ export const useAuthStore = defineStore('auth', () => {
   const currentUser = computed<User | null>(() => {
     if (currentUserId.value === null) return null
     return users.byId(currentUserId.value) ?? null
+  })
+
+  /**
+   * Die Akademie des angemeldeten Users - der Dreh- und Angelpunkt der App.
+   *
+   * Daraus folgt alles Weitere: welche Faecher sichtbar sind, wie Lernende
+   * heissen, wie die Noten benannt werden und welches Design gilt. Deshalb
+   * abgeleitet und nicht gespeichert: eine Quelle der Wahrheit.
+   */
+  const academy = computed<Academy | null>(() => {
+    const user = currentUser.value
+    return user === null ? null : (academies.byId(user.academyId) ?? null)
   })
 
   const isAuthenticated = computed(() => currentUser.value !== null)
@@ -78,6 +90,7 @@ export const useAuthStore = defineStore('auth', () => {
   return {
     currentUserId,
     currentUser,
+    academy,
     error,
     isAuthenticated,
     role,

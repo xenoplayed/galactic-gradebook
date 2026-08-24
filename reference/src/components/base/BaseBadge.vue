@@ -3,11 +3,20 @@ type Tone = 'neutral' | 'success' | 'warning' | 'info'
 
 const { tone = 'neutral' } = defineProps<{ tone?: Tone }>()
 
+/**
+ * Die Toene kommen aus Theme-Tokens, nicht aus festen Tailwind-Farben.
+ * Dadurch stimmt der Kontrast in allen vier Akademien - eine helle
+ * Emerald-Pille auf dem fast schwarzen Korriban-Hintergrund saehe aus wie ein
+ * aufgeklebter Sticker.
+ *
+ * `/12` ist die Deckkraft: dieselbe Farbe einmal flaechig gedaempft als
+ * Hintergrund, einmal voll als Schrift.
+ */
 const TONE_CLASSES: Record<Tone, string> = {
-  neutral: 'bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300',
-  success: 'bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300',
-  warning: 'bg-amber-100 text-amber-800 dark:bg-amber-950 dark:text-amber-300',
-  info: 'bg-brand-100 text-brand-700 dark:bg-brand-700/25 dark:text-brand-100',
+  neutral: 'bg-ink/10 text-ink-soft',
+  success: 'bg-ok/12 text-ok',
+  warning: 'bg-warn/12 text-warn',
+  info: 'bg-link/12 text-link',
 }
 </script>
 

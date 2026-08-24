@@ -4,33 +4,193 @@
   Tailwind 4 wird CSS-first konfiguriert: kein tailwind.config.js mehr.
   Alles in @theme wird zu CSS-Custom-Properties UND zu Utility-Klassen,
   d.h. --color-grade-1 erzeugt automatisch bg-grade-1, text-grade-1, ...
+
+  Entscheidend fuer das Theming weiter unten: Tailwind gibt die Utilities als
+  Verweis aus, nicht als eingesetzten Wert -
+
+      .bg-brand-600 { background-color: var(--color-brand-600) }
+
+  Deshalb genuegt es, die Custom Property unter einem Selektor neu zu belegen,
+  um jede Verwendung auf der Seite umzufaerben.
 */
 @theme {
-  --color-brand-50: oklch(0.97 0.02 255);
-  --color-brand-100: oklch(0.93 0.04 255);
-  --color-brand-500: oklch(0.58 0.16 255);
-  --color-brand-600: oklch(0.51 0.16 255);
-  --color-brand-700: oklch(0.44 0.14 255);
+  /* Neutrale Grundwerte - gelten auf dem Login-Bildschirm, solange keine
+     Akademie gewaehlt ist. */
+  --color-brand-50: oklch(0.97 0.01 250);
+  --color-brand-100: oklch(0.93 0.02 250);
+  --color-brand-500: oklch(0.6 0.1 250);
+  --color-brand-600: oklch(0.52 0.1 250);
+  --color-brand-700: oklch(0.44 0.09 250);
 
-  /* Notenfarben: 1 = sehr gut (gruen) bis 5 = nicht bestanden (rot) */
+  /* Flaechen und Text. Werden je Akademie ueberschrieben. */
+  --color-surface: oklch(0.99 0 0);
+  --color-surface-2: oklch(0.97 0.003 250);
+  --color-line: oklch(0.9 0.005 250);
+  --color-ink: oklch(0.25 0.02 250);
+  --color-ink-soft: oklch(0.52 0.02 250);
+
+  /*
+    Link- und Statusfarben getrennt von --color-brand-*.
+    Grund: brand-600 muss WEISSE Schrift tragen koennen (Buttons) und
+    gleichzeitig als Textfarbe auf der Flaeche lesbar sein. Das geht nicht mit
+    einem Wert. Auf dunklen Akademien liegen diese Tokens deutlich heller.
+  */
+  --color-link: oklch(0.5 0.1 250);
+  --color-ok: oklch(0.45 0.13 155);
+  --color-warn: oklch(0.5 0.12 70);
+
+  /* Notenfarben: 1 = beste bis 5 = schlechteste */
   --color-grade-1: oklch(0.65 0.16 155);
   --color-grade-2: oklch(0.72 0.16 130);
   --color-grade-3: oklch(0.78 0.15 85);
   --color-grade-4: oklch(0.7 0.16 55);
   --color-grade-5: oklch(0.62 0.19 25);
 
-  --font-sans: 'Inter', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  /* Form und Schrift gehoeren genauso zur Identitaet wie die Farbe. */
+  --radius-card: 0.75rem;
+  --font-display: ui-sans-serif, system-ui, sans-serif;
+  --font-sans: ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+
+  /* Wie stark Ueberschriften gesperrt werden - beim Imperium deutlich. */
+  --tracking-display: 0em;
 }
 
+/* ===================================================================
+   Die vier Akademien.
+
+   Jede belegt dieselben Properties neu. Unterschieden wird bewusst auf
+   mehreren Ebenen gleichzeitig - Farbe allein reicht nicht, um Imperium
+   und Sith auseinanderzuhalten.
+   =================================================================== */
+
+/* --- Jedi: hell, blaugruen, weich. Ruhig und offen. ----------------- */
+[data-academy='jedi'] {
+  --color-brand-50: oklch(0.96 0.03 195);
+  --color-brand-100: oklch(0.91 0.06 195);
+  --color-brand-500: oklch(0.66 0.12 195);
+  --color-brand-600: oklch(0.57 0.12 195);
+  --color-brand-700: oklch(0.47 0.1 195);
+
+  --color-surface: oklch(0.99 0.005 195);
+  --color-surface-2: oklch(0.96 0.012 195);
+  --color-line: oklch(0.88 0.02 195);
+  --color-ink: oklch(0.26 0.03 220);
+  --color-ink-soft: oklch(0.52 0.025 210);
+
+  --color-link: oklch(0.5 0.12 200);
+  --color-ok: oklch(0.45 0.13 155);
+  --color-warn: oklch(0.5 0.12 70);
+
+  --radius-card: 1rem;
+  --font-display: ui-sans-serif, system-ui, sans-serif;
+  --tracking-display: -0.015em;
+}
+
+/* --- Sith: tiefschwarz, Karmesin ins Purpur, Serif. Okkult, gluehend. */
+[data-academy='sith'] {
+  --color-brand-50: oklch(0.32 0.09 12);
+  --color-brand-100: oklch(0.38 0.13 12);
+  --color-brand-500: oklch(0.55 0.21 12);
+  --color-brand-600: oklch(0.48 0.22 10);
+  --color-brand-700: oklch(0.4 0.2 8);
+
+  /* Fast schwarz mit einem Stich ins Rote - NICHT das Stahlgrau des Imperiums. */
+  --color-surface: oklch(0.16 0.018 15);
+  --color-surface-2: oklch(0.21 0.025 15);
+  --color-line: oklch(0.31 0.045 12);
+  --color-ink: oklch(0.94 0.012 20);
+  --color-ink-soft: oklch(0.68 0.03 15);
+
+  /* Deutlich heller als brand-600: auf fast schwarzem Grund muss Text
+     mindestens 4,5:1 erreichen. Gemessen, nicht geschaetzt. */
+  --color-link: oklch(0.74 0.16 18);
+  --color-ok: oklch(0.78 0.15 158);
+  --color-warn: oklch(0.83 0.13 80);
+
+  --radius-card: 0.125rem;
+  --font-display: ui-serif, Georgia, 'Times New Roman', serif;
+  --tracking-display: 0.01em;
+}
+
+/* --- Imperium: kaltes Stahlgrau, Signalrot, Radius 0, Versalien. ---- */
+[data-academy='empire'] {
+  --color-brand-50: oklch(0.36 0.02 250);
+  --color-brand-100: oklch(0.44 0.03 250);
+  --color-brand-500: oklch(0.58 0.21 27);
+  --color-brand-600: oklch(0.52 0.23 27);
+  --color-brand-700: oklch(0.44 0.21 27);
+
+  /* Neutrales Grau, komplett ohne Rotstich - der Kontrast zu Korriban. */
+  --color-surface: oklch(0.22 0.004 250);
+  --color-surface-2: oklch(0.28 0.005 250);
+  --color-line: oklch(0.4 0.008 250);
+  --color-ink: oklch(0.95 0.002 250);
+  --color-ink-soft: oklch(0.7 0.006 250);
+
+  --color-link: oklch(0.76 0.15 30);
+  --color-ok: oklch(0.78 0.15 158);
+  --color-warn: oklch(0.83 0.13 80);
+
+  --radius-card: 0;
+  --font-display: ui-monospace, 'SF Mono', 'Cascadia Mono', Menlo, monospace;
+  --tracking-display: 0.12em;
+}
+
+/* --- Rebellen: warm, Orange und Sand, mittlere Rundung. ------------- */
+[data-academy='rebels'] {
+  --color-brand-50: oklch(0.96 0.035 65);
+  --color-brand-100: oklch(0.9 0.07 65);
+  --color-brand-500: oklch(0.7 0.17 55);
+  --color-brand-600: oklch(0.62 0.18 50);
+  --color-brand-700: oklch(0.52 0.16 45);
+
+  --color-surface: oklch(0.98 0.012 75);
+  --color-surface-2: oklch(0.95 0.025 75);
+  --color-line: oklch(0.87 0.035 70);
+  --color-ink: oklch(0.28 0.035 55);
+  --color-ink-soft: oklch(0.5 0.04 60);
+
+  --color-link: oklch(0.5 0.16 45);
+  --color-ok: oklch(0.45 0.13 155);
+  --color-warn: oklch(0.5 0.12 70);
+
+  --radius-card: 0.5rem;
+  --font-display: ui-sans-serif, system-ui, sans-serif;
+  --tracking-display: 0.005em;
+}
+
+/* Sith und Imperium bringen ihre Dunkelheit selbst mit - dort darf der
+   Browser nicht zusaetzlich in den Dark Mode schalten. */
 html {
-  color-scheme: light dark;
+  color-scheme: light;
+}
+html[data-academy='sith'],
+html[data-academy='empire'] {
+  color-scheme: dark;
 }
 
 body {
-  @apply bg-slate-50 text-slate-900 antialiased dark:bg-slate-950 dark:text-slate-100;
+  background-color: var(--color-surface-2);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Ueberschriften tragen den Schriftcharakter der Akademie. */
+h1,
+h2 {
+  font-family: var(--font-display);
+  letter-spacing: var(--tracking-display);
+}
+
+/* Das Imperium schreibt in Versalien. Nur dort. */
+[data-academy='empire'] h1,
+[data-academy='empire'] h2 {
+  text-transform: uppercase;
 }
 
 /* Sichtbarer Fokus fuer Tastaturnutzung - nicht wegoptimieren. */
 :focus-visible {
-  @apply outline-2 outline-offset-2 outline-brand-500;
+  outline: 2px solid var(--color-brand-500);
+  outline-offset: 2px;
 }

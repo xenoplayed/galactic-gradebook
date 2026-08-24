@@ -3,7 +3,8 @@ import { GRADES, type Grade } from '@/types/domain'
 /** Verteilung: wie oft kommt jede Note vor. */
 export type GradeDistribution = Record<Grade, number>
 
-const GRADE_LABELS: Record<Grade, string> = {
+/** Neutrale Bezeichnungen - gelten, solange keine Akademie im Spiel ist. */
+const DEFAULT_GRADE_LABELS: Record<Grade, string> = {
   1: 'sehr gut',
   2: 'gut',
   3: 'befriedigend',
@@ -38,8 +39,19 @@ export function parseGrade(input: string): Grade | null | undefined {
   return isGrade(value) ? value : undefined
 }
 
-export function gradeLabel(grade: Grade): string {
-  return GRADE_LABELS[grade]
+/**
+ * Die Bezeichnung zu einer Note.
+ *
+ * Der zweite Parameter kommt aus der Akademie (`academy.gradeLabels`), damit
+ * eine 5 bei den Jedi "Von der dunklen Seite versucht" heisst und im Imperium
+ * "Nachschulung angeordnet". Die Funktion bleibt trotzdem rein: sie kennt
+ * keine Akademie, sie bekommt nur eine Tabelle gereicht.
+ */
+export function gradeLabel(
+  grade: Grade,
+  labels: Record<Grade, string> = DEFAULT_GRADE_LABELS,
+): string {
+  return labels[grade]
 }
 
 /** Anzeige einer moeglicherweise fehlenden Note. */

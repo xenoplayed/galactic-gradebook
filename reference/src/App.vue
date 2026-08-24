@@ -1,6 +1,11 @@
 <script setup lang="ts">
 import { RouterView } from 'vue-router'
 import AppNav from '@/components/AppNav.vue'
+import { useAcademyTheme } from '@/composables/useAcademyTheme'
+
+// Setzt data-academy am <html> und schaltet damit die gesamte Palette um.
+// Einmal hier aufgerufen, gilt es fuer die ganze App.
+useAcademyTheme()
 </script>
 
 <template>
