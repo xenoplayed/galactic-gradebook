@@ -31,4 +31,4 @@ keiner Verbindung zu Lucasfilm Ltd. oder The Walt Disney Company. „Star Wars"
 sowie die verwendeten Figuren- und Ortsnamen sind Marken ihrer jeweiligen
 Inhaber und werden hier ausschließlich als Testdaten verwendet.
 
-Der Code steht unter der MIT-Lizenz (siehe `LICENSE`).
+Code und Texte stehen unter CC0 1.0 (siehe `LICENSE`) — gemeinfrei, ohne Bedingungen.
