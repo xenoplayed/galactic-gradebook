@@ -28,7 +28,17 @@ export function toUsername(lastName: string): string {
     .replace(/[^a-z0-9]/g, '')
 }
 
-/** "Greta Müller" - fuer Anzeigen, in denen der volle Name gebraucht wird. */
+/**
+ * Der volle Name fuer Anzeigen: "Ahsoka Tano".
+ *
+ * Nicht jede Person hat zwei Namen. Yoda und Maul fuehren in den Stammdaten
+ * denselben Vor- und Nachnamen, weil das Datenmodell beides verlangt - ohne
+ * diese Pruefung stuende in der Oberflaeche "Yoda Yoda".
+ *
+ * Das ist kein Star-Wars-Sonderfall: Mononyme gibt es real genauso, und
+ * Namensannahmen sind eine der haeufigsten Fehlerquellen in Software.
+ */
 export function fullName(person: { firstName: string; lastName: string }): string {
+  if (person.firstName === person.lastName) return person.lastName
   return `${person.firstName} ${person.lastName}`
 }

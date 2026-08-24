@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import {
   academies,
+  accessEntriesFor,
   createGradeBook,
   lecturers,
   students,
@@ -82,5 +83,50 @@ describe('createGradeBook', () => {
 
     expect(first).not.toBe(second)
     expect(first).toEqual(second)
+  })
+})
+
+describe('accessEntriesFor', () => {
+  it('listet die lehrende Person zuerst, dann zehn Lernende', () => {
+    const entries = accessEntriesFor('jedi')
+
+    expect(entries).toHaveLength(11)
+    expect(entries[0]?.isLecturer).toBe(true)
+    expect(entries.slice(1).every((entry) => !entry.isLecturer)).toBe(true)
+  })
+
+  it('haengt die Bezeichnung nur an Lehrende', () => {
+    const [lecturer, ...students] = accessEntriesFor('jedi')
+
+    expect(lecturer?.display).toBe('Yoda (Großmeister)')
+    // Bei zehn Lernenden waere "(Padawan)" zehnmal dasselbe Wort.
+    expect(students.every((entry) => !entry.display.includes('('))).toBe(true)
+  })
+
+  it('uebernimmt NUR den Benutzernamen, nicht die Anzeige', () => {
+    const [lecturer] = accessEntriesFor('jedi')
+
+    expect(lecturer?.display).toContain('Großmeister')
+    expect(lecturer?.login).toBe('yoda')
+  })
+
+  it('normalisiert Akzente im Benutzernamen', () => {
+    const sabe = accessEntriesFor('rebels').find((entry) => entry.display.includes('Sabé'))
+
+    expect(sabe?.login).toBe('sabe')
+  })
+
+  it('doppelt Mononyme nicht', () => {
+    // Maul fuehrt denselben Vor- und Nachnamen - "Maul Maul" waere falsch.
+    const maul = accessEntriesFor('sith').find((entry) => entry.login === 'maul')
+
+    expect(maul?.display).toBe('Maul')
+  })
+
+  it('mischt keine Akademien', () => {
+    const sithLogins = accessEntriesFor('sith').map((entry) => entry.login)
+
+    expect(sithLogins).toContain('bane')
+    expect(sithLogins).not.toContain('yoda')
   })
 })

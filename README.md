@@ -37,16 +37,24 @@ läuft im Container.
 
 ### Zugänge
 
-Benutzername und Passwort sind jeweils der **kleingeschriebene Nachname**.
+Auf dem Anmeldebildschirm wählst du oben eine Akademie — das **Erscheinungsbild wechselt
+sofort**, noch bevor du angemeldet bist. Der Knopf *Zugänge anzeigen* listet alle Personen der
+gewählten Akademie; ein Klick trägt Benutzername und Passwort ein.
 
-| Akademie | Lehrende | Beispiel Lernende |
+Benutzername und Passwort sind jeweils der **kleingeschriebene Nachname**:
+
+| Akademie | Lehrende | Lernende (Auswahl) |
 | --- | --- | --- |
 | Jedi-Tempel Coruscant | `yoda` | `tano`, `kestis`, `bridger` |
 | Sith-Akademie Korriban | `bane` | `maul`, `ventress`, `talon` |
 | Imperiale Akademie Carida | `thrawn` | `versio`, `ree`, `sloane` |
 | Allianz-Basis Yavin IV | `organa` | `syndulla`, `wren`, `andor` |
 
-Auf dem Anmeldebildschirm genügt ein Klick auf eine Akademiekarte, um den Zugang einzutragen.
+Die Auswahl oben ist reine Vorschau: Du kannst dich jederzeit als jemand aus einer anderen
+Akademie anmelden — danach gilt deren Design.
+
+Alle Bewertungen liegen nur im Browser. Unter dem Formular setzt *Testdaten zurücksetzen*
+alles auf den Auslieferungszustand zurück.
 
 ## Womit gebaut
 

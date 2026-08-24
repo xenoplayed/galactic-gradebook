@@ -1,37 +1,36 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { storeToRefs } from 'pinia'
 import { useAuthStore } from '@/stores/auth'
+import { useGradesStore } from '@/stores/grades'
+import { useAcademyPreview } from '@/composables/useAcademyTheme'
 import { homeRouteFor } from '@/router'
-import { academies, lecturers } from '@/data/seed'
-import { toUsername } from '@/lib/strings'
+import { academies, accessEntriesFor } from '@/data/seed'
 import BaseButton from '@/components/base/BaseButton.vue'
 import BaseCard from '@/components/base/BaseCard.vue'
+import BaseDialog from '@/components/base/BaseDialog.vue'
 import BaseInput from '@/components/base/BaseInput.vue'
 import AcademyEmblem from '@/components/AcademyEmblem.vue'
 
 const auth = useAuthStore()
+const gradesStore = useGradesStore()
 const router = useRouter()
 const route = useRoute()
 const { error } = storeToRefs(auth)
 
+// Geteilter Zustand aus dem Composable: dieselbe Auswahl, die das Theme
+// umschaltet. Deshalb reicht hier ein v-model - das Umfaerben passiert
+// woanders von selbst.
+const { previewAcademyId } = useAcademyPreview()
+
 const username = ref('')
 const password = ref('')
+const accessOpen = ref(false)
 
-/**
- * Je Akademie die lehrende Person - daraus entsteht die Liste der Testzugaenge.
- * Abgeleitet statt abgeschrieben: kommt eine Akademie dazu, steht sie hier
- * automatisch mit drin.
- */
-const showcase = academies.map((academy) => {
-  const lecturer = lecturers.find((person) => person.academyId === academy.id)
-  return {
-    academy,
-    lecturer,
-    login: lecturer === undefined ? '' : toUsername(lecturer.lastName),
-  }
-})
+const selectedAcademy = computed(() => academies.require(previewAcademyId.value))
+
+const accessEntries = computed(() => accessEntriesFor(previewAcademyId.value))
 
 function handleSubmit() {
   if (!auth.login(username.value, password.value)) {
@@ -51,11 +50,19 @@ function handleSubmit() {
   router.push(homeRouteFor(auth.role!))
 }
 
-/** Bequemlichkeit: Klick auf eine Akademiekarte fuellt den Testzugang aus. */
-function useLogin(name: string) {
-  username.value = name
-  password.value = name
+/** Uebernimmt einen Zugang aus der Liste in beide Felder. */
+function pickLogin(login: string) {
+  username.value = login
+  password.value = login
   auth.clearError()
+  accessOpen.value = false
+}
+
+function resetData() {
+  const confirmed = window.confirm(
+    'Alle eingetragenen Bewertungen werden auf den Auslieferungszustand zurückgesetzt. Fortfahren?',
+  )
+  if (confirmed) gradesStore.resetAll()
 }
 </script>
 
@@ -67,6 +74,46 @@ function useLogin(name: string) {
         Ausbildungsakten der Galaxis · vier Akademien, ein Zugang
       </p>
     </div>
+
+    <!--
+      Echte Radio-Buttons statt <button role="radio">: Gruppierung,
+      Pfeiltastennavigation und Fokusverhalten kommen damit vom Browser.
+      Sichtbar ist nur das <label>, der Eingabeknopf liegt per sr-only daneben.
+    -->
+    <fieldset>
+      <legend class="mb-3 w-full text-center text-sm font-medium text-ink-soft">
+        Akademie wählen — das Erscheinungsbild wechselt sofort
+      </legend>
+
+      <div class="grid gap-3 sm:grid-cols-2">
+        <label
+          v-for="academy in academies.all()"
+          :key="academy.id"
+          class="flex cursor-pointer items-start gap-3 rounded-card bg-surface p-4 ring-1 transition-colors"
+          :class="
+            previewAcademyId === academy.id ? 'ring-2 ring-link' : 'ring-line hover:bg-surface-2'
+          "
+        >
+          <input
+            v-model="previewAcademyId"
+            type="radio"
+            name="academy"
+            :value="academy.id"
+            class="sr-only"
+          />
+          <span
+            class="mt-0.5 block h-8 w-8 shrink-0"
+            :class="previewAcademyId === academy.id ? 'text-link' : 'text-ink-soft'"
+          >
+            <AcademyEmblem :academy-id="academy.id" />
+          </span>
+          <span class="min-w-0">
+            <span class="block font-medium">{{ academy.name }}</span>
+            <span class="mt-0.5 block text-xs text-ink-soft italic">„{{ academy.motto }}"</span>
+          </span>
+        </label>
+      </div>
+    </fieldset>
 
     <div class="mx-auto max-w-md">
       <BaseCard title="Anmelden" subtitle="Benutzername und Passwort sind jeweils der Nachname.">
@@ -92,49 +139,41 @@ function useLogin(name: string) {
           />
           <BaseButton type="submit" block>Anmelden</BaseButton>
         </form>
+
+        <div class="mt-4 border-t border-line pt-4">
+          <BaseButton variant="secondary" block @click="accessOpen = true">
+            Zugänge von {{ selectedAcademy.shortName }} anzeigen
+          </BaseButton>
+        </div>
       </BaseCard>
+
+      <p class="mt-6 text-center text-xs text-ink-soft">
+        Alle Bewertungen liegen nur in diesem Browser.
+        <button type="button" class="underline hover:text-ink" @click="resetData">
+          Testdaten zurücksetzen
+        </button>
+      </p>
     </div>
 
-    <section>
-      <h2 class="text-center text-sm font-medium text-ink-soft">
-        Die vier Akademien — zum Ausprobieren anklicken
-      </h2>
-
-      <div class="mt-4 grid gap-3 sm:grid-cols-2">
-        <button
-          v-for="entry in showcase"
-          :key="entry.academy.id"
-          type="button"
-          class="rounded-card bg-surface p-4 text-left ring-1 ring-line transition-colors hover:bg-surface-2"
-          @click="useLogin(entry.login)"
-        >
-          <div class="flex items-start gap-3">
-            <!--
-              Das Wasserzeichen traegt hier NICHT die Akademiefarbe: solange
-              niemand angemeldet ist, gilt die neutrale Palette. Sonst saehe der
-              Login-Bildschirm nach vier gleichzeitigen Themes aus.
-            -->
-            <span class="mt-0.5 block h-8 w-8 shrink-0 text-brand-600">
-              <AcademyEmblem :academy-id="entry.academy.id" />
+    <BaseDialog
+      v-model="accessOpen"
+      :title="`Zugänge — ${selectedAcademy.name}`"
+      :description="`Auswählen trägt Benutzername und Passwort ein. Beides ist der Nachname, kleingeschrieben.`"
+    >
+      <ul class="divide-y divide-line">
+        <li v-for="entry in accessEntries" :key="entry.id">
+          <button
+            type="button"
+            class="flex w-full items-center justify-between gap-4 py-2.5 text-left hover:text-link"
+            @click="pickLogin(entry.login)"
+          >
+            <span class="min-w-0 truncate" :class="entry.isLecturer && 'font-medium'">
+              {{ entry.display }}
             </span>
-            <div class="min-w-0">
-              <p class="font-medium">{{ entry.academy.name }}</p>
-              <p class="mt-0.5 text-xs text-ink-soft italic">„{{ entry.academy.motto }}"</p>
-              <p class="mt-2 text-xs text-ink-soft">
-                {{ entry.academy.lecturerLabel }}:
-                <code class="font-mono">{{ entry.login }}</code>
-                <span class="opacity-60"> · Passwort identisch</span>
-              </p>
-            </div>
-          </div>
-        </button>
-      </div>
-
-      <p class="mt-4 text-center text-xs text-ink-soft">
-        Lernende melden sich ebenso an, z. B.
-        <code class="font-mono">tano</code>, <code class="font-mono">maul</code>,
-        <code class="font-mono">versio</code> oder <code class="font-mono">syndulla</code>.
-      </p>
-    </section>
+            <code class="shrink-0 font-mono text-xs text-ink-soft">{{ entry.login }}</code>
+          </button>
+        </li>
+      </ul>
+    </BaseDialog>
   </div>
 </template>

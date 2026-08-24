@@ -21,6 +21,14 @@ describe('toUsername', () => {
 
 describe('fullName', () => {
   it('setzt Vor- und Nachnamen zusammen', () => {
-    expect(fullName({ firstName: 'Greta', lastName: 'Müller' })).toBe('Greta Müller')
+    expect(fullName({ firstName: 'Ahsoka', lastName: 'Tano' })).toBe('Ahsoka Tano')
+  })
+
+  it('doppelt Mononyme nicht', () => {
+    // Yoda und Maul fuehren in den Stammdaten denselben Vor- und Nachnamen,
+    // weil das Modell beides verlangt. "Yoda Yoda" darf trotzdem nirgends
+    // in der Oberflaeche stehen.
+    expect(fullName({ firstName: 'Yoda', lastName: 'Yoda' })).toBe('Yoda')
+    expect(fullName({ firstName: 'Maul', lastName: 'Maul' })).toBe('Maul')
   })
 })

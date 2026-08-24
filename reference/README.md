@@ -34,8 +34,13 @@ ausgeschrieben (`Sabé` → `sabe`).
 | Imperiale Akademie Carida | `thrawn` | `versio`, `ree`, `kyrell`, `sloane`, `piett` |
 | Allianz-Basis Yavin IV | `organa` | `syndulla`, `wren`, `erso`, `andor`, `sabe` |
 
-Auf dem Anmeldebildschirm genügt ein Klick auf eine Akademiekarte. Pro Akademie sind zwei der
-sechs Fächer bereits bewertet, vier sind leer.
+Auf dem Anmeldebildschirm wählst du oben eine Akademie — das Erscheinungsbild wechselt sofort,
+noch vor der Anmeldung. *Zugänge anzeigen* öffnet ein Fenster mit allen Personen dieser
+Akademie; ein Klick trägt die Zugangsdaten ein. Die Auswahl ist reine Vorschau und schränkt
+den Login nicht ein.
+
+Pro Akademie sind zwei der sechs Fächer bereits bewertet, vier sind leer. *Testdaten
+zurücksetzen* unter dem Formular stellt den Auslieferungszustand wieder her.
 
 > Das ist **keine** echte Authentifizierung. Benutzername und Passwort sind identisch und
 > werden im Browser geprüft. Für eine Lernanwendung ohne Backend ist das in Ordnung; für alles
@@ -118,7 +123,7 @@ src/
   data/               vier Akademien, 4 Lehrende, 40 Lernende, 24 Fächer, Seed
   stores/             Pinia: auth (Anmeldung + Akademie) und grades (Bewertungsmatrix)
   composables/        useLocalStorage<T>, useGradeStats, useRandomGrades, useAcademyTheme
-  components/base/    generische Bausteine: Button, Card, Input, Select, Table, Badge
+  components/base/    generische Bausteine: Button, Card, Dialog, Input, Select, Table, Badge
   components/         fachlich: GradeInput, GradeBadge, Diagramm, Wappen, Kopfband
   router/index.ts     Routen, typisiertes `meta`, Rollen-Guard
   views/              je eine Seite, getrennt nach lecturer/ und student/
@@ -134,7 +139,8 @@ Vier Entscheidungen, die den Rest erklären:
 3. **Der Entwurf im Bewertungsformular ist lokal, nicht im Store.** Deshalb ändert *Zufällig
    ausfüllen* noch keine Daten — erst *Speichern* schreibt.
 4. **Das Theming hängt an einem Attribut.** `data-academy` am `<html>` belegt dieselben
-   CSS-Custom-Properties neu; keine Komponente kennt eine Akademie.
+   CSS-Custom-Properties neu; keine Komponente kennt eine Akademie. Der Startwert steht im
+   `index.html`, damit beim Laden nichts aufblitzt.
 
 ## Bekannte Eigenheiten
 

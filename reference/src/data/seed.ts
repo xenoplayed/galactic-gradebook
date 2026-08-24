@@ -9,6 +9,7 @@ import type {
   Subject,
   User,
 } from '@/types/domain'
+import { fullName, toUsername } from '@/lib/strings'
 import { ACADEMIES } from './academies'
 import { LECTURERS } from './lecturers'
 import { STUDENTS } from './students'
@@ -42,6 +43,38 @@ export function subjectsOf(academyId: AcademyId): readonly Subject[] {
     .filter((subject) => subject.academyId === academyId)
     .sortBy((subject) => subject.semester * 1000 + Number(subject.id.slice(1)))
     .all()
+}
+
+/** Ein waehlbarer Zugang auf dem Anmeldebildschirm. */
+export interface AccessEntry {
+  readonly id: string
+  /** "Yoda (Großmeister)" bzw. "Ahsoka Tano" - nur zum Anzeigen. */
+  readonly display: string
+  /** Der Benutzername, der uebernommen wird. NICHT identisch mit `display`. */
+  readonly login: string
+  readonly isLecturer: boolean
+}
+
+/**
+ * Alle Zugaenge einer Akademie: lehrende Person zuerst, dann die Lernenden
+ * alphabetisch (das sortiert `studentsOf` bereits).
+ *
+ * Steht hier und nicht in der View, weil es Datenableitung ist und keine
+ * Darstellung - so laesst es sich ohne Komponente, Router und Store testen.
+ */
+export function accessEntriesFor(academyId: AcademyId): AccessEntry[] {
+  const lecturer = lecturers.find((person) => person.academyId === academyId)
+  const people = [...(lecturer === undefined ? [] : [lecturer]), ...studentsOf(academyId)]
+
+  return people.map((person) => ({
+    id: person.id,
+    // Die Bezeichnung steht nur bei Lehrenden. Bei zehn Lernenden waere sie
+    // zehnmal dasselbe Wort und damit reines Rauschen.
+    display:
+      person.role === 'lecturer' ? `${fullName(person)} (${person.roleLabel})` : fullName(person),
+    login: toUsername(person.lastName),
+    isLecturer: person.role === 'lecturer',
+  }))
 }
 
 /**
