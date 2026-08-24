@@ -11,6 +11,7 @@ import BaseTable from '@/components/base/BaseTable.vue'
 import EmptyState from '@/components/base/EmptyState.vue'
 import GradeBadge from '@/components/GradeBadge.vue'
 import StatTile from '@/components/StatTile.vue'
+import AcademyBanner from '@/components/AcademyBanner.vue'
 
 const auth = useAuthStore()
 const gradesStore = useGradesStore()
@@ -35,17 +36,12 @@ const stats = useGradeStats(ownGrades)
 
 <template>
   <div class="space-y-6">
-    <div>
-      <h1 class="text-2xl font-semibold tracking-tight">{{ greeting }}</h1>
-      <p class="text-sm text-ink-soft">
-        {{ currentUser?.roleLabel }} · {{ academy?.name }} · Akte
-        {{
-          currentUser && 'matriculationNumber' in currentUser
-            ? currentUser.matriculationNumber
-            : '–'
-        }}
-      </p>
-    </div>
+    <AcademyBanner
+      v-if="academy"
+      :academy="academy"
+      :title="greeting"
+      :subtitle="`${currentUser?.roleLabel} · ${academy.name}`"
+    />
 
     <div class="grid gap-4 sm:grid-cols-3">
       <StatTile

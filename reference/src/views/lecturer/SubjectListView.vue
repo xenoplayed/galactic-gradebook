@@ -10,6 +10,7 @@ import BaseBadge from '@/components/base/BaseBadge.vue'
 import BaseCard from '@/components/base/BaseCard.vue'
 import BaseTable from '@/components/base/BaseTable.vue'
 import StatTile from '@/components/StatTile.vue'
+import AcademyBanner from '@/components/AcademyBanner.vue'
 
 const auth = useAuthStore()
 const gradesStore = useGradesStore()
@@ -49,10 +50,7 @@ const totalAverage = computed(() =>
 
 <template>
   <div v-if="academy" class="space-y-6">
-    <div>
-      <h1 class="text-2xl font-semibold tracking-tight">{{ academy.name }}</h1>
-      <p class="text-sm text-ink-soft italic">„{{ academy.motto }}"</p>
-    </div>
+    <AcademyBanner :academy="academy" />
 
     <div class="grid gap-4 sm:grid-cols-3">
       <StatTile :label="`${academy.subjectLabel}e`" :value="String(ownSubjects.length)" />
