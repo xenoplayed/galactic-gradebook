@@ -49,7 +49,7 @@ Der Fortschritt als Badge:
 </BaseBadge>
 ```
 
-## Das Notenformular
+## Das Bewertungsformular
 
 ### Entwurf und gespeicherter Stand
 
@@ -73,7 +73,9 @@ anzeigen:
 
 ```ts
 const isDirty = computed(() =>
-  roster.some((student) => draft.value[student.id] !== gradesStore.gradeOf(props.subjectId, student.id)),
+  roster.value.some(
+    (student) => draft.value[student.id] !== gradesStore.gradeOf(props.subjectId, student.id),
+  ),
 )
 ```
 
@@ -100,11 +102,11 @@ bräuchtest du zusätzlich ein `onMounted`.
 
 ```ts
 function fillRandom() {
-  draft.value = randomGradesFor(roster.map((student) => student.id))
+  draft.value = randomGradesFor(roster.value.map((student) => student.id))
 }
 ```
 
-Ein neues Objekt statt fünfzehn Einzelzuweisungen: **eine** Zuweisung, **ein** Rendern.
+Ein neues Objekt statt zehn Einzelzuweisungen: **eine** Zuweisung, **ein** Rendern.
 
 ### Speichern
 
@@ -134,7 +136,7 @@ Die Lösung ist, `v-model` in seine beiden Hälften aufzulösen:
 ```vue
 <GradeInput
   :model-value="draft[student.id] ?? null"
-  :label="`Note für ${student.firstName} ${student.lastName}`"
+  :label="`Bewertung für ${student.firstName} ${student.lastName}`"
   @update:model-value="(value) => (draft[student.id] = value)"
 />
 ```
@@ -142,8 +144,8 @@ Die Lösung ist, `v-model` in seine beiden Hälften aufzulösen:
 Deshalb war es in [Kapitel 05](05-komponenten.md) die Mühe wert, die ausgeschriebene Form zu
 kennen: sobald der Wert beim Hineingeben angepasst werden muss, reicht die Kurzform nicht.
 
-Das `:label` ist kein Beiwerk. Fünfzehn Eingabefelder ohne sichtbares Label brauchen ein
-`aria-label`, sonst hört ein Screenreader fünfzehnmal „Textfeld“.
+Das `:label` ist kein Beiwerk. Zehn Eingabefelder ohne sichtbares Label brauchen ein
+`aria-label`, sonst hört ein Screenreader zehnmal „Textfeld“.
 
 ## `GradeInput`: Übersetzen zwischen Text und Note
 
@@ -189,7 +191,7 @@ Und die Fehlermeldung braucht eine eindeutige ID:
 const hintId = useId()
 ```
 
-`aria-describedby` verweist auf die Meldung. Fünfzehn Felder mit derselben festen ID würden
+`aria-describedby` verweist auf die Meldung. Zehn Felder mit derselben festen ID würden
 alle auf dieselbe zeigen.
 
 ---
@@ -199,7 +201,7 @@ alle auf dieselbe zeigen.
 **`views/lecturer/SubjectListView.vue`:**
 1. `computed` mit Fach, Fortschritt, `isComplete` und Durchschnitt.
 2. Kennzahlen oben: Anzahl Fächer, offene Fächer, Gesamtdurchschnitt.
-3. Tabelle mit Badge und Link auf das Notenformular.
+3. Tabelle mit Badge und Link auf das Bewertungsformular.
 
 **`views/lecturer/GradeEntryView.vue`:**
 4. `subjectId` als Prop (`props: true` im Router).
@@ -245,7 +247,7 @@ const subject = computed(() => {
 
 ## Selbstcheck
 
-- [ ] Leeres Fach öffnen, *Zufällig ausfüllen* → alle 15 Felder gefüllt, „ungespeichert“ steht da
+- [ ] Leeres Fach öffnen, *Zufällig ausfüllen* → alle **10** Felder gefüllt (nicht 40!), „ungespeichert“ steht da
 - [ ] Der Store ist noch unverändert (im Vue-Devtools nachsehen)
 - [ ] *Verwerfen* stellt den alten Stand wieder her
 - [ ] *Speichern* → Hinweis wechselt, Reload → Noten sind noch da

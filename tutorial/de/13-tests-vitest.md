@@ -322,6 +322,6 @@ ebenfalls.
 ## In der Referenz
 
 - `reference/src/lib/__tests__/`, `reference/src/stores/__tests__/`, `reference/src/composables/__tests__/`,
-  `reference/src/components/__tests__/` — 41 Tests
+  `reference/src/components/__tests__/`, `reference/src/i18n/__tests__/` — 85 Tests
 - `reference/tsconfig.vitest.json` — inklusive der `lib`-Korrektur
 - `reference/vitest.setup.ts` — der jsdom-Ersatz für `<dialog>`

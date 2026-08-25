@@ -15,7 +15,9 @@ als Balkendiagramm, die eigene Note hervorgehoben. Ohne Chart-Bibliothek.
 const rows = computed(() => {
   const user = currentUser.value
   if (user === null) return []
-  return gradesStore.gradesForStudent(user.id)
+  // Die Akademie kommt vom User selbst - dadurch sieht ein Padawan nie ein
+  // imperiales Fach, egal was in der URL steht.
+  return gradesStore.gradesForStudent(user.id, user.academyId)
 })
 
 const ownGrades = computed(() => rows.value.map((row) => row.grade))
@@ -72,8 +74,8 @@ const rank = computed(() => {
 })
 ```
 
-Wer bei gleicher Note dieselbe Platzierung bekommt („geteilt“), ist eine fachliche
-Entscheidung — und sie ist die richtige: Fünfzehn Leute nach Note zu sortieren und
+Wer bei gleicher Bewertung dieselbe Platzierung bekommt („geteilt“), ist eine fachliche
+Entscheidung — und sie ist die richtige: Zehn Leute nach Bewertung zu sortieren und
 durchzunummerieren erzeugt eine Rangfolge, die es nicht gibt.
 
 ## Das Balkendiagramm
@@ -174,7 +176,7 @@ darüber. Information nie allein über Farbe oder Form transportieren.
 
 ## Leere Zustände
 
-Sechs Fächer sind unbenotet. Das ist der Normalfall, nicht die Ausnahme:
+Vier von sechs Fächern sind unbewertet. Das ist der Normalfall, nicht die Ausnahme:
 
 ```vue
 <EmptyState
