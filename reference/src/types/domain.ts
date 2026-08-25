@@ -1,5 +1,5 @@
 /**
- * Das Domaenenmodell des Datapads.
+ * Das Domaenenmodell der Anwendung.
  *
  * Bewusst frei von Vue: hier stehen nur Typen, keine Reaktivitaet. Dadurch
  * bleibt die Fachlichkeit ohne Framework testbar - und du kannst sie spaeter

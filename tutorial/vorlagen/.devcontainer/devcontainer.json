@@ -1,5 +1,5 @@
 {
-  "name": "Datapad (mein Nachbau)",
+  "name": "Galactic Gradebook (mein Nachbau)",
   "image": "mcr.microsoft.com/devcontainers/typescript-node:24-bookworm",
 
   // Zu den Ports steht hier bewusst NICHTS.
@@ -19,7 +19,7 @@
   //  2. Auf dem Host installierte native Binaries (esbuild, rollup ->
   //     darwin-arm64) sind im Linux-Container unbrauchbar.
   "mounts": [
-    "source=mein-datapad-node-modules,target=${containerWorkspaceFolder}/node_modules,type=volume"
+    "source=mein-gradebook-node-modules,target=${containerWorkspaceFolder}/node_modules,type=volume"
   ],
   "postCreateCommand": "bash .devcontainer/post-create.sh",
 

@@ -1,4 +1,4 @@
-# Datapad — Referenzimplementierung
+# Galactic Gradebook — Referenzimplementierung
 
 [English](README.md) · **Deutsch**
 

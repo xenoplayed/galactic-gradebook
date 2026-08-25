@@ -249,7 +249,7 @@ Each grade's probability is then exactly its weight.
 - A composable without `MaybeRefOrGetter` — then the value freezes.
 - Forgetting `deep: true` — the book is never saved.
 - No `try`/`catch` on read. Try it: run
-  `localStorage.setItem('datapad.grades', 'broken')` in the devtools and reload. With the
+  `localStorage.setItem('grades', 'broken')` in the devtools and reload. With the
   `catch` the app carries on; without it the page stays white.
 - Calling a composable in a callback instead of at the top level.
 - In tests: `watch` fires only on the next tick. Without `await nextTick()` there's nothing in

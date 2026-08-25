@@ -1,6 +1,6 @@
-# Datapad — Tutorial
+# Galactic Gradebook — Tutorial
 
-Build a small but complete Vue 3 application from scratch: **Datapad**, a training-records app
+Build a small but complete Vue 3 application from scratch: **Galactic Gradebook**, a training-records app
 for four Star Wars academies. Instructors record assessments from 1 to 5; trainees see their
 own results and an anonymous comparison with their cohort. Each academy — Jedi, Sith, Empire,
 Rebels — has its own look.
@@ -30,7 +30,7 @@ The repository has **two parts**:
 | `reference/` | the finished app |
 
 Plus **your own project**, which you create in chapter 00 — in a *separate* repository next to
-this one, e.g. `~/projects/nodejs/my-datapad`. Why separate: your rebuild should have its own
+this one, e.g. `~/projects/nodejs/my-gradebook`. Why separate: your rebuild should have its own
 history, and you should be able to delete it and start over without touching this repository.
 
 The reference is **not a template to copy from**. It's a place to look things up: try it

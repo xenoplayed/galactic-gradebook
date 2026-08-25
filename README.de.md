@@ -1,10 +1,10 @@
 [English](README.md) · **Deutsch**
 
-# Datapad
+# Galactic Gradebook
 
 Ein Lernprojekt für Vue 3 und TypeScript — mit Star-Wars-Anstrich.
 
-**Datapad** verwaltet Ausbildungsbewertungen für vier Akademien: den Jedi-Tempel auf
+**Galactic Gradebook** verwaltet Ausbildungsbewertungen für vier Akademien: den Jedi-Tempel auf
 Coruscant, die Sith-Akademie Korriban, die Imperiale Akademie Carida und die Allianz-Basis
 Yavin IV. Lehrende tragen Bewertungen von 1 bis 5 ein, Lernende sehen ihre eigenen und den
 anonymen Vergleich mit ihrem Jahrgang. Jede Akademie hat ihr eigenes Erscheinungsbild.

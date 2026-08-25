@@ -123,7 +123,7 @@ it('persists only the ID', async () => {
 
   await nextTick()      // ← without this there's nothing in localStorage yet
 
-  expect(window.localStorage.getItem('datapad.session')).toBe('"d01"')
+  expect(window.localStorage.getItem('gradebook.session')).toBe('"d01"')
 })
 ```
 

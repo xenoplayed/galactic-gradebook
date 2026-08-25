@@ -99,8 +99,8 @@ describe('useAuthStore', () => {
     // die in Tests staendig auftaucht, im Browser aber nie auffaellt.
     await nextTick()
 
-    expect(window.localStorage.getItem('datapad.session')).toBe('"d01"')
+    expect(window.localStorage.getItem('gradebook.session')).toBe('"d01"')
     // Weder Name noch Akademie landen im Storage - beides wird abgeleitet.
-    expect(window.localStorage.getItem('datapad.session')).not.toContain('jedi')
+    expect(window.localStorage.getItem('gradebook.session')).not.toContain('jedi')
   })
 })

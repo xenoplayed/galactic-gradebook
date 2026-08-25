@@ -120,8 +120,8 @@ Without it, Podman sends your local `node_modules` along as build context — hu
 megabytes for nothing, and in the worst case it overwrites the image's own `npm ci`.
 
 ```bash
-podman build -t datapad:1.0 -f Containerfile .
-podman run --rm -p 8080:80 datapad:1.0
+podman build -t galactic-gradebook:1.0 -f Containerfile .
+podman run --rm -p 8080:80 galactic-gradebook:1.0
 ```
 
 ## Dev container and production image are two different things

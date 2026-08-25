@@ -3,7 +3,7 @@ import { useI18n } from 'vue-i18n'
 import { AVAILABLE_LOCALES, DEFAULT_LOCALE, isSupportedLocale } from '@/i18n'
 import { useLocalStorage } from '@/composables/useLocalStorage'
 
-const LOCALE_KEY = 'datapad.locale'
+const LOCALE_KEY = 'gradebook.locale'
 
 /**
  * Erraet die Startsprache aus den Browsereinstellungen.

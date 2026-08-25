@@ -254,7 +254,7 @@ negativ wird. Die Trefferwahrscheinlichkeit jeder Note ist dann genau ihr Gewich
 - Composable ohne `MaybeRefOrGetter`, dann friert der Wert ein.
 - `deep: true` vergessen — die Matrix wird nie gespeichert.
 - Kein `try`/`catch` beim Lesen. Probier es aus: schreib in den DevTools
-  `localStorage.setItem('datapad.grades', 'kaputt')` und lade neu. Mit `catch` läuft
+  `localStorage.setItem('grades', 'kaputt')` und lade neu. Mit `catch` läuft
   die App weiter, ohne bleibt sie weiß.
 - Composable in einem Callback aufrufen statt auf oberster Ebene.
 - In Tests: `watch` feuert erst im nächsten Tick. Ohne `await nextTick()` steht im

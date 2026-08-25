@@ -1,5 +1,5 @@
 {
-  "name": "Datapad",
+  "name": "Galactic Gradebook",
   "image": "mcr.microsoft.com/devcontainers/typescript-node:24-bookworm",
 
   // Zu den Ports steht hier bewusst NICHTS.
@@ -21,8 +21,8 @@
   //
   // Ein Volume je Teilprojekt - sie haben unterschiedliche Abhaengigkeiten.
   "mounts": [
-    "source=datapad-reference-node-modules,target=${containerWorkspaceFolder}/reference/node_modules,type=volume",
-    "source=datapad-playground-node-modules,target=${containerWorkspaceFolder}/tutorial/playground/node_modules,type=volume"
+    "source=galactic-gradebook-reference-node-modules,target=${containerWorkspaceFolder}/reference/node_modules,type=volume",
+    "source=galactic-gradebook-playground-node-modules,target=${containerWorkspaceFolder}/tutorial/playground/node_modules,type=volume"
   ],
   "postCreateCommand": "bash .devcontainer/post-create.sh",
 

@@ -15,10 +15,10 @@ Bevor du anfängst: **dein Projekt gehört nicht in dieses Repo.** Leg es danebe
 
 ```
 ~/projects/nodejs/
-  datapad/              ← dieses Repo (Tutorial + Referenz), nur lesen
+  galactic-gradebook/              ← dieses Repo (Tutorial + Referenz), nur lesen
     tutorial/
     reference/
-  mein-datapad/         ← dein Nachbau, eigenes Repo
+  mein-gradebook/         ← dein Nachbau, eigenes Repo
 ```
 
 Der Grund ist nicht Ordnungsliebe: dein Nachbau soll eine eigene Git-Historie bekommen, und du
@@ -43,7 +43,7 @@ liegt in [`vorlagen/.devcontainer/`](../vorlagen/.devcontainer/); hier ist sie S
 
 ```jsonc
 {
-  "name": "Datapad (mein Nachbau)",
+  "name": "Galactic Gradebook (mein Nachbau)",
   "image": "mcr.microsoft.com/devcontainers/typescript-node:24-bookworm",
 ```
 
@@ -85,7 +85,7 @@ ignoriert `keep-id` in diesem Modus.
 
 ```jsonc
   "mounts": [
-    "source=mein-datapad-node-modules,target=${containerWorkspaceFolder}/node_modules,type=volume"
+    "source=mein-gradebook-node-modules,target=${containerWorkspaceFolder}/node_modules,type=volume"
   ],
 ```
 

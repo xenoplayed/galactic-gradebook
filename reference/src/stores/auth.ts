@@ -5,7 +5,7 @@ import { toUsername } from '@/lib/strings'
 import { useLocalStorage } from '@/composables/useLocalStorage'
 import type { Academy, User } from '@/types/domain'
 
-const SESSION_KEY = 'datapad.session'
+const SESSION_KEY = 'gradebook.session'
 
 /**
  * Setup-Store: die Funktion ist aufgebaut wie ein `<script setup>`.

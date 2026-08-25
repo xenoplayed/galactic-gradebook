@@ -14,10 +14,10 @@ Before you start: **your project does not belong in this repository.** Put it ne
 
 ```
 ~/projects/nodejs/
-  datapad/              ← this repository (tutorial + reference), read only
+  galactic-gradebook/              ← this repository (tutorial + reference), read only
     tutorial/
     reference/
-  my-datapad/           ← your rebuild, its own repository
+  my-gradebook/           ← your rebuild, its own repository
 ```
 
 The reason isn't tidiness: your rebuild should get its own git history, and you should be able
@@ -42,7 +42,7 @@ in [`vorlagen/.devcontainer/`](../vorlagen/.devcontainer/); here it is piece by 
 
 ```jsonc
 {
-  "name": "Datapad (my rebuild)",
+  "name": "Galactic Gradebook (my rebuild)",
   "image": "mcr.microsoft.com/devcontainers/typescript-node:24-bookworm",
 ```
 
@@ -84,7 +84,7 @@ ignores `keep-id` in this mode.
 
 ```jsonc
   "mounts": [
-    "source=my-datapad-node-modules,target=${containerWorkspaceFolder}/node_modules,type=volume"
+    "source=my-gradebook-node-modules,target=${containerWorkspaceFolder}/node_modules,type=volume"
   ],
 ```
 

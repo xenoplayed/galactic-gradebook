@@ -1,4 +1,4 @@
-# Datapad — Tutorial
+# Galactic Gradebook — Tutorial
 
 Build the app yourself, chapter by chapter.
 

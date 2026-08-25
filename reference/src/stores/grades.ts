@@ -13,7 +13,7 @@ import type {
   SubjectId,
 } from '@/types/domain'
 
-const GRADES_KEY = 'datapad.grades'
+const GRADES_KEY = 'gradebook.grades'
 
 /**
  * Eine Note pro Fach - die Ansicht, die eine Studentin von sich selbst hat.

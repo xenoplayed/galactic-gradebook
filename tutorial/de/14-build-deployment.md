@@ -122,8 +122,8 @@ Ohne die schickt Podman dein lokales `node_modules` als Build-Kontext mit — hu
 für nichts, und im Zweifel überschreibt es das `npm ci` des Images.
 
 ```bash
-podman build -t datapad:1.0 -f Containerfile .
-podman run --rm -p 8080:80 datapad:1.0
+podman build -t galactic-gradebook:1.0 -f Containerfile .
+podman run --rm -p 8080:80 galactic-gradebook:1.0
 ```
 
 ## DevContainer und Produktions-Image sind zwei verschiedene Dinge

@@ -1,6 +1,6 @@
-# Datapad — Tutorial
+# Galactic Gradebook — Tutorial
 
-Bau dir eine kleine, vollständige Vue-3-Anwendung von Grund auf: **Datapad**, eine
+Bau dir eine kleine, vollständige Vue-3-Anwendung von Grund auf: **Galactic Gradebook**, eine
 Ausbildungsverwaltung für vier Star-Wars-Akademien. Lehrende tragen Bewertungen von 1 bis 5
 ein, Lernende sehen ihre eigenen und den anonymen Vergleich mit ihrem Jahrgang. Jede Akademie
 — Jedi, Sith, Imperium, Rebellen — hat ihr eigenes Erscheinungsbild.
@@ -23,15 +23,17 @@ Stellen sind markiert:
 
 ## Wie du damit arbeitest
 
-Es gibt **zwei Repos**:
+Das Repo hat **zwei Teile**:
 
-| Repo | Rolle |
+| Ordner | Rolle |
 | --- | --- |
-| `datapad` (dieses hier) | die Kapitel und die Übungen |
-| `datapad-reference` | die fertige App |
+| `tutorial/` (dieser hier) | die Kapitel und die Übungen |
+| `reference/` | die fertige App |
 
-Und dazu **dein eigenes Projekt**, das du in Kapitel 00 anlegst — irgendwo daneben, z. B.
-`~/projects/nodejs/mein-datapad`.
+Und dazu **dein eigenes Projekt**, das du in Kapitel 00 anlegst — in einem *eigenen* Repo
+daneben, z. B. `~/projects/nodejs/mein-gradebook`. Warum getrennt: dein Nachbau soll eine
+eigene Historie bekommen, und du sollst ihn wegwerfen und neu anfangen können, ohne dieses
+Repo anzufassen.
 
 Die Referenz ist **kein Vorlagenordner zum Kopieren**. Sie ist dein Nachschlagewerk: erst
 selbst versuchen, und wenn es klemmt oder du wissen willst, wie es sauberer ginge, dort
