@@ -97,5 +97,15 @@ works are included; the four academy crests are original drawings.
 
 ## Languages
 
-This page and the German version are equivalent. The tutorial and `reference/README.md` are
-currently German only — an English translation is in progress.
+Everything is available in German and English:
+
+| | English | Deutsch |
+| --- | --- | --- |
+| This page | [`README.md`](README.md) | [`README.de.md`](README.de.md) |
+| Tutorial | [`tutorial/en/`](tutorial/en/README.md) | [`tutorial/de/`](tutorial/de/README.md) |
+| Reference | [`reference/README.md`](reference/README.md) | [`reference/README.de.md`](reference/README.de.md) |
+| The app itself | switchable at runtime | switchable at runtime |
+
+The German tutorial is the original, the English one a translation; where they differ, the
+German text applies. The app's interface language is switched in the navigation bar — adding
+another language means adding one file under `reference/src/i18n/locales/`.

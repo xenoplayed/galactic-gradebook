@@ -242,8 +242,25 @@ Tailwind nicht; nimm ein `Record<Grade, string>`.
 
 ```
 mx-auto max-w-5xl px-4     grid gap-4 sm:grid-cols-3     flex items-center justify-between
-dark:bg-slate-900          overflow-x-auto               tabular-nums    sr-only
+bg-surface text-ink        overflow-x-auto               tabular-nums    sr-only
 ```
+
+## Mehrsprachigkeit (vue-i18n)
+
+```ts
+// Dateien finden, nicht aufzaehlen - eine neue Sprache ist EINE Datei
+const modules = import.meta.glob('./locales/*.json', { eager: true })
+```
+```jsonc
+{ "_name": "Deutsch",                        // Anzeigename IN der Datei
+  "academies": { "sith": { "subjectLabel": "Lehre | Lehren" } } }
+```
+```ts
+t('academies.sith.subjectLabel', 6)   // "Lehren" - Pluralregel je Sprache
+document.documentElement.lang = 'de'  // Screenreader-Aussprache
+```
+`<q>{{ motto }}</q>` statt fester Anführungszeichen. Ein Test vergleicht die Schlüsselsätze
+aller Sprachdateien und nennt fehlende beim Namen.
 
 ## Vitest
 
@@ -280,7 +297,7 @@ podman build -t app:1.0 -f Containerfile .
 podman run --rm -p 8080:80 app:1.0
 ```
 
-## Die zwölf häufigsten Fehler
+## Die häufigsten Fehler
 
 1. `.value` im Skript vergessen (oder im Template hinzugefügt)
 2. Store destrukturiert ohne `storeToRefs`
@@ -299,3 +316,5 @@ podman run --rm -p 8080:80 app:1.0
 15. Kontrast geschätzt statt gemessen → auf dunklem Grund fällt Text durch
 16. `@close` am `<dialog>` vergessen → nach Escape geht es nicht mehr auf
 17. `ref` außerhalb der Funktion, wo eigener Zustand gemeint war → Werte überleben die Seite
+18. Plural durch Anhängen eines Buchstabens → „Lehree"; nimm `"Lehre | Lehren"` und `t(key, n)`
+19. Sprachdateien im Code aufzählen statt finden → die neue Sprache fehlt in der Liste

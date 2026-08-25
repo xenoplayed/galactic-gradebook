@@ -98,5 +98,16 @@ Filmbilder oder sonstigen Werke enthalten; die vier Akademie-Wappen sind eigene 
 
 ## Sprachen
 
-Diese Seite und die englische Fassung sind gleichwertig. Das Tutorial und
-`reference/README.md` sind derzeit nur auf Deutsch — die englische Übersetzung ist in Arbeit.
+Alles liegt auf Deutsch und Englisch vor:
+
+| | Deutsch | English |
+| --- | --- | --- |
+| Diese Seite | [`README.de.md`](README.de.md) | [`README.md`](README.md) |
+| Tutorial | [`tutorial/de/`](tutorial/de/README.md) | [`tutorial/en/`](tutorial/en/README.md) |
+| Referenz | [`reference/README.de.md`](reference/README.de.md) | [`reference/README.md`](reference/README.md) |
+| Die App selbst | zur Laufzeit umschaltbar | zur Laufzeit umschaltbar |
+
+Die deutsche Fassung des Tutorials ist das Original, die englische eine Übersetzung; bei
+Abweichungen gilt die deutsche. Die Oberflächensprache der App wechselst du in der
+Navigationsleiste — eine weitere Sprache ist eine Datei unter
+`reference/src/i18n/locales/`.

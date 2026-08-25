@@ -1,6 +1,8 @@
 # Datapad — Referenzimplementierung
 
-Die fertige, lauffähige App zum [Tutorial](../tutorial/). Sie ist als **Nachschlagewerk**
+[English](README.md) · **Deutsch**
+
+Die fertige, lauffähige App zum [Tutorial](../tutorial/README.md). Sie ist als **Nachschlagewerk**
 gedacht: Wenn dein eigener Nachbau klemmt, schaust du hier nach, wie es gelöst ist.
 
 Vue 3 (Composition API) · TypeScript · Vite · Vue Router · Pinia · Tailwind CSS 4 · Vitest.
@@ -33,6 +35,11 @@ ausgeschrieben (`Sabé` → `sabe`).
 | Sith-Akademie Korriban | `bane` | `maul`, `ventress`, `talon`, `malgus`, `kun` |
 | Imperiale Akademie Carida | `thrawn` | `versio`, `ree`, `kyrell`, `sloane`, `piett` |
 | Allianz-Basis Yavin IV | `organa` | `syndulla`, `wren`, `erso`, `andor`, `sabe` |
+
+Die Oberfläche gibt es auf **Deutsch und Englisch**; die Umschaltung sitzt rechts in der
+Navigationsleiste und ist auch vor der Anmeldung erreichbar. Eine weitere Sprache ist genau
+eine Datei in `src/i18n/locales/` — sie wird beim Bauen gefunden, nicht in einer Liste
+aufgezählt.
 
 Auf dem Anmeldebildschirm wählst du oben eine Akademie — das Erscheinungsbild wechselt sofort,
 noch vor der Anmeldung. *Zugänge anzeigen* öffnet ein Fenster mit allen Personen dieser
@@ -122,7 +129,9 @@ src/
   lib/                Vue-freie Logik: Collection<T>, Bewertungen rechnen, Strings
   data/               vier Akademien, 4 Lehrende, 40 Lernende, 24 Fächer, Seed
   stores/             Pinia: auth (Anmeldung + Akademie) und grades (Bewertungsmatrix)
-  composables/        useLocalStorage<T>, useGradeStats, useRandomGrades, useAcademyTheme
+  composables/        useLocalStorage<T>, useGradeStats, useRandomGrades, useAcademyTheme,
+                      useLocale, useAcademyLabels
+  i18n/               Setup mit Glob-Erkennung, locales/de.json, locales/en.json
   components/base/    generische Bausteine: Button, Card, Dialog, Input, Select, Table, Badge
   components/         fachlich: GradeInput, GradeBadge, Diagramm, Wappen, Kopfband
   router/index.ts     Routen, typisiertes `meta`, Rollen-Guard
