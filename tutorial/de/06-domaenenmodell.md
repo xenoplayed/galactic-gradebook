@@ -87,7 +87,7 @@ export function subjectsOf(academyId: AcademyId): readonly Subject[] { … }
 Kapitel 03 gebaut und brauchst hier keine Zeile neuen Infrastruktur-Code. Genau dafür lohnt
 sich eine kleine, gut geschnittene Klasse.
 
-### Alles Sprachliche ist Datenfeld
+### Alles Sprachliche an einem Ort
 
 Bei den Jedi heißen Lernende „Padawan", im Imperium „Kadett". Eine 5 heißt bei den Jedi „Von
 der dunklen Seite versucht", im Imperium „Nachschulung angeordnet". Das sind **Daten**, keine
@@ -109,6 +109,9 @@ export interface Academy extends Identifiable {
 Der Test dafür: **eine fünfte Akademie hinzuzufügen darf keine Komponente berühren.** Ein
 Eintrag in `academies.ts`, Fixtures, eine Farbpalette — fertig. Wenn du irgendwo ein
 `if (academy === 'sith')` schreiben musst, gehört dieser Wert stattdessen in die Akademie.
+
+Sobald mehrere Sprachen dazukommen, wandern genau diese Felder in die Sprachdateien
+([Kapitel 15](15-mehrsprachigkeit.md)) — das Prinzip bleibt, der Ort wird präziser.
 
 `Record<Grade, string>` ist dabei mehr als Bequemlichkeit: weil `Grade` eine Union von fünf
 Literalen ist, **verlangt** der Compiler alle fünf Schlüssel. Eine vergessene 4 ist ein
@@ -163,10 +166,13 @@ Vier Entscheidungen, die den Rest der App prägen:
 **`Grade` ist eine Literal-Union.** Der Wertebereich lebt im Typsystem. `const g: Grade = 6`
 ist ein Compile-Fehler, und du brauchst nirgends eine Bereichsprüfung „von Hand“.
 
-**`roleLabel` ist ein Datenfeld.** Wie eine Person bezeichnet werden möchte, steht in den
-Daten. Aus einem Vornamen lässt sich das nicht erschließen, also wird es auch nicht versucht.
-Bei den Lernenden wird es aus der Akademie abgeleitet (alle Jedi-Lernenden sind „Padawan"),
-bei den Lehrenden ist es je Person gesetzt — „Großmeister" neben „Generalin".
+**Die Rollenbezeichnung ist keine Namensableitung.** Wie eine Person bezeichnet wird
+(„Padawan", „Großmeister"), folgt aus Rolle plus Akademie — und niemals aus dem Vornamen. Aus
+einem Namen lässt sich so etwas nicht erschließen, also wird es auch nicht versucht.
+
+> **Vorgriff auf [Kapitel 15](15-mehrsprachigkeit.md):** In der fertigen Referenz stehen diese
+> Bezeichnungen in den Sprachdateien, weil ein „Großmeister" auf Englisch „Grand Master" heißt.
+> Bau sie fürs Erste als Feld — der Grundsatz bleibt derselbe, nur der Ort ändert sich später.
 
 **`User` ist eine Discriminated Union.** Nach `if (user.role === 'student')` weiß der
 Compiler, dass `matriculationNumber` existiert.

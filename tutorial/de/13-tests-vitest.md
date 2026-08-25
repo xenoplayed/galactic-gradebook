@@ -310,6 +310,7 @@ ebenfalls.
 | `Property 'at' does not exist` | `tsconfig.vitest.json` hat `"lib": []` — setz es auf `["ESNext"]` |
 | `showModal is not a function` | jsdom-Lücke — Ersatz in `vitest.setup.ts`, nicht in der Komponente |
 | „no active effect scope" beim Composable-Test | Composable mit Watchern außerhalb einer Komponente aufgerufen — in `effectScope()` verpacken |
+| Mounten wirft, sobald eine Komponente `useI18n()` nutzt | i18n-Plugin fehlt — einmal global in `vitest.setup.ts` über `config.global.plugins` bereitstellen |
 
 ## Selbstcheck
 
