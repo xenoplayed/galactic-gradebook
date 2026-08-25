@@ -1,11 +1,20 @@
 <script setup lang="ts">
 import { computed } from 'vue'
-import { formatGrade, gradeLabel } from '@/lib/grades'
+import { useI18n } from 'vue-i18n'
+import { formatGrade } from '@/lib/grades'
 import type { Grade } from '@/types/domain'
 
-const { grade, highlight = false } = defineProps<{
+const { t } = useI18n()
+
+const {
+  grade,
+  highlight = false,
+  label,
+} = defineProps<{
   grade: Grade | null
   highlight?: boolean
+  /** Bezeichnung aus der Akademie - fuer den Tooltip. */
+  label?: string
 }>()
 
 // Tailwind kann keine zur Laufzeit zusammengebauten Klassennamen finden
@@ -23,7 +32,7 @@ const classes = computed(() =>
   grade === null ? 'bg-surface-2 text-ink-soft' : GRADE_CLASSES[grade],
 )
 
-const title = computed(() => (grade === null ? 'Noch nicht benotet' : gradeLabel(grade)))
+const title = computed(() => (grade === null ? t('grades.notAssessedShort') : (label ?? '')))
 </script>
 
 <template>

@@ -1,0 +1,184 @@
+{
+  "_name": "Deutsch",
+  "app": {
+    "name": "Datapad",
+    "tagline": "Ausbildungsakten der Galaxis · vier Akademien, ein Zugang"
+  },
+  "nav": {
+    "training": "Ausbildung",
+    "myAssessments": "Meine Bewertungen",
+    "signOut": "Abmelden",
+    "language": "Sprache"
+  },
+  "login": {
+    "title": "Anmelden",
+    "subtitle": "Benutzername und Passwort sind jeweils der Nachname.",
+    "username": "Benutzername",
+    "usernamePlaceholder": "z. B. yoda",
+    "password": "Passwort",
+    "submit": "Anmelden",
+    "failed": "Benutzername oder Passwort ist falsch.",
+    "greeting": "Hallo {name}",
+    "chooseAcademy": "Akademie wählen — das Erscheinungsbild wechselt sofort",
+    "showAccounts": "Zugänge von {academy} anzeigen",
+    "accountsTitle": "Zugänge — {academy}",
+    "accountsHint": "Auswählen trägt Benutzername und Passwort ein. Beides ist der Nachname, kleingeschrieben.",
+    "localOnly": "Alle Bewertungen liegen nur in diesem Browser.",
+    "resetData": "Testdaten zurücksetzen",
+    "resetConfirm": "Alle eingetragenen Bewertungen werden auf den Auslieferungszustand zurückgesetzt. Fortfahren?"
+  },
+  "lecturer": {
+    "openCount": "Offen",
+    "openHintNone": "Alles bewertet",
+    "openHintSome": "noch nicht vollständig bewertet",
+    "overallAverage": "Gesamtdurchschnitt",
+    "chooseSubject": "Auswählen, um Bewertungen für {students} einzutragen.",
+    "edit": "Bearbeiten",
+    "assess": "Bewerten",
+    "entryTitle": "Bewertungen eintragen",
+    "entrySubtitle": "Werte von 1 bis 5. Leeres Feld = noch nicht bewertet.",
+    "fillRandom": "Zufällig ausfüllen",
+    "clear": "Leeren",
+    "discard": "Verwerfen",
+    "save": "Speichern",
+    "unsaved": "Ungespeicherte Änderungen.",
+    "savedAt": "Gespeichert um {time}.",
+    "leaveConfirm": "Es gibt ungespeicherte Bewertungen. Seite trotzdem verlassen?",
+    "assessmentFor": "Bewertung für {name}"
+  },
+  "student": {
+    "signedInAs": "{role} · {academy} · Akte {number}",
+    "average": "Durchschnitt",
+    "averageHint": "über alle bewerteten {subjects}",
+    "assessedSubjects": "Bewertete {subjects}",
+    "myTitle": "Meine Bewertungen",
+    "mySubtitle": "Auswählen, um den Vergleich mit den anderen {students} zu sehen.",
+    "emptyTitle": "Noch keine Bewertungen",
+    "emptyBody": "Sobald {lecturer} bewertet, erscheint es hier.",
+    "compare": "Vergleich",
+    "myAssessment": "Meine Bewertung",
+    "cohortAverage": "Durchschnitt",
+    "rank": "Platzierung",
+    "rankValue": "{position}. von {total}",
+    "rankHint": "bei gleicher Bewertung geteilt",
+    "compareTitle": "Vergleich",
+    "compareSubtitle": "Verteilung aller Bewertungen unter den {students} – anonym.",
+    "compareEmptyTitle": "Hier wurde noch nicht bewertet",
+    "compareEmptyBody": "Der Vergleich erscheint, sobald Bewertungen vorliegen.",
+    "ownBarNote": "Der umrandete Balken enthält deine eigene Bewertung. Alle Angaben sind anonym."
+  },
+  "grades": {
+    "notAssessed": "noch nicht bewertet",
+    "assessed": "Bewertet",
+    "passed": "Bestanden",
+    "onlyOneToFive": "nur 1–5",
+    "notAssessedShort": "Noch nicht bewertet"
+  },
+  "table": {
+    "semester": "Semester",
+    "progress": "Fortschritt",
+    "value": "Wert",
+    "rating": "Bewertung",
+    "matriculation": "Matrikelnummer",
+    "action": "Aktion"
+  },
+  "common": {
+    "close": "Schließen",
+    "back": "Zurück",
+    "notFoundTitle": "Seite nicht gefunden",
+    "notFoundBody": "Diese Adresse gibt es hier nicht.",
+    "toStart": "Zur Startseite",
+    "subjectNotFound": "{subject} nicht gefunden",
+    "subjectNotFoundBody": "Es gibt hier nichts mit der ID «{id}».",
+    "toSubjects": "Zur Übersicht",
+    "toMyAssessments": "Zu meinen Bewertungen"
+  },
+  "academies": {
+    "jedi": {
+      "name": "Jedi-Tempel Coruscant",
+      "shortName": "Jedi-Tempel",
+      "motto": "Tue es. Oder tue es nicht. Es gibt kein Versuchen.",
+      "lecturerLabel": "Großmeister",
+      "studentLabel": "Padawan | Padawane",
+      "subjectLabel": "Lehrpfad | Lehrpfade",
+      "gradeLabels": {
+        "1": "Eins mit der Macht",
+        "2": "Erleuchtet",
+        "3": "Im Gleichgewicht",
+        "4": "Unstet",
+        "5": "Von der dunklen Seite versucht"
+      }
+    },
+    "sith": {
+      "name": "Sith-Akademie Korriban",
+      "shortName": "Korriban",
+      "motto": "Durch Leidenschaft erlange ich Stärke.",
+      "lecturerLabel": "Dunkler Lord",
+      "studentLabel": "Akolyth | Akolythen",
+      "subjectLabel": "Lehre | Lehren",
+      "gradeLabels": {
+        "1": "Furchteinflößend",
+        "2": "Erbarmungslos",
+        "3": "Brauchbar",
+        "4": "Enttäuschend",
+        "5": "Ersetzbar"
+      }
+    },
+    "empire": {
+      "name": "Imperiale Akademie Carida",
+      "shortName": "Carida",
+      "motto": "Ordnung durch Stärke.",
+      "lecturerLabel": "Großadmiral",
+      "studentLabel": "Kadett | Kadetten",
+      "subjectLabel": "Ausbildungsfach | Ausbildungsfächer",
+      "gradeLabels": {
+        "1": "Vorbildlich",
+        "2": "Zufriedenstellend",
+        "3": "Ausreichend",
+        "4": "Mangelhaft",
+        "5": "Nachschulung angeordnet"
+      }
+    },
+    "rebels": {
+      "name": "Allianz-Basis Yavin IV",
+      "shortName": "Yavin IV",
+      "motto": "Rebellionen bauen auf Hoffnung.",
+      "lecturerLabel": "Generalin",
+      "studentLabel": "Rekrut | Rekruten",
+      "subjectLabel": "Kurs | Kurse",
+      "gradeLabels": {
+        "1": "Heldenhaft",
+        "2": "Stark",
+        "3": "Solide",
+        "4": "Wackelig",
+        "5": "Zurück in die Ausbildung"
+      }
+    }
+  },
+  "subjects": {
+    "f01": "Machtkontrolle",
+    "f02": "Lichtschwertformen I",
+    "f03": "Meditation und Achtsamkeit",
+    "f04": "Geschichte des Ordens",
+    "f05": "Galaktische Diplomatie",
+    "f06": "Gedankenbeeinflussung",
+    "f07": "Beherrschung des Zorns",
+    "f08": "Alte Sith-Sprache",
+    "f09": "Kampfform Juyo",
+    "f10": "Die Regel der Zwei",
+    "f11": "Sith-Alchemie",
+    "f12": "Einfluss und Überzeugung",
+    "f13": "Exerzierdienst",
+    "f14": "Imperiale Doktrin",
+    "f15": "TIE-Grundausbildung",
+    "f16": "Nachrichtenwesen",
+    "f17": "Flottentaktik",
+    "f18": "Sternenzerstörer-Systemkunde",
+    "f19": "Astromech-Wartung",
+    "f20": "Basisverteidigung",
+    "f21": "X-Flügler-Flugkunde",
+    "f22": "Feldfunk und Verschlüsselung",
+    "f23": "Navigation abseits der Routen",
+    "f24": "Erste Hilfe im Feld"
+  }
+}

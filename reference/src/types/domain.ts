@@ -33,40 +33,34 @@ export const GRADES = [1, 2, 3, 4, 5] as const satisfies readonly Grade[]
 /**
  * Eine Akademie ist mehr als ein Etikett: sie bestimmt, wer wen sieht.
  *
- * Alles Sprachliche steht hier als Datenfeld, nicht als `if` in einer View.
- * Eine neue Akademie hinzuzufuegen heisst deshalb: einen Eintrag anlegen und
- * eine Farbpalette ergaenzen - keine Komponente anfassen.
+ * Hier steht nur noch die **Struktur**. Alles Sprachliche - Name, Motto,
+ * Bezeichnungen, Notenlabels - liegt in `src/i18n/locales/*.json`, weil es je
+ * Sprache anders lautet. Das Prinzip ist dasselbe wie vorher: alles Sprachliche
+ * an einem Ort. Der Ort ist nur praeziser geworden.
+ *
+ * Eine fuenfte Akademie waere: ein Eintrag hier, ein Block je Sprachdatei, eine
+ * Farbpalette in `assets/main.css`. Keine Komponente.
  */
 export interface Academy extends Identifiable {
   readonly id: AcademyId
-  /** Vollstaendiger Name, z.B. "Sith-Akademie Korriban". */
-  readonly name: string
-  /** Kurzform fuer die Navigation. */
-  readonly shortName: string
-  readonly motto: string
-  /** Wie Lehrende hier heissen: "Grossmeister", "Dunkler Lord", ... */
-  readonly lecturerLabel: string
-  /** Einzahl der Lernenden: "Padawan", "Akolyth", "Kadett", "Rekrut". */
-  readonly studentLabel: string
-  readonly studentPlural: string
-  /** Wie ein Fach hier heisst: "Lehrpfad", "Lehre", "Ausbildungsfach", "Kurs". */
-  readonly subjectLabel: string
-  /** Notenbezeichnungen im Ton der Akademie. Vollstaendig, sonst Compile-Fehler. */
-  readonly gradeLabels: Record<Grade, string>
 }
 
 export interface Person extends Identifiable {
   readonly firstName: string
   readonly lastName: string
-  /**
-   * Wie die Person bezeichnet wird ("Grossmeister", "Akolythin", ...).
-   * Steht als Datenfeld hier und wird NICHT zur Laufzeit aus dem Namen
-   * abgeleitet - aus einem Namen laesst sich so etwas nicht erschliessen.
-   */
-  readonly roleLabel: string
   /** Bindet die Person an genau einen Ausbildungsweg. */
   readonly academyId: AcademyId
 }
+
+/*
+ * Frueher stand hier ein Feld `roleLabel`. Die Bezeichnung folgt jetzt aus
+ * Rolle plus Akademie und kommt aus den Sprachdateien - ein Grossmeister heisst
+ * auf Englisch "Grand Master", das gehoert nicht in die Stammdaten.
+ *
+ * Der urspruengliche Punkt bleibt aber bestehen: die Bezeichnung wird weiterhin
+ * NICHT aus dem Namen abgeleitet. Aus einem Vornamen laesst sich so etwas nicht
+ * erschliessen.
+ */
 
 export interface Student extends Person {
   readonly role: 'student'
@@ -86,7 +80,7 @@ export interface Lecturer extends Person {
 export type User = Student | Lecturer
 
 export interface Subject extends Identifiable {
-  readonly name: string
+  /** Kennzeichen wie eine Modulnummer - wird nicht uebersetzt. */
   readonly shortName: string
   readonly semester: number
   readonly ects: number

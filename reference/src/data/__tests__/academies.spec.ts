@@ -11,7 +11,7 @@ import {
   users,
 } from '@/data/seed'
 import { toUsername } from '@/lib/strings'
-import { GRADES, type AcademyId } from '@/types/domain'
+import type { AcademyId } from '@/types/domain'
 
 const ACADEMY_IDS: AcademyId[] = ['jedi', 'sith', 'empire', 'rebels']
 
@@ -43,11 +43,11 @@ describe('Stammdaten', () => {
     expect(new Set(logins).size).toBe(logins.length)
   })
 
-  it('gibt jeder Akademie vollstaendige Notenbezeichnungen', () => {
+  it('haelt in den Stammdaten nur noch die Struktur', () => {
+    // Namen, Mottos und Bezeichnungen liegen in den Sprachdateien - hier
+    // stehen nur die IDs. Der Test haelt genau das fest.
     for (const academy of academies) {
-      for (const grade of GRADES) {
-        expect(academy.gradeLabels[grade]).toBeTruthy()
-      }
+      expect(Object.keys(academy)).toEqual(['id'])
     }
   })
 })
@@ -95,23 +95,22 @@ describe('accessEntriesFor', () => {
     expect(entries.slice(1).every((entry) => !entry.isLecturer)).toBe(true)
   })
 
-  it('haengt die Bezeichnung nur an Lehrende', () => {
-    const [lecturer, ...students] = accessEntriesFor('jedi')
+  it('bleibt sprachfrei', () => {
+    // Die Funktion liefert Rohdaten. Die Klammer mit der Bezeichnung
+    // ("Yoda (Großmeister)") haengt an der Sprache und setzt die View -
+    // deshalb darf hier nirgends ein uebersetzter Text auftauchen.
+    const entries = accessEntriesFor('jedi')
 
-    expect(lecturer?.display).toBe('Yoda (Großmeister)')
-    // Bei zehn Lernenden waere "(Padawan)" zehnmal dasselbe Wort.
-    expect(students.every((entry) => !entry.display.includes('('))).toBe(true)
+    expect(entries[0]?.name).toBe('Yoda')
+    expect(entries.some((entry) => entry.name.includes('('))).toBe(false)
   })
 
-  it('uebernimmt NUR den Benutzernamen, nicht die Anzeige', () => {
-    const [lecturer] = accessEntriesFor('jedi')
-
-    expect(lecturer?.display).toContain('Großmeister')
-    expect(lecturer?.login).toBe('yoda')
+  it('uebernimmt NUR den Benutzernamen', () => {
+    expect(accessEntriesFor('jedi')[0]?.login).toBe('yoda')
   })
 
   it('normalisiert Akzente im Benutzernamen', () => {
-    const sabe = accessEntriesFor('rebels').find((entry) => entry.display.includes('Sabé'))
+    const sabe = accessEntriesFor('rebels').find((entry) => entry.name.includes('Sabé'))
 
     expect(sabe?.login).toBe('sabe')
   })
@@ -120,7 +119,7 @@ describe('accessEntriesFor', () => {
     // Maul fuehrt denselben Vor- und Nachnamen - "Maul Maul" waere falsch.
     const maul = accessEntriesFor('sith').find((entry) => entry.login === 'maul')
 
-    expect(maul?.display).toBe('Maul')
+    expect(maul?.name).toBe('Maul')
   })
 
   it('mischt keine Akademien', () => {

@@ -2,11 +2,13 @@
 import { computed, ref, watch } from 'vue'
 import { RouterLink, onBeforeRouteLeave } from 'vue-router'
 import { storeToRefs } from 'pinia'
+import { useI18n } from 'vue-i18n'
 import { studentsOf, subjects } from '@/data/seed'
 import { useAuthStore } from '@/stores/auth'
 import { useGradesStore } from '@/stores/grades'
 import { useGradeStats } from '@/composables/useGradeStats'
 import { useRandomGrades } from '@/composables/useRandomGrades'
+import { useAcademyLabels } from '@/composables/useAcademyLabels'
 import { formatAverage } from '@/lib/grades'
 import { GRADES, type Grade, type StudentId } from '@/types/domain'
 import BaseBadge from '@/components/base/BaseBadge.vue'
@@ -20,8 +22,10 @@ import StatTile from '@/components/StatTile.vue'
 // Kommt aus der Route (`props: true` im Router).
 const props = defineProps<{ subjectId: string }>()
 
+const { t, locale } = useI18n()
 const auth = useAuthStore()
 const { academy } = storeToRefs(auth)
+const labels = useAcademyLabels(() => academy.value?.id)
 const gradesStore = useGradesStore()
 const { randomGradesFor } = useRandomGrades()
 
@@ -103,7 +107,7 @@ function save() {
  */
 onBeforeRouteLeave(() => {
   if (!isDirty.value) return true
-  return window.confirm('Es gibt ungespeicherte Noten. Seite trotzdem verlassen?')
+  return window.confirm(t('lecturer.leaveConfirm'))
 })
 </script>
 
@@ -111,14 +115,14 @@ onBeforeRouteLeave(() => {
   <div v-if="subject === undefined || academy === null">
     <BaseCard>
       <EmptyState
-        title="Fach nicht gefunden"
-        :description="`Es gibt kein Fach mit der ID «${subjectId}».`"
+        :title="t('common.subjectNotFound', { subject: labels.subjectLabel(1) })"
+        :description="t('common.subjectNotFoundBody', { id: subjectId })"
       >
         <RouterLink
           :to="{ name: 'lecturer-subjects' }"
           class="text-sm font-medium text-link hover:underline"
         >
-          Zur Fächerliste
+          {{ t('common.toSubjects') }}
         </RouterLink>
       </EmptyState>
     </BaseCard>
@@ -127,50 +131,54 @@ onBeforeRouteLeave(() => {
   <div v-else class="space-y-6">
     <div>
       <RouterLink :to="{ name: 'lecturer-subjects' }" class="text-sm text-ink-soft hover:underline">
-        ← Fächer
+        ← {{ labels.subjectLabel(2) }}
       </RouterLink>
-      <h1 class="mt-1 text-2xl font-semibold tracking-tight">{{ subject.name }}</h1>
+      <h1 class="mt-1 text-2xl font-semibold tracking-tight">{{ t(`subjects.${subject.id}`) }}</h1>
       <p class="text-sm text-ink-soft">
         {{ subject.shortName }} · {{ subject.semester }}. Semester · {{ subject.ects }} ECTS
       </p>
     </div>
 
     <div class="grid gap-4 sm:grid-cols-3">
-      <StatTile label="Bewertet" :value="`${stats.count.value} / ${stats.total.value}`" />
-      <StatTile label="Durchschnitt" :value="formatAverage(stats.average.value)" />
       <StatTile
-        label="Bestanden"
+        :label="t('grades.assessed')"
+        :value="`${stats.count.value} / ${stats.total.value}`"
+      />
+      <StatTile :label="t('student.average')" :value="formatAverage(stats.average.value)" />
+      <StatTile
+        :label="t('grades.passed')"
         :value="stats.passRate.value === null ? '–' : `${Math.round(stats.passRate.value)} %`"
       />
     </div>
 
-    <BaseCard
-      title="Noten eintragen"
-      subtitle="Werte von 1 bis 5. Leeres Feld = noch nicht benotet."
-    >
+    <BaseCard :title="t('lecturer.entryTitle')" :subtitle="t('lecturer.entrySubtitle')">
       <template #header>
         <div class="flex flex-wrap items-center gap-2">
-          <BaseButton variant="secondary" @click="fillRandom">Zufällig ausfüllen</BaseButton>
-          <BaseButton variant="ghost" @click="clearAll">Leeren</BaseButton>
-          <BaseButton variant="ghost" :disabled="!isDirty" @click="loadDraft">Verwerfen</BaseButton>
-          <BaseButton :disabled="!isDirty" @click="save">Speichern</BaseButton>
+          <BaseButton variant="secondary" @click="fillRandom">{{
+            t('lecturer.fillRandom')
+          }}</BaseButton>
+          <BaseButton variant="ghost" @click="clearAll">{{ t('lecturer.clear') }}</BaseButton>
+          <BaseButton variant="ghost" :disabled="!isDirty" @click="loadDraft">{{
+            t('lecturer.discard')
+          }}</BaseButton>
+          <BaseButton :disabled="!isDirty" @click="save">{{ t('lecturer.save') }}</BaseButton>
         </div>
       </template>
 
       <div v-if="isDirty" class="mb-4 rounded-card bg-amber-50 px-3 py-2 text-sm text-amber-800">
-        Ungespeicherte Änderungen.
+        {{ t('lecturer.unsaved') }}
       </div>
       <div
         v-else-if="savedAt"
         class="mb-4 rounded-card bg-emerald-50 px-3 py-2 text-sm text-emerald-800"
       >
-        Gespeichert um {{ savedAt.toLocaleTimeString('de-DE') }}.
+        {{ t('lecturer.savedAt', { time: savedAt.toLocaleTimeString(locale) }) }}
       </div>
 
       <BaseTable>
         <template #head>
-          <th class="py-2 pr-4 font-medium">{{ academy.studentLabel }}</th>
-          <th class="py-2 pr-4 font-medium">Matrikelnummer</th>
+          <th class="py-2 pr-4 font-medium">{{ labels.studentLabel(1) }}</th>
+          <th class="py-2 pr-4 font-medium">{{ t('table.matriculation') }}</th>
           <th class="py-2 font-medium">Note</th>
         </template>
 
@@ -189,7 +197,9 @@ onBeforeRouteLeave(() => {
             -->
             <GradeInput
               :model-value="draft[student.id] ?? null"
-              :label="`Bewertung für ${student.firstName} ${student.lastName}`"
+              :label="
+                t('lecturer.assessmentFor', { name: `${student.firstName} ${student.lastName}` })
+              "
               @update:model-value="(value) => (draft[student.id] = value)"
             />
           </td>

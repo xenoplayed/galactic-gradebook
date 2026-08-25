@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import type { Academy } from '@/types/domain'
+import type { AcademyId } from '@/types/domain'
+import { useAcademyLabels } from '@/composables/useAcademyLabels'
 import AcademyEmblem from './AcademyEmblem.vue'
 
 /**
@@ -10,11 +11,13 @@ import AcademyEmblem from './AcademyEmblem.vue'
  * wuerde dort mit der Lesbarkeit kaempfen. Als abgegrenztes Band mit
  * Abdunklung funktioniert dasselbe Bild in allen vier Paletten.
  */
-const { academy, title, subtitle } = defineProps<{
-  academy: Academy
+const { academyId, title, subtitle } = defineProps<{
+  academyId: AcademyId
   title?: string
   subtitle?: string
 }>()
+
+const labels = useAcademyLabels(() => academyId)
 </script>
 
 <template>
@@ -25,7 +28,7 @@ const { academy, title, subtitle } = defineProps<{
       Name und Motto stehen ohnehin als Text daneben.
     -->
     <img
-      :src="`/backgrounds/${academy.id}.jpg`"
+      :src="`/backgrounds/${academyId}.jpg`"
       alt=""
       class="h-36 w-full object-cover sm:h-40"
       loading="lazy"
@@ -36,14 +39,20 @@ const { academy, title, subtitle } = defineProps<{
 
     <div class="absolute inset-0 flex items-center gap-4 px-5 sm:px-7">
       <span class="hidden h-12 w-12 shrink-0 text-white/90 sm:block">
-        <AcademyEmblem :academy-id="academy.id" />
+        <AcademyEmblem :academy-id="academyId" />
       </span>
       <div class="min-w-0">
         <h1 class="truncate text-xl font-semibold text-white sm:text-2xl">
-          {{ title ?? academy.name }}
+          {{ title ?? labels.name.value }}
         </h1>
+        <!--
+          <q> statt fester Anfuehrungszeichen: der Browser setzt die
+          landesueblichen Zeichen anhand von <html lang> - deutsch „…",
+          englisch "…". Genau dafuer gibt es das Element.
+        -->
         <p class="mt-0.5 truncate text-sm text-white/80 italic">
-          {{ subtitle ?? `„${academy.motto}"` }}
+          <template v-if="subtitle">{{ subtitle }}</template>
+          <q v-else>{{ labels.motto.value }}</q>
         </p>
       </div>
     </div>

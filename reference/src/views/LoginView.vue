@@ -2,9 +2,11 @@
 import { computed, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { storeToRefs } from 'pinia'
+import { useI18n } from 'vue-i18n'
 import { useAuthStore } from '@/stores/auth'
 import { useGradesStore } from '@/stores/grades'
 import { useAcademyPreview } from '@/composables/useAcademyTheme'
+import { useAcademyLabels } from '@/composables/useAcademyLabels'
 import { homeRouteFor } from '@/router'
 import { academies, accessEntriesFor } from '@/data/seed'
 import BaseButton from '@/components/base/BaseButton.vue'
@@ -13,6 +15,7 @@ import BaseDialog from '@/components/base/BaseDialog.vue'
 import BaseInput from '@/components/base/BaseInput.vue'
 import AcademyEmblem from '@/components/AcademyEmblem.vue'
 
+const { t } = useI18n()
 const auth = useAuthStore()
 const gradesStore = useGradesStore()
 const router = useRouter()
@@ -28,7 +31,7 @@ const username = ref('')
 const password = ref('')
 const accessOpen = ref(false)
 
-const selectedAcademy = computed(() => academies.require(previewAcademyId.value))
+const labels = useAcademyLabels(previewAcademyId)
 
 const accessEntries = computed(() => accessEntriesFor(previewAcademyId.value))
 
@@ -59,9 +62,7 @@ function pickLogin(login: string) {
 }
 
 function resetData() {
-  const confirmed = window.confirm(
-    'Alle eingetragenen Bewertungen werden auf den Auslieferungszustand zurückgesetzt. Fortfahren?',
-  )
+  const confirmed = window.confirm(t('login.resetConfirm'))
   if (confirmed) gradesStore.resetAll()
 }
 </script>
@@ -69,9 +70,9 @@ function resetData() {
 <template>
   <div class="mx-auto max-w-3xl space-y-8">
     <div class="text-center">
-      <h1 class="text-2xl font-semibold tracking-tight">Datapad</h1>
+      <h1 class="text-2xl font-semibold tracking-tight">{{ t('app.name') }}</h1>
       <p class="mt-1 text-sm text-ink-soft">
-        Ausbildungsakten der Galaxis · vier Akademien, ein Zugang
+        {{ t('app.tagline') }}
       </p>
     </div>
 
@@ -82,7 +83,7 @@ function resetData() {
     -->
     <fieldset>
       <legend class="mb-3 w-full text-center text-sm font-medium text-ink-soft">
-        Akademie wählen — das Erscheinungsbild wechselt sofort
+        {{ t('login.chooseAcademy') }}
       </legend>
 
       <div class="grid gap-3 sm:grid-cols-2">
@@ -108,15 +109,17 @@ function resetData() {
             <AcademyEmblem :academy-id="academy.id" />
           </span>
           <span class="min-w-0">
-            <span class="block font-medium">{{ academy.name }}</span>
-            <span class="mt-0.5 block text-xs text-ink-soft italic">„{{ academy.motto }}"</span>
+            <span class="block font-medium">{{ t(`academies.${academy.id}.name`) }}</span>
+            <q class="mt-0.5 block text-xs text-ink-soft italic">{{
+              t(`academies.${academy.id}.motto`)
+            }}</q>
           </span>
         </label>
       </div>
     </fieldset>
 
     <div class="mx-auto max-w-md">
-      <BaseCard title="Anmelden" subtitle="Benutzername und Passwort sind jeweils der Nachname.">
+      <BaseCard :title="t('login.title')" :subtitle="t('login.subtitle')">
         <!--
           `@submit.prevent` = addEventListener('submit', e => { e.preventDefault(); ... }).
           Ein echtes <form> statt eines Buttons mit @click: nur so funktioniert
@@ -125,40 +128,40 @@ function resetData() {
         <form class="space-y-4" @submit.prevent="handleSubmit">
           <BaseInput
             v-model="username"
-            label="Benutzername"
+            :label="t('login.username')"
             autocomplete="username"
-            placeholder="z. B. yoda"
+            :placeholder="t('login.usernamePlaceholder')"
             @update:model-value="auth.clearError()"
           />
           <BaseInput
             v-model="password"
-            label="Passwort"
+            :label="t('login.password')"
             type="password"
             autocomplete="current-password"
             :error="error"
           />
-          <BaseButton type="submit" block>Anmelden</BaseButton>
+          <BaseButton type="submit" block>{{ t('login.submit') }}</BaseButton>
         </form>
 
         <div class="mt-4 border-t border-line pt-4">
           <BaseButton variant="secondary" block @click="accessOpen = true">
-            Zugänge von {{ selectedAcademy.shortName }} anzeigen
+            {{ t('login.showAccounts', { academy: labels.shortName.value }) }}
           </BaseButton>
         </div>
       </BaseCard>
 
       <p class="mt-6 text-center text-xs text-ink-soft">
-        Alle Bewertungen liegen nur in diesem Browser.
+        {{ t('login.localOnly') }}
         <button type="button" class="underline hover:text-ink" @click="resetData">
-          Testdaten zurücksetzen
+          {{ t('login.resetData') }}
         </button>
       </p>
     </div>
 
     <BaseDialog
       v-model="accessOpen"
-      :title="`Zugänge — ${selectedAcademy.name}`"
-      :description="`Auswählen trägt Benutzername und Passwort ein. Beides ist der Nachname, kleingeschrieben.`"
+      :title="t('login.accountsTitle', { academy: labels.name.value })"
+      :description="t('login.accountsHint')"
     >
       <ul class="divide-y divide-line">
         <li v-for="entry in accessEntries" :key="entry.id">
@@ -168,7 +171,7 @@ function resetData() {
             @click="pickLogin(entry.login)"
           >
             <span class="min-w-0 truncate" :class="entry.isLecturer && 'font-medium'">
-              {{ entry.display }}
+              {{ entry.isLecturer ? `${entry.name} (${labels.lecturerLabel.value})` : entry.name }}
             </span>
             <code class="shrink-0 font-mono text-xs text-ink-soft">{{ entry.login }}</code>
           </button>

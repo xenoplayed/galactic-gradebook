@@ -2,10 +2,12 @@
 import { computed } from 'vue'
 import { RouterLink } from 'vue-router'
 import { storeToRefs } from 'pinia'
+import { useI18n } from 'vue-i18n'
 import { subjects } from '@/data/seed'
 import { useAuthStore } from '@/stores/auth'
 import { useGradesStore } from '@/stores/grades'
 import { useGradeStats } from '@/composables/useGradeStats'
+import { useAcademyLabels } from '@/composables/useAcademyLabels'
 import { formatAverage, gradeLabel } from '@/lib/grades'
 import BaseCard from '@/components/base/BaseCard.vue'
 import EmptyState from '@/components/base/EmptyState.vue'
@@ -15,9 +17,11 @@ import StatTile from '@/components/StatTile.vue'
 
 const props = defineProps<{ subjectId: string }>()
 
+const { t } = useI18n()
 const auth = useAuthStore()
 const gradesStore = useGradesStore()
 const { currentUser, academy } = storeToRefs(auth)
+const labels = useAcademyLabels(() => academy.value?.id)
 
 /**
  * Das Fach - aber nur, wenn es zur eigenen Akademie gehoert.
@@ -59,14 +63,14 @@ const rank = computed(() => {
 <template>
   <BaseCard v-if="subject === undefined">
     <EmptyState
-      title="Fach nicht gefunden"
-      :description="`Es gibt kein Fach mit der ID «${subjectId}».`"
+      :title="t('common.subjectNotFound', { subject: labels.subjectLabel(1) })"
+      :description="t('common.subjectNotFoundBody', { id: subjectId })"
     >
       <RouterLink
         :to="{ name: 'student-dashboard' }"
         class="text-sm font-medium text-link hover:underline"
       >
-        Zu meinen Bewertungen
+        {{ t('common.toMyAssessments') }}
       </RouterLink>
     </EmptyState>
   </BaseCard>
@@ -74,9 +78,9 @@ const rank = computed(() => {
   <div v-else class="space-y-6">
     <div>
       <RouterLink :to="{ name: 'student-dashboard' }" class="text-sm text-ink-soft hover:underline">
-        ← Meine Bewertungen
+        ← {{ t('student.myAssessment') }}en
       </RouterLink>
-      <h1 class="mt-1 text-2xl font-semibold tracking-tight">{{ subject.name }}</h1>
+      <h1 class="mt-1 text-2xl font-semibold tracking-tight">{{ t(`subjects.${subject.id}`) }}</h1>
       <p class="text-sm text-ink-soft">
         {{ subject.shortName }} · {{ subject.semester }}. Semester · {{ subject.ects }} ECTS
       </p>
@@ -84,38 +88,50 @@ const rank = computed(() => {
 
     <div class="grid gap-4 sm:grid-cols-4">
       <div class="rounded-card bg-surface p-4 ring-1 ring-line">
-        <p class="text-xs font-medium tracking-wide text-ink-soft uppercase">Meine Bewertung</p>
+        <p class="text-xs font-medium tracking-wide text-ink-soft uppercase">
+          {{ t('student.myAssessment') }}
+        </p>
         <div class="mt-2 flex items-center gap-3">
-          <GradeBadge :grade="ownGrade" highlight />
+          <GradeBadge
+            :grade="ownGrade"
+            highlight
+            :label="ownGrade === null ? undefined : labels.gradeLabels.value[ownGrade]"
+          />
           <span class="text-sm text-ink-soft">
             {{
-              ownGrade === null ? 'noch nicht bewertet' : gradeLabel(ownGrade, academy?.gradeLabels)
+              ownGrade === null
+                ? t('grades.notAssessed')
+                : gradeLabel(ownGrade, labels.gradeLabels.value)
             }}
           </span>
         </div>
       </div>
-      <StatTile label="Durchschnitt" :value="formatAverage(stats.average.value)" />
-      <StatTile label="Bewertet" :value="`${stats.count.value} / ${stats.total.value}`" />
+      <StatTile :label="t('student.cohortAverage')" :value="formatAverage(stats.average.value)" />
       <StatTile
-        label="Platzierung"
+        :label="t('grades.assessed')"
+        :value="`${stats.count.value} / ${stats.total.value}`"
+      />
+      <StatTile
+        :label="t('student.rank')"
         :value="rank === null ? '–' : `${rank.position}. von ${rank.of}`"
-        hint="bei gleicher Note geteilt"
+        :hint="t('student.rankHint')"
       />
     </div>
 
     <BaseCard
-      title="Vergleich"
-      :subtitle="`Verteilung aller Bewertungen unter den ${academy?.studentPlural ?? 'Lernenden'} – anonym.`"
+      :title="t('student.compareTitle')"
+      :subtitle="t('student.compareSubtitle', { students: labels.studentLabel(2) })"
     >
       <EmptyState
         v-if="stats.isEmpty.value"
-        title="Hier wurde noch nicht bewertet"
-        description="Der Vergleich erscheint, sobald Bewertungen vorliegen."
+        :title="t('student.compareEmptyTitle')"
+        :description="t('student.compareEmptyBody')"
       />
       <GradeDistributionChart
         v-else
         :distribution="stats.distribution.value"
         :own-grade="ownGrade"
+        :grade-labels="labels.gradeLabels.value"
       />
     </BaseCard>
   </div>

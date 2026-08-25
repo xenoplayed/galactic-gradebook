@@ -1,5 +1,4 @@
 import type { AcademyId, Student } from '@/types/domain'
-import { ACADEMIES } from './academies'
 
 /**
  * Zehn Lernende je Akademie. Login ist jeweils der kleingeschriebene Nachname
@@ -64,19 +63,9 @@ const ROSTER = [
   academyId: AcademyId
 }[]
 
-/**
- * Die Bezeichnung kommt aus der Akademie statt vierzigmal abgeschrieben zu
- * werden. Kein `!` und kein Cast: das `??` faengt den theoretischen Fall ab,
- * dass eine ID nicht gefunden wird.
- */
-function studentLabelFor(academyId: AcademyId): string {
-  return ACADEMIES.find((academy) => academy.id === academyId)?.studentLabel ?? 'Lernende:r'
-}
-
 export const STUDENTS = ROSTER.map<Student>((person, index) => ({
   ...person,
   role: 'student',
-  roleLabel: studentLabelFor(person.academyId),
   // 2400001, 2400002, ... - padStart fuellt links mit Nullen auf.
   matriculationNumber: `24${String(index + 1).padStart(5, '0')}`,
 }))

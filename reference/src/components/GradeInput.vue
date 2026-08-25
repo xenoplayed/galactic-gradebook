@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed, ref, useId, watch } from 'vue'
+import { useI18n } from 'vue-i18n'
 import { parseGrade } from '@/lib/grades'
 import type { Grade } from '@/types/domain'
 
@@ -11,6 +12,8 @@ import type { Grade } from '@/types/domain'
  * uebersetzt in beide Richtungen. Ungueltige Eingaben werden angezeigt, aber
  * NICHT nach oben gemeldet - das Modell bleibt zu jedem Zeitpunkt gueltig.
  */
+const { t } = useI18n()
+
 const model = defineModel<Grade | null>({ required: true })
 
 defineProps<{
@@ -66,6 +69,8 @@ const describedBy = computed(() => (invalid.value ? hintId : undefined))
       class="h-9 w-14 rounded-card border-0 bg-surface text-center text-sm font-semibold tabular-nums text-ink ring-1 ring-line focus:ring-2 focus:ring-brand-500"
       :class="invalid && 'ring-red-500'"
     />
-    <span v-if="invalid" :id="hintId" class="mt-1 text-xs text-red-600"> nur 1–5 </span>
+    <span v-if="invalid" :id="hintId" class="mt-1 text-xs text-red-600">
+      {{ t('grades.onlyOneToFive') }}
+    </span>
   </div>
 </template>

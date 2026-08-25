@@ -1,17 +1,25 @@
 <script setup lang="ts">
 import { computed } from 'vue'
+import { useI18n } from 'vue-i18n'
 import { GRADES, type Grade } from '@/types/domain'
 import type { GradeDistribution } from '@/lib/grades'
-import { gradeLabel } from '@/lib/grades'
 
 /**
  * Der Klassenspiegel als Balkendiagramm - bewusst ohne Chart-Bibliothek.
  * Fuenf Balken, deren Hoehe ein Prozentwert ist, sind reines CSS; eine
  * Bibliothek dafuer waeren ~100 kB, die niemand braucht.
  */
-const { distribution, ownGrade = null } = defineProps<{
+const { t } = useI18n()
+
+const {
+  distribution,
+  ownGrade = null,
+  gradeLabels,
+} = defineProps<{
   distribution: GradeDistribution
   ownGrade?: Grade | null
+  /** Bezeichnungen der Akademie - fuer die Vorlesehilfe je Balken. */
+  gradeLabels: Record<Grade, string>
 }>()
 
 const BAR_CLASSES: Record<Grade, string> = {
@@ -64,7 +72,7 @@ const bars = computed(() =>
             ]"
             :style="{ height: `${Math.max(bar.heightPercent, 2)}%` }"
             role="img"
-            :aria-label="`Note ${bar.grade} (${gradeLabel(bar.grade)}): ${bar.count} von ${total}`"
+            :aria-label="`${bar.grade} — ${gradeLabels[bar.grade]}: ${bar.count} / ${total}`"
           />
         </div>
 
@@ -79,7 +87,7 @@ const bars = computed(() =>
     </div>
 
     <p v-if="ownGrade !== null" class="mt-4 text-xs text-ink-soft">
-      Der umrandete Balken enthält deine eigene Note. Alle Angaben sind anonym.
+      {{ t('student.ownBarNote') }}
     </p>
   </div>
 </template>

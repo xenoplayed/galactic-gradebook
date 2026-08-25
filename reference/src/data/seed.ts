@@ -48,9 +48,9 @@ export function subjectsOf(academyId: AcademyId): readonly Subject[] {
 /** Ein waehlbarer Zugang auf dem Anmeldebildschirm. */
 export interface AccessEntry {
   readonly id: string
-  /** "Yoda (Großmeister)" bzw. "Ahsoka Tano" - nur zum Anzeigen. */
-  readonly display: string
-  /** Der Benutzername, der uebernommen wird. NICHT identisch mit `display`. */
+  /** "Ahsoka Tano" - der Name, sonst nichts. */
+  readonly name: string
+  /** Der Benutzername, der uebernommen wird. NICHT identisch mit `name`. */
   readonly login: string
   readonly isLecturer: boolean
 }
@@ -59,8 +59,10 @@ export interface AccessEntry {
  * Alle Zugaenge einer Akademie: lehrende Person zuerst, dann die Lernenden
  * alphabetisch (das sortiert `studentsOf` bereits).
  *
- * Steht hier und nicht in der View, weil es Datenableitung ist und keine
- * Darstellung - so laesst es sich ohne Komponente, Router und Store testen.
+ * Gibt bewusst **Rohdaten** zurueck und keinen fertigen Anzeigetext. Die
+ * Klammer mit der Bezeichnung ("Yoda (Grossmeister)") haengt an der Sprache und
+ * gehoert deshalb in die View. So bleibt diese Funktion rein und laesst sich
+ * ohne Uebersetzer, Komponente und Store testen.
  */
 export function accessEntriesFor(academyId: AcademyId): AccessEntry[] {
   const lecturer = lecturers.find((person) => person.academyId === academyId)
@@ -68,10 +70,7 @@ export function accessEntriesFor(academyId: AcademyId): AccessEntry[] {
 
   return people.map((person) => ({
     id: person.id,
-    // Die Bezeichnung steht nur bei Lehrenden. Bei zehn Lernenden waere sie
-    // zehnmal dasselbe Wort und damit reines Rauschen.
-    display:
-      person.role === 'lecturer' ? `${fullName(person)} (${person.roleLabel})` : fullName(person),
+    name: fullName(person),
     login: toUsername(person.lastName),
     isLecturer: person.role === 'lecturer',
   }))

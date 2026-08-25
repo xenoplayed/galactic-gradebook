@@ -22,3 +22,13 @@ if (typeof HTMLDialogElement !== 'undefined' && !HTMLDialogElement.prototype.sho
     this.dispatchEvent(new Event('close'))
   }
 }
+
+/**
+ * Komponenten rufen `useI18n()` auf. Ohne installiertes Plugin wirft das beim
+ * Mounten - also wird es hier einmal global bereitgestellt, statt es in jedem
+ * einzelnen Test mitzugeben.
+ */
+import { config } from '@vue/test-utils'
+import { i18n } from './src/i18n'
+
+config.global.plugins = [...(config.global.plugins ?? []), i18n]

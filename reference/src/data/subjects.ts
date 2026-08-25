@@ -1,12 +1,18 @@
 import type { Subject } from '@/types/domain'
 
-/** Sechs Faecher je Akademie, verteilt ueber vier Semester. */
+/**
+ * Sechs Faecher je Akademie, verteilt ueber vier Semester.
+ *
+ * Der **Name** steht in den Sprachdateien unter `subjects.<id>` - er ist ein
+ * beschreibender Titel und gehoert uebersetzt. Das Kuerzel bleibt hier: es ist
+ * ein Kennzeichen wie eine Modulnummer, und die uebersetzt man auch an einer
+ * echten Hochschule nicht.
+ */
 export const SUBJECTS = [
   // --- Jedi-Tempel Coruscant ---
-  { id: 'f01', name: 'Machtkontrolle', shortName: 'MK', semester: 1, ects: 6, academyId: 'jedi' },
+  { id: 'f01', shortName: 'MK', semester: 1, ects: 6, academyId: 'jedi' },
   {
     id: 'f02',
-    name: 'Lichtschwertformen I',
     shortName: 'LSF1',
     semester: 1,
     ects: 6,
@@ -14,7 +20,6 @@ export const SUBJECTS = [
   },
   {
     id: 'f03',
-    name: 'Meditation und Achtsamkeit',
     shortName: 'MED',
     semester: 2,
     ects: 4,
@@ -22,7 +27,6 @@ export const SUBJECTS = [
   },
   {
     id: 'f04',
-    name: 'Geschichte des Ordens',
     shortName: 'GDO',
     semester: 2,
     ects: 4,
@@ -30,7 +34,6 @@ export const SUBJECTS = [
   },
   {
     id: 'f05',
-    name: 'Galaktische Diplomatie',
     shortName: 'DIP',
     semester: 3,
     ects: 5,
@@ -38,7 +41,6 @@ export const SUBJECTS = [
   },
   {
     id: 'f06',
-    name: 'Gedankenbeeinflussung',
     shortName: 'GED',
     semester: 4,
     ects: 5,
@@ -48,7 +50,6 @@ export const SUBJECTS = [
   // --- Sith-Akademie Korriban ---
   {
     id: 'f07',
-    name: 'Beherrschung des Zorns',
     shortName: 'BDZ',
     semester: 1,
     ects: 6,
@@ -56,25 +57,22 @@ export const SUBJECTS = [
   },
   {
     id: 'f08',
-    name: 'Alte Sith-Sprache',
     shortName: 'SPR',
     semester: 1,
     ects: 4,
     academyId: 'sith',
   },
-  { id: 'f09', name: 'Kampfform Juyo', shortName: 'JUY', semester: 2, ects: 6, academyId: 'sith' },
+  { id: 'f09', shortName: 'JUY', semester: 2, ects: 6, academyId: 'sith' },
   {
     id: 'f10',
-    name: 'Die Regel der Zwei',
     shortName: 'RDZ',
     semester: 2,
     ects: 4,
     academyId: 'sith',
   },
-  { id: 'f11', name: 'Sith-Alchemie', shortName: 'ALC', semester: 3, ects: 6, academyId: 'sith' },
+  { id: 'f11', shortName: 'ALC', semester: 3, ects: 6, academyId: 'sith' },
   {
     id: 'f12',
-    name: 'Einfluss und Überzeugung',
     shortName: 'EIN',
     semester: 4,
     ects: 5,
@@ -84,7 +82,6 @@ export const SUBJECTS = [
   // --- Imperiale Akademie Carida ---
   {
     id: 'f13',
-    name: 'Exerzierdienst',
     shortName: 'EXD',
     semester: 1,
     ects: 4,
@@ -92,7 +89,6 @@ export const SUBJECTS = [
   },
   {
     id: 'f14',
-    name: 'Imperiale Doktrin',
     shortName: 'DOK',
     semester: 1,
     ects: 4,
@@ -100,7 +96,6 @@ export const SUBJECTS = [
   },
   {
     id: 'f15',
-    name: 'TIE-Grundausbildung',
     shortName: 'TIE',
     semester: 2,
     ects: 6,
@@ -108,16 +103,14 @@ export const SUBJECTS = [
   },
   {
     id: 'f16',
-    name: 'Nachrichtenwesen',
     shortName: 'NAW',
     semester: 2,
     ects: 5,
     academyId: 'empire',
   },
-  { id: 'f17', name: 'Flottentaktik', shortName: 'FLT', semester: 3, ects: 6, academyId: 'empire' },
+  { id: 'f17', shortName: 'FLT', semester: 3, ects: 6, academyId: 'empire' },
   {
     id: 'f18',
-    name: 'Sternenzerstörer-Systemkunde',
     shortName: 'SZS',
     semester: 4,
     ects: 6,
@@ -127,7 +120,6 @@ export const SUBJECTS = [
   // --- Allianz-Basis Yavin IV ---
   {
     id: 'f19',
-    name: 'Astromech-Wartung',
     shortName: 'AMW',
     semester: 1,
     ects: 5,
@@ -135,7 +127,6 @@ export const SUBJECTS = [
   },
   {
     id: 'f20',
-    name: 'Basisverteidigung',
     shortName: 'BVT',
     semester: 1,
     ects: 4,
@@ -143,7 +134,6 @@ export const SUBJECTS = [
   },
   {
     id: 'f21',
-    name: 'X-Flügler-Flugkunde',
     shortName: 'XFK',
     semester: 2,
     ects: 6,
@@ -151,7 +141,6 @@ export const SUBJECTS = [
   },
   {
     id: 'f22',
-    name: 'Feldfunk und Verschlüsselung',
     shortName: 'FFV',
     semester: 2,
     ects: 5,
@@ -159,7 +148,6 @@ export const SUBJECTS = [
   },
   {
     id: 'f23',
-    name: 'Navigation abseits der Routen',
     shortName: 'NAV',
     semester: 3,
     ects: 5,
@@ -167,7 +155,6 @@ export const SUBJECTS = [
   },
   {
     id: 'f24',
-    name: 'Erste Hilfe im Feld',
     shortName: 'EHF',
     semester: 4,
     ects: 4,

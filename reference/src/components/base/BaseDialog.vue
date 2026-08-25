@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { useTemplateRef, watch } from 'vue'
+import { useI18n } from 'vue-i18n'
 
 /**
  * Ein modales Fenster auf Basis des nativen <dialog>-Elements.
@@ -11,6 +12,8 @@ import { useTemplateRef, watch } from 'vue'
  *
  * Deshalb hier kein eigenes Overlay-Konstrukt: der Browser kann das laengst.
  */
+const { t } = useI18n()
+
 const open = defineModel<boolean>({ required: true })
 
 defineProps<{
@@ -64,7 +67,7 @@ watch(open, (isOpen) => {
       <button
         type="button"
         class="-mr-1 shrink-0 rounded-card px-2 py-1 text-xl leading-none text-ink-soft hover:bg-surface-2"
-        aria-label="Schließen"
+        :aria-label="t('common.close')"
         @click="open = false"
       >
         ×

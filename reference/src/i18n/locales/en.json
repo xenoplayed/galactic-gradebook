@@ -1,0 +1,184 @@
+{
+  "_name": "English",
+  "app": {
+    "name": "Datapad",
+    "tagline": "Training records of the galaxy · four academies, one sign-in"
+  },
+  "nav": {
+    "training": "Training",
+    "myAssessments": "My assessments",
+    "signOut": "Sign out",
+    "language": "Language"
+  },
+  "login": {
+    "title": "Sign in",
+    "subtitle": "Username and password are both the last name.",
+    "username": "Username",
+    "usernamePlaceholder": "e.g. yoda",
+    "password": "Password",
+    "submit": "Sign in",
+    "failed": "Username or password is incorrect.",
+    "greeting": "Hello {name}",
+    "chooseAcademy": "Choose an academy — the look changes right away",
+    "showAccounts": "Show accounts for {academy}",
+    "accountsTitle": "Accounts — {academy}",
+    "accountsHint": "Selecting one fills in username and password. Both are the last name, lowercased.",
+    "localOnly": "All assessments live in this browser only.",
+    "resetData": "Reset demo data",
+    "resetConfirm": "All recorded assessments will be restored to their shipped state. Continue?"
+  },
+  "lecturer": {
+    "openCount": "Open",
+    "openHintNone": "All assessed",
+    "openHintSome": "not fully assessed yet",
+    "overallAverage": "Overall average",
+    "chooseSubject": "Select one to record assessments for your {students}.",
+    "edit": "Edit",
+    "assess": "Assess",
+    "entryTitle": "Record assessments",
+    "entrySubtitle": "Values from 1 to 5. An empty field means not assessed yet.",
+    "fillRandom": "Fill at random",
+    "clear": "Clear",
+    "discard": "Discard",
+    "save": "Save",
+    "unsaved": "Unsaved changes.",
+    "savedAt": "Saved at {time}.",
+    "leaveConfirm": "There are unsaved assessments. Leave the page anyway?",
+    "assessmentFor": "Assessment for {name}"
+  },
+  "student": {
+    "signedInAs": "{role} · {academy} · record {number}",
+    "average": "Average",
+    "averageHint": "across all assessed {subjects}",
+    "assessedSubjects": "Assessed {subjects}",
+    "myTitle": "My assessments",
+    "mySubtitle": "Select one to compare with the other {students}.",
+    "emptyTitle": "No assessments yet",
+    "emptyBody": "Once {lecturer} records something, it shows up here.",
+    "compare": "Compare",
+    "myAssessment": "My assessment",
+    "cohortAverage": "Average",
+    "rank": "Standing",
+    "rankValue": "{position} of {total}",
+    "rankHint": "shared when assessments are equal",
+    "compareTitle": "Comparison",
+    "compareSubtitle": "Distribution of all assessments among the {students} – anonymous.",
+    "compareEmptyTitle": "Nothing assessed here yet",
+    "compareEmptyBody": "The comparison appears once assessments exist.",
+    "ownBarNote": "The outlined bar holds your own assessment. All figures are anonymous."
+  },
+  "grades": {
+    "notAssessed": "not assessed yet",
+    "assessed": "Assessed",
+    "passed": "Passed",
+    "onlyOneToFive": "only 1–5",
+    "notAssessedShort": "Not assessed yet"
+  },
+  "table": {
+    "semester": "Term",
+    "progress": "Progress",
+    "value": "Value",
+    "rating": "Rating",
+    "matriculation": "Record no.",
+    "action": "Action"
+  },
+  "common": {
+    "close": "Close",
+    "back": "Back",
+    "notFoundTitle": "Page not found",
+    "notFoundBody": "There is nothing at this address.",
+    "toStart": "Go to start",
+    "subjectNotFound": "{subject} not found",
+    "subjectNotFoundBody": "There is nothing here with the ID «{id}».",
+    "toSubjects": "Back to the overview",
+    "toMyAssessments": "Back to my assessments"
+  },
+  "academies": {
+    "jedi": {
+      "name": "Jedi Temple, Coruscant",
+      "shortName": "Jedi Temple",
+      "motto": "Do. Or do not. There is no try.",
+      "lecturerLabel": "Grand Master",
+      "studentLabel": "Padawan | Padawans",
+      "subjectLabel": "Path | Paths",
+      "gradeLabels": {
+        "1": "One with the Force",
+        "2": "Enlightened",
+        "3": "In balance",
+        "4": "Unsteady",
+        "5": "Tempted by the dark side"
+      }
+    },
+    "sith": {
+      "name": "Sith Academy, Korriban",
+      "shortName": "Korriban",
+      "motto": "Through passion, I gain strength.",
+      "lecturerLabel": "Dark Lord",
+      "studentLabel": "Acolyte | Acolytes",
+      "subjectLabel": "Teaching | Teachings",
+      "gradeLabels": {
+        "1": "Fearsome",
+        "2": "Merciless",
+        "3": "Serviceable",
+        "4": "Disappointing",
+        "5": "Replaceable"
+      }
+    },
+    "empire": {
+      "name": "Imperial Academy, Carida",
+      "shortName": "Carida",
+      "motto": "Order through strength.",
+      "lecturerLabel": "Grand Admiral",
+      "studentLabel": "Cadet | Cadets",
+      "subjectLabel": "Course | Courses",
+      "gradeLabels": {
+        "1": "Exemplary",
+        "2": "Satisfactory",
+        "3": "Adequate",
+        "4": "Deficient",
+        "5": "Retraining ordered"
+      }
+    },
+    "rebels": {
+      "name": "Alliance Base, Yavin IV",
+      "shortName": "Yavin IV",
+      "motto": "Rebellions are built on hope.",
+      "lecturerLabel": "General",
+      "studentLabel": "Recruit | Recruits",
+      "subjectLabel": "Class | Classes",
+      "gradeLabels": {
+        "1": "Heroic",
+        "2": "Strong",
+        "3": "Solid",
+        "4": "Shaky",
+        "5": "Back to training"
+      }
+    }
+  },
+  "subjects": {
+    "f01": "Force Control",
+    "f02": "Lightsaber Forms I",
+    "f03": "Meditation and Mindfulness",
+    "f04": "History of the Order",
+    "f05": "Galactic Diplomacy",
+    "f06": "Mind Influence",
+    "f07": "Mastery of Anger",
+    "f08": "Ancient Sith Language",
+    "f09": "Combat Form Juyo",
+    "f10": "The Rule of Two",
+    "f11": "Sith Alchemy",
+    "f12": "Influence and Persuasion",
+    "f13": "Drill Duty",
+    "f14": "Imperial Doctrine",
+    "f15": "TIE Basic Training",
+    "f16": "Signals and Intelligence",
+    "f17": "Fleet Tactics",
+    "f18": "Star Destroyer Systems",
+    "f19": "Astromech Maintenance",
+    "f20": "Base Defence",
+    "f21": "X-wing Flight Training",
+    "f22": "Field Comms and Encryption",
+    "f23": "Navigation off the Lanes",
+    "f24": "Field First Aid"
+  }
+}

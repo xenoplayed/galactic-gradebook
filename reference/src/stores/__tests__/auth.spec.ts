@@ -35,8 +35,9 @@ describe('useAuthStore', () => {
     expect(auth.login('maul', 'maul')).toBe(true)
     expect(auth.isStudent).toBe(true)
     expect(auth.academy?.id).toBe('sith')
-    // Die Bezeichnung kommt aus der Akademie, nicht aus dem Namen.
-    expect(auth.currentUser?.roleLabel).toBe('Akolyth')
+    // Die Bezeichnung ("Akolyth") steht nicht mehr an der Person, sondern
+    // folgt aus Rolle plus Akademie und kommt aus den Sprachdateien.
+    expect(auth.currentUser?.academyId).toBe('sith')
   })
 
   it.each([

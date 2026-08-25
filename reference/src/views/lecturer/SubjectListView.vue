@@ -2,9 +2,11 @@
 import { computed } from 'vue'
 import { RouterLink } from 'vue-router'
 import { storeToRefs } from 'pinia'
+import { useI18n } from 'vue-i18n'
 import { subjectsOf } from '@/data/seed'
 import { useAuthStore } from '@/stores/auth'
 import { useGradesStore } from '@/stores/grades'
+import { useAcademyLabels } from '@/composables/useAcademyLabels'
 import { average, formatAverage } from '@/lib/grades'
 import BaseBadge from '@/components/base/BaseBadge.vue'
 import BaseCard from '@/components/base/BaseCard.vue'
@@ -12,10 +14,13 @@ import BaseTable from '@/components/base/BaseTable.vue'
 import StatTile from '@/components/StatTile.vue'
 import AcademyBanner from '@/components/AcademyBanner.vue'
 
+const { t } = useI18n()
 const auth = useAuthStore()
 const gradesStore = useGradesStore()
 const { academy } = storeToRefs(auth)
 const { gradedCountBySubject } = storeToRefs(gradesStore)
+
+const labels = useAcademyLabels(() => academy.value?.id)
 
 /** Nur die Faecher der eigenen Akademie - die Trennung passiert hier. */
 const ownSubjects = computed(() => (academy.value === null ? [] : subjectsOf(academy.value.id)))
@@ -50,34 +55,40 @@ const totalAverage = computed(() =>
 
 <template>
   <div v-if="academy" class="space-y-6">
-    <AcademyBanner :academy="academy" />
+    <AcademyBanner :academy-id="academy.id" />
 
     <div class="grid gap-4 sm:grid-cols-3">
-      <StatTile :label="`${academy.subjectLabel}e`" :value="String(ownSubjects.length)" />
+      <!-- subjectLabel(n) waehlt Singular oder Plural - siehe useAcademyLabels. -->
       <StatTile
-        label="Offen"
-        :value="String(openCount)"
-        :hint="openCount === 0 ? 'Alles bewertet' : 'noch nicht vollständig bewertet'"
+        :label="labels.subjectLabel(ownSubjects.length)"
+        :value="String(ownSubjects.length)"
       />
-      <StatTile label="Gesamtdurchschnitt" :value="formatAverage(totalAverage)" />
+      <StatTile
+        :label="t('lecturer.openCount')"
+        :value="String(openCount)"
+        :hint="openCount === 0 ? t('lecturer.openHintNone') : t('lecturer.openHintSome')"
+      />
+      <StatTile :label="t('lecturer.overallAverage')" :value="formatAverage(totalAverage)" />
     </div>
 
     <BaseCard
-      :title="`${academy.subjectLabel}e`"
-      :subtitle="`Auswählen, um Bewertungen für ${academy.studentPlural} einzutragen.`"
+      :title="labels.subjectLabel(2)"
+      :subtitle="t('lecturer.chooseSubject', { students: labels.studentLabel(2) })"
     >
       <BaseTable>
         <template #head>
-          <th class="py-2 pr-4 font-medium">{{ academy.subjectLabel }}</th>
-          <th class="py-2 pr-4 font-medium">Semester</th>
-          <th class="py-2 pr-4 font-medium">Fortschritt</th>
+          <th class="py-2 pr-4 font-medium">{{ labels.subjectLabel(1) }}</th>
+          <th class="py-2 pr-4 font-medium">{{ t('table.semester') }}</th>
+          <th class="py-2 pr-4 font-medium">{{ t('table.progress') }}</th>
           <th class="py-2 pr-4 text-right font-medium">Ø</th>
-          <th class="py-2"><span class="sr-only">Aktion</span></th>
+          <th class="py-2">
+            <span class="sr-only">{{ t('table.action') }}</span>
+          </th>
         </template>
 
         <tr v-for="row in rows" :key="row.subject.id" class="hover:bg-surface-2">
           <td class="py-3 pr-4">
-            <div class="font-medium">{{ row.subject.name }}</div>
+            <div class="font-medium">{{ t(`subjects.${row.subject.id}`) }}</div>
             <div class="text-xs text-ink-soft">
               {{ row.subject.shortName }} · {{ row.subject.ects }} ECTS
             </div>
@@ -94,7 +105,7 @@ const totalAverage = computed(() =>
               :to="{ name: 'lecturer-grade-entry', params: { subjectId: row.subject.id } }"
               class="text-sm font-medium text-link hover:underline"
             >
-              {{ row.isComplete ? 'Bearbeiten' : 'Bewerten' }}
+              {{ row.isComplete ? t('lecturer.edit') : t('lecturer.assess') }}
             </RouterLink>
           </td>
         </tr>
