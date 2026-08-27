@@ -22,7 +22,7 @@ Before you start: **your project does not belong in this repository.** Put it ne
 
 The reason isn't tidiness: your rebuild should get its own git history, and you should be able
 to throw it away and start over without touching this repository. The templates in
-[`vorlagen/`](../vorlagen/) exist exactly for that.
+[`vorlagen/`](../../vorlagen/) exist exactly for that.
 
 Incidentally, this repository has **one** dev container at the root serving both the reference
 and the playground. Yours will be one for a single project — the normal case, and slightly
@@ -38,7 +38,7 @@ containerise build jobs.
 ## The configuration
 
 Create `.devcontainer/devcontainer.json` in your new project folder. The finished template is
-in [`vorlagen/.devcontainer/`](../vorlagen/.devcontainer/); here it is piece by piece.
+in [`vorlagen/.devcontainer/`](../../vorlagen/.devcontainer/); here it is piece by piece.
 
 ```jsonc
 {
@@ -236,7 +236,7 @@ npm install -D tailwindcss @tailwindcss/vite
 
 Tailwind 4 is added as a **Vite plugin** and configured **in CSS**. There is no
 `tailwind.config.js` any more — if you come across a tutorial that creates one, it's for
-version 3. Details in [chapter 12](12-styling-tailwind.md).
+version 3. Details in [Styling and theming](12-styling-tailwind.md).
 
 ## Configuring Vite for the container
 
@@ -273,7 +273,7 @@ Every line has a reason:
 ## Your task
 
 1. Create the project folder, take `.devcontainer/devcontainer.json` and `post-create.sh` from
-   [`vorlagen/`](../vorlagen/).
+   [`vorlagen/`](../../vorlagen/).
 2. Start the container.
 3. Scaffold the Vue project, add Tailwind, adjust `vite.config.ts`.
 4. Run `npm run dev` and open <http://localhost:5173> in the browser on your machine.

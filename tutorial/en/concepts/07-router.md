@@ -16,10 +16,10 @@ An SPA loads **one** HTML page. Based on the URL, the router decides which compo
 rendered inside `<RouterView />` — without the browser reloading.
 
 ```
-/login                    -> LoginView
+/login                       -> LoginView
 /lecturer/subjects           -> SubjectListView
 /lecturer/subjects/f03       -> GradeEntryView (subjectId = 'f03')
-/student/grades            -> DashboardView
+/student/grades              -> DashboardView
 ```
 
 ## Defining routes
@@ -183,9 +183,9 @@ onBeforeRouteLeave(() => {
 })
 ```
 
-You'll need this in [chapter 10](10-instructor-view.md): someone who entered ten assessments
-and didn't save shouldn't lose everything to a stray click. The guard hangs off the component
-and disappears with it.
+You'll need this in [The instructor view](10-instructor-view.md): someone who entered ten
+assessments and didn't save shouldn't lose everything to a stray click. The guard hangs off the
+component and disappears with it.
 
 ## The shell
 
@@ -216,8 +216,8 @@ rendered by `<RouterView />`.
 1. `src/router/index.ts` with all routes: `login`, `home` (which redirects), the two instructor
    routes, the two trainee routes, `not-found`.
 2. Type `meta` via declaration merging.
-3. Write the `beforeEach` guard (the auth store arrives in chapter 08 — until then you can work
-   with a hard-coded `const role = 'lecturer'`).
+3. Write the `beforeEach` guard (the auth store arrives in [Pinia](08-pinia.md) — until then
+   you can work with a hard-coded `const role = 'lecturer'`).
 4. Rebuild `App.vue` around `<RouterView />` and `AppNav`.
 5. Create placeholder views that just display their name for now.
 
@@ -228,8 +228,8 @@ rendered by `<RouterView />`.
 | "no active Pinia" | store fetched outside the guard |
 | Infinite redirect loop | the guard redirects to a route it redirects again — the exception for `public`/`login` is missing |
 | Route param is `undefined` | forgot `props: true` |
-| Direct URL gives a 404 in production | server configuration, see [chapter 14](14-build-deployment.md) |
-| View doesn't change when switching subjects | the component is reused — you need a watcher on the param, see chapter 10 |
+| Direct URL gives a 404 in production | server configuration, see [Build and deployment](14-build-deployment.md) |
+| View doesn't change when switching subjects | the component is reused — you need a watcher on the param, see [The instructor view](10-instructor-view.md) |
 
 ## Self-check
 

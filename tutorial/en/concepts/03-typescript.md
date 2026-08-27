@@ -64,7 +64,7 @@ type WithTime = Subject & { asOf: Date }    // intersection
 
 Rule of thumb: `interface` for object shapes, `type` for everything else (unions, aliases,
 function types). An `interface` can also be extended after the fact — which is exactly what
-the router uses in [chapter 07](07-router.md) to type `meta`.
+the router uses in [Router](07-router.md) to type `meta`.
 
 ## Literal and union types — the most useful tool
 
@@ -124,7 +124,7 @@ if (user.role === 'student') {
 ```
 
 A shared field with literal types is enough. That's the backbone of the domain model in
-[chapter 06](06-domain-model.md).
+[Domain model](06-domain-model.md).
 
 ### Type guards — the way from outside in
 
@@ -260,8 +260,8 @@ if (firstGrade !== undefined) { ... }
 const value = map[id] ?? null
 ```
 
-You'll trip over exactly this in [chapter 10](10-instructor-view.md), when `v-model` on an
-index access doesn't type-check.
+You'll trip over exactly this in [The instructor view](10-instructor-view.md), when `v-model` on
+an index access doesn't type-check.
 
 ## Dealing with `as`
 

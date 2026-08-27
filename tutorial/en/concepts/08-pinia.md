@@ -5,7 +5,8 @@
 ## Goal
 
 Sign-in and the grade book live in stores that any component can reach. At the end signing in
-works, the navigation shows the name, and the guard from chapter 07 works with real data.
+works, the navigation shows the name, and the guard from [Router](07-router.md) works with real
+data.
 
 ---
 
@@ -99,7 +100,7 @@ always stays reactive.
 function login(username: string, password: string): boolean {
   const normalized = toUsername(username)
   // `users` contains ALL people of ALL academies - which is why last names
-  // have to be unique across academies (see chapter 06).
+  // have to be unique across academies (see Domain model).
   const match = users.find((user) => toUsername(user.lastName) === normalized)
 
   if (match === undefined || toUsername(password) !== normalized) {
@@ -179,7 +180,7 @@ only valid values land in the store.
 
 **`book.value = { ...book.value, [subjectId]: row }`** instead of
 `book.value[subjectId] = row`. Both work in Vue; assigning a new object is clearer though, and
-plays well with the `watch` that handles persistence in [chapter 09](09-composables.md).
+plays well with the `watch` that handles persistence in [Composables](09-composables.md).
 
 ## A store in a component
 
@@ -212,7 +213,7 @@ function signOut() {
 2. `src/stores/grades.ts`: `book`, `rosterFor`, `gradesForSubject`, `gradeMapForSubject`,
    `gradesForStudent`, `gradeOf`, `saveSubject`, `resetAll`, `studentCountOf` and a `computed`
    `gradedCountBySubject` for the progress display.
-3. Switch the guard from chapter 07 to the real store.
+3. Switch the guard from [Router](07-router.md) to the real store.
 4. `LoginView` with `BaseInput`, `BaseButton`, `BaseCard` and a real `<form>` using
    `@submit.prevent`.
 5. `AppNav` shows the greeting, the role label and a sign-out button.

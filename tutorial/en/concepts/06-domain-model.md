@@ -80,8 +80,9 @@ export function studentsOf(academyId: AcademyId): readonly Student[] {
 export function subjectsOf(academyId: AcademyId): readonly Subject[] { … }
 ```
 
-`filter` and `sortBy` are your own methods on `Collection<T>` — you built them in chapter 03
-and need no new infrastructure code here. That's exactly what a small, well-cut class is for.
+`filter` and `sortBy` are your own methods on `Collection<T>` — you built them in
+[TypeScript](03-typescript.md) and need no new infrastructure code here. That's exactly what a
+small, well-cut class is for.
 
 ### Everything language-shaped in one place
 
@@ -107,7 +108,7 @@ The test for it: **adding a fifth academy must not touch a single component.** O
 `if (academy === 'sith')` somewhere, that value belongs in the academy instead.
 
 Once several languages arrive, exactly these fields move into the locale files
-([chapter 15](15-i18n.md)) — the principle stays, the location gets more precise.
+([Internationalisation](15-i18n.md)) — the principle stays, the location gets more precise.
 
 `Record<Grade, string>` is more than convenience here: because `Grade` is a union of five
 literals, the compiler **demands** all five keys. A forgotten 4 is a compile error.
@@ -165,9 +166,9 @@ Four decisions that shape the rest of the app:
 Master") follows from role plus academy — never from the first name. You can't infer that from
 a name, so it isn't attempted.
 
-> **Looking ahead to [chapter 15](15-i18n.md):** in the finished reference these labels live in
-> the locale files, because a "Großmeister" is a "Grand Master" in English. Build them as a
-> field for now — the principle stays the same, only the location changes later.
+> **Looking ahead to [Internationalisation](15-i18n.md):** in the finished reference these labels
+> live in the locale files, because a "Großmeister" is a "Grand Master" in English. Build them as
+> a field for now — the principle stays the same, only the location changes later.
 
 **`User` is a discriminated union.** After `if (user.role === 'student')` the compiler knows
 `matriculationNumber` exists.
@@ -186,7 +187,7 @@ export function isStudent(user: User): user is Student {
 ## The generic collection
 
 `src/lib/collection.ts` — this is the `Register<T>` class from
-[chapter 03](03-typescript.md), just under its proper name. It holds the master data and offers
+[TypeScript](03-typescript.md), just under its proper name. It holds the master data and offers
 `byId`, `require`, `filter`, `sortBy`, `map` and `all`.
 
 Two points that make the difference:

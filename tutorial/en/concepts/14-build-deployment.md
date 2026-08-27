@@ -193,7 +193,7 @@ What you'd have to touch — and what you wouldn't:
 | `src/views/`, `src/components/`, `src/lib/` | **nothing** |
 
 That the last row looks like that is exactly the pay-off from the separation in
-[chapter 06](06-domain-model.md). The views talk to stores, not to data sources.
+[Domain model](06-domain-model.md). The views talk to stores, not to data sources.
 
 ---
 

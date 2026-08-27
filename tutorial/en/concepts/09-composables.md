@@ -26,7 +26,7 @@ export function useCounter(start = 0) {
 }
 ```
 
-Remember the closures from [chapter 02](02-js-advanced.md)? This is exactly the same
+Remember the closures from [JavaScript, part two](02-js-advanced.md)? This is exactly the same
 principle: `value` lives on because the returned things hold on to it. Every call to
 `useCounter()` creates its own, independent value.
 
@@ -239,7 +239,7 @@ Each grade's probability is then exactly its weight.
 2. `src/composables/useGradeStats.ts` — with `MaybeRefOrGetter` and `toValue`.
 3. `src/composables/useRandomGrades.ts`.
 4. `src/composables/useAcademyTheme.ts` — with a **module-level** `previewAcademyId` and the
-   switching via `data-academy`. More on that in [chapter 12](12-styling-tailwind.md).
+   switching via `data-academy`. More on that in [Styling and theming](12-styling-tailwind.md).
 5. Switch both stores to `useLocalStorage`: `auth` stores only the ID, `grades` the book with
    `mergeWithSeed`.
 6. Check in the browser: sign in, reload the page — you're still signed in.

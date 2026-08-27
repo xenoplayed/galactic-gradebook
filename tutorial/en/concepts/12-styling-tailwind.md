@@ -111,7 +111,7 @@ property and you change every use on the page — without touching a single clas
 Switching happens in a composable:
 
 ```ts
-// Module-level: ONE value for the whole app (see chapter 09).
+// Module-level: ONE value for the whole app (see Composables).
 const previewAcademyId = ref<AcademyId>('jedi')
 
 export function useAcademyPreview() {

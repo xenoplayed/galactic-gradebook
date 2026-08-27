@@ -37,7 +37,7 @@ A detail when accessing role-specific fields:
 ```
 
 `currentUser` is a `User`, i.e. `Student | Lecturer`. The `in` operator narrows it — that's
-narrowing from [chapter 03](03-typescript.md) in a place where it genuinely helps.
+narrowing from [TypeScript](03-typescript.md) in a place where it genuinely helps.
 
 ## The cohort comparison
 
@@ -157,7 +157,7 @@ const BAR_CLASSES: Record<Grade, string> = {
 
 `` `bg-grade-${bar.grade}` `` does **not** work. Tailwind scans your source for complete class
 names; it never finds one assembled at runtime, and the class doesn't end up in the CSS. More
-on that in [chapter 12](12-styling-tailwind.md).
+on that in [Styling and theming](12-styling-tailwind.md).
 
 ### Accessibility
 

@@ -88,7 +88,7 @@ next()   // 12
 variable alive. Every call to `counter(...)` creates its **own** value.
 
 That isn't a curiosity — it's exactly the principle composables rest on in
-[chapter 09](09-composables.md).
+[Composables](09-composables.md).
 
 ### Default values and rest
 
@@ -235,4 +235,4 @@ with `await` inside a loop it goes red. That's exactly the point of the exercise
 - `reference/src/composables/useLocalStorage.ts` — a closure over `key` and `fallback`
 - There is no service layer for network access in the reference — the app fetches nothing over
   the network. You'll still need `async` as soon as you think about a real backend in
-  [chapter 14](14-build-deployment.md).
+  [Build and deployment](14-build-deployment.md).

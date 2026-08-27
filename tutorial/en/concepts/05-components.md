@@ -104,9 +104,8 @@ const model = defineModel<string>({ required: true })
 `model` is an ordinary `ref`: read with `model.value`, write with `model.value = x` — Vue
 raises the event upwards for you.
 
-It's worth knowing the spelled-out form. You'll need it in
-[chapter 10](10-instructor-view.md), because there you have to normalise the value on the way
-in.
+It's worth knowing the spelled-out form. You'll need it in [The instructor
+view](10-instructor-view.md), because there you have to normalise the value on the way in.
 
 ## Slots: markup in
 
@@ -202,8 +201,8 @@ distinguishes the surround from the content, which lives in child elements.
 `inset: 0`. But Tailwind's preflight sets `margin: 0` on everything — without `m-auto` your
 window sticks to the top-left corner. That happened to me while building the reference.
 
-> **And a note for chapter 13:** jsdom, the test environment, doesn't know `showModal()`. The
-> test therefore needs a small stand-in — described there.
+> **And a note for [Tests](13-tests-vitest.md):** jsdom, the test environment, doesn't know
+> `showModal()`. The test therefore needs a small stand-in — described there.
 
 ## Why base components at all
 
@@ -274,8 +273,8 @@ Create `src/components/base/` and build:
 5. **`BaseDialog.vue`** — `defineModel<boolean>()` for open/closed, prop `title`, default slot.
    Then check by hand: Escape closes, a click beside it closes, Tab stays inside.
 
-Use them in your screen from chapter 04 and check that `@click` works on `BaseButton` even
-though the component declares no `click` emit.
+Use them in your screen from [Vue reactivity](04-vue-reactivity.md) and check that `@click` works
+on `BaseButton` even though the component declares no `click` emit.
 
 ## Pitfalls
 
@@ -284,7 +283,7 @@ though the component declares no `click` emit.
   script camelCase.
 - Forgetting to check the slot (`$slots.header`) and producing an empty frame.
 - Assembling class names at runtime (`bg-grade-${grade}`). Tailwind never finds those — more on
-  that in [chapter 12](12-styling-tailwind.md).
+  that in [Styling and theming](12-styling-tailwind.md).
 
 ## Self-check
 

@@ -114,11 +114,11 @@ function save() {
 
 Afterwards `isDirty` is `false` automatically — it compares against the store, after all. You
 don't have to reset anything; the derived value is right by itself. That's the pay-off from the
-rule in [chapter 04](04-vue-reactivity.md): derive instead of maintaining.
+rule in [Vue reactivity](04-vue-reactivity.md): derive instead of maintaining.
 
 ## `v-model` on an index access
 
-Here you trip over `noUncheckedIndexedAccess` from [chapter 03](03-typescript.md):
+Here you trip over `noUncheckedIndexedAccess` from [TypeScript](03-typescript.md):
 
 ```vue
 <!-- Type error: draft[student.id] is Grade | null | undefined,
@@ -136,7 +136,7 @@ The fix is to split `v-model` into its two halves:
 />
 ```
 
-That's why it was worth knowing the spelled-out form back in [chapter 05](05-components.md):
+That's why it was worth knowing the spelled-out form back in [Components](05-components.md):
 as soon as the value has to be adjusted on the way in, the shorthand isn't enough.
 
 The `:label` isn't decoration. Ten input fields without a visible label need an `aria-label`,

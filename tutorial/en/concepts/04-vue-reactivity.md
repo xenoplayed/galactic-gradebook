@@ -52,7 +52,7 @@ component is created. Everything you declare at its top level is visible in the 
 
 `<style scoped>` limits the styles to this component; Vue attaches a unique attribute to the
 elements for that. (In this project we mostly use Tailwind instead of `scoped`, see
-[chapter 12](12-styling-tailwind.md).)
+[Styling and theming](12-styling-tailwind.md).)
 
 ## `ref` — mutable state
 
@@ -244,7 +244,7 @@ Once that runs you have the building blocks the rest of the app is made of.
 - [ ] Adding a grade updates list, average and distribution at once
 - [ ] An empty list shows `–` instead of `NaN`
 - [ ] You can explain when `computed` and when `watch` is right
-- [ ] The browser updates without a reload (otherwise see chapter 00, `usePolling`)
+- [ ] The browser updates without a reload (otherwise see [Setup](00-setup.md), `usePolling`)
 
 ## In the reference
 

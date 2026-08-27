@@ -129,7 +129,7 @@ function display({ name, ects }) {
 ```
 
 > **Remember this already:** you must **not** destructure a Pinia store like this — reactivity
-> is lost. That's what `storeToRefs` is for, see [chapter 08](08-pinia.md).
+> is lost. That's what `storeToRefs` is for, see [Pinia](08-pinia.md).
 
 ## Optional chaining
 
@@ -196,7 +196,7 @@ Object.hasOwn(obj, 'id')
 ```
 
 `Object.fromEntries(list.map(x => [x.id, x]))` is the standard pattern for building an index
-from a list — you'll need it again in chapter 06.
+from a list — you'll need it again in [Domain model](06-domain-model.md).
 
 > **Not what you're used to**
 > Object keys are **always strings** (or symbols). `obj[1]` and `obj['1']` are the same entry.
