@@ -20,10 +20,10 @@ Eine SPA lädt **eine** HTML-Seite. Der Router entscheidet anhand der URL, welch
 `<RouterView />` gerendert wird — ohne dass der Browser neu lädt.
 
 ```
-/login                    -> LoginView
+/login                       -> LoginView
 /lecturer/subjects           -> SubjectListView
 /lecturer/subjects/f03       -> GradeEntryView (subjectId = 'f03')
-/student/grades            -> DashboardView
+/student/grades              -> DashboardView
 ```
 
 ## Routen definieren
@@ -222,8 +222,8 @@ rendert `<RouterView />`.
 1. `src/router/index.ts` mit allen Routen: `login`, `home` (leitet weiter), die beiden
    Dozenten-Routen, die beiden Studierenden-Routen, `not-found`.
 2. `meta` per Declaration Merging typisieren.
-3. `beforeEach`-Guard schreiben (der Auth-Store kommt in [Pinia](08-pinia.md) — bis dahin kannst du mit
-   einem hartcodierten `const role = 'lecturer'` arbeiten).
+3. `beforeEach`-Guard schreiben (der Auth-Store kommt in [Pinia](08-pinia.md) — bis dahin
+   kannst du mit einem hartcodierten `const role = 'lecturer'` arbeiten).
 4. `App.vue` auf `<RouterView />` und `AppNav` umbauen.
 5. Platzhalter-Views anlegen, die erst mal nur ihren Namen anzeigen.
 
