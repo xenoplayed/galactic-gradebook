@@ -236,7 +236,7 @@ Padawan".
 - [ ] A wrong password shows a message, clears the password field, and grants no access
 - [ ] After signing in the navigation shows the name immediately (otherwise `storeToRefs` is missing)
 - [ ] Enter in the password field submits the form
-- [ ] Signing out returns to `/login`, and `/dozent/faecher` is locked again
+- [ ] Signing out returns to `/login`, and `/lecturer/subjects` is locked again
 
 ## In the reference
 

@@ -4,13 +4,9 @@
 
 ## Goal
 
-Your app gets real addresses: `/login`, `/dozent/faecher`, `/student/noten/f03`. A guard makes
+Your app gets real addresses: `/login`, `/lecturer/subjects`, `/student/grades/f03`. A guard makes
 sure nobody without a sign-in, or with the wrong role, ends up somewhere they have no business
 being.
-
-> The URL paths are German in the reference (`/dozent` = instructor, `/student` = trainee,
-> `/faecher` = subjects, `/noten` = assessments). Use whatever you like in your own build — the
-> point is the mechanism, not the wording.
 
 ---
 
@@ -21,9 +17,9 @@ rendered inside `<RouterView />` — without the browser reloading.
 
 ```
 /login                    -> LoginView
-/dozent/faecher           -> SubjectListView
-/dozent/faecher/f03       -> GradeEntryView (subjectId = 'f03')
-/student/noten            -> DashboardView
+/lecturer/subjects           -> SubjectListView
+/lecturer/subjects/f03       -> GradeEntryView (subjectId = 'f03')
+/student/grades            -> DashboardView
 ```
 
 ## Defining routes
@@ -42,7 +38,7 @@ const router = createRouter({
       meta: { public: true },
     },
     {
-      path: '/dozent/faecher/:subjectId',
+      path: '/lecturer/subjects/:subjectId',
       name: 'lecturer-grade-entry',
       props: true,
       component: () => import('@/views/lecturer/GradeEntryView.vue'),
@@ -73,7 +69,7 @@ every view into its own chunk, loaded only when someone visits the route. You'll
 ```
 
 If the path changes later, you touch exactly one place. With
-`:to="`/dozent/faecher/${subject.id}`"` you'd be hunting everywhere.
+`:to="`/lecturer/subjects/${subject.id}`"` you'd be hunting everywhere.
 
 **`props: true`** passes the route params into the component as props:
 
@@ -237,8 +233,8 @@ rendered by `<RouterView />`.
 
 ## Self-check
 
-- [ ] Visiting `/dozent/faecher/f03` directly shows the right view
-- [ ] Without signing in you land on `/login?redirect=/dozent/faecher/f03`
+- [ ] Visiting `/lecturer/subjects/f03` directly shows the right view
+- [ ] Without signing in you land on `/login?redirect=/lecturer/subjects/f03`
 - [ ] `/does-not-exist` shows the 404 view
 - [ ] `npm run build` produces several files in `dist/assets/` (lazy loading works)
 

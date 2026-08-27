@@ -32,13 +32,13 @@ const router = createRouter({
       redirect: { name: 'login' },
     },
     {
-      path: '/dozent/faecher',
+      path: '/lecturer/subjects',
       name: 'lecturer-subjects',
       component: () => import('@/views/lecturer/SubjectListView.vue'),
       meta: { role: 'lecturer' },
     },
     {
-      path: '/dozent/faecher/:subjectId',
+      path: '/lecturer/subjects/:subjectId',
       name: 'lecturer-grade-entry',
       // `props: true` reicht die Route-Parameter als Props in die Komponente.
       // Die View muss dann nicht selbst `useRoute()` aufrufen und ist damit
@@ -48,13 +48,13 @@ const router = createRouter({
       meta: { role: 'lecturer' },
     },
     {
-      path: '/student/noten',
+      path: '/student/grades',
       name: 'student-dashboard',
       component: () => import('@/views/student/DashboardView.vue'),
       meta: { role: 'student' },
     },
     {
-      path: '/student/noten/:subjectId',
+      path: '/student/grades/:subjectId',
       name: 'student-subject',
       props: true,
       component: () => import('@/views/student/SubjectMirrorView.vue'),

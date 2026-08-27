@@ -52,10 +52,10 @@ places from the dev server (minification, real tree shaking, `import.meta.env.PR
 
 This is the thing you overlook once and then never again.
 
-Your app knows `/dozent/faecher/f03`. That file doesn't exist on disk — the route is known only
+Your app knows `/lecturer/subjects/f03`. That file doesn't exist on disk — the route is known only
 to the router **in the browser**. When someone clicks there inside the app, nothing happens
 server-side. But when someone opens the URL directly or reloads, the browser asks the server
-for `/dozent/faecher/f03`, and it finds nothing.
+for `/lecturer/subjects/f03`, and it finds nothing.
 
 The fix: send everything unknown to `index.html`.
 
@@ -73,7 +73,7 @@ Caddy `try_files {path} /index.html`, Netlify/Vercel a rewrite rule `/* -> /inde
 > URL corresponds to the same file. The server always delivers the same shell; what happens
 > inside it is decided by the router in the browser.
 
-The alternative would be `createWebHashHistory()` (`/#/dozent/faecher/f03`) — works without
+The alternative would be `createWebHashHistory()` (`/#/lecturer/subjects/f03`) — works without
 server configuration, but looks worse and is bad for search engines. Take the fallback.
 
 ## The Containerfile
@@ -203,7 +203,7 @@ That the last row looks like that is exactly the pay-off from the separation in
    <http://localhost:4173>.
 2. Create `Containerfile`, `nginx.conf` and `.containerignore`.
 3. `podman build` and `podman run`.
-4. **Prove the fallback:** open `http://localhost:8080/dozent/faecher/f03` directly. Then
+4. **Prove the fallback:** open `http://localhost:8080/lecturer/subjects/f03` directly. Then
    comment out `try_files`, rebuild — and look at the 404. This is a bug you want to have seen
    on purpose once.
 5. Check the headers:

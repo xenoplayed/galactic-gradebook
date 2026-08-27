@@ -82,7 +82,7 @@ watch(() => props.subjectId, loadDraft, { immediate: true })
 ```
 
 Without this line the view is broken in a way that's easy to miss: when you switch from
-`/dozent/faecher/f02` to `/f03`, **the component is reused**. Vue doesn't recreate it, because
+`/lecturer/subjects/f02` to `/f03`, **the component is reused**. Vue doesn't recreate it, because
 it's the same route with different parameters. So `<script setup>` doesn't run again and the
 old draft stays — and you record assessments for the wrong subject.
 
@@ -211,8 +211,8 @@ point at the same one.
 
 **`components/GradeInput.vue`:** as described above.
 
-**Catch unknown *and foreign* subjects:** `/dozent/faecher/f99` must not crash — and
-`/dozent/faecher/<a Sith subject>` must not work as a Jedi either:
+**Catch unknown *and foreign* subjects:** `/lecturer/subjects/f99` must not crash — and
+`/lecturer/subjects/<a Sith subject>` must not work as a Jedi either:
 
 ```ts
 const subject = computed(() => {
@@ -251,7 +251,7 @@ const subject = computed(() => {
 - [ ] Clear a field → saved as "not assessed"
 - [ ] Navigating away with unsaved changes → confirmation
 - [ ] Switching subjects through the list shows the right assessments
-- [ ] `/dozent/faecher/f99` shows a friendly message
+- [ ] `/lecturer/subjects/f99` shows a friendly message
 - [ ] A subject from a **foreign** academy via the address bar does too
 
 ## In the reference

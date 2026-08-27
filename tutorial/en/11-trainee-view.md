@@ -229,9 +229,9 @@ A chart made of five zero-height bars is not a good answer to "there's nothing y
 - [ ] The percentages add up to roughly 100
 - [ ] An unassessed subject shows the empty state, not a chart made of zeroes
 - [ ] No foreign name appears anywhere
-- [ ] `/student/noten/f99` doesn't crash
+- [ ] `/student/grades/f99` doesn't crash
 - [ ] Nor does a subject from a foreign academy — and it shows **no** foreign data
-- [ ] Visiting `/dozent/faecher` as a trainee → the guard sends you back
+- [ ] Visiting `/lecturer/subjects` as a trainee → the guard sends you back
 
 ## In the reference
 
