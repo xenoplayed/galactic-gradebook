@@ -1,20 +1,20 @@
 # Changelog
 
-Alle nennenswerten Änderungen an diesem Projekt werden hier festgehalten.
-Format nach [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
+All notable changes to this project are documented here.
+Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
 ### Added
 
-- Deutsche Build-Spur (`tutorial/de/build/`): 21 Kapitel, die die App schrittweise aufbauen —
-  vom hartcodierten Array bis zu vier Akademien.
-- Englische Build-Spur (`tutorial/en/build/`), gleichwertig zur deutschen.
+- German build track (`tutorial/de/build/`): 21 chapters that build the app step by step —
+  from a hardcoded array to four academies.
+- English build track (`tutorial/en/build/`), equivalent to the German one.
 - `CHANGELOG.md`.
 
 ### Changed
 
-- Die bisherigen 17 thematischen Tutorial-Seiten liegen jetzt unter `tutorial/de/konzepte/`
-  bzw. `tutorial/en/concepts/`, um Platz für die Build-Spur zu schaffen.
-- Routen der Referenz-App auf Englisch: `/dozent/faecher` → `/lecturer/subjects`,
+- The previous 17 topic-based tutorial pages now live under `tutorial/de/konzepte/` and
+  `tutorial/en/concepts/`, to make room for the build track.
+- Reference app routes translated to English: `/dozent/faecher` → `/lecturer/subjects`,
   `/student/noten` → `/student/grades`.
