@@ -2,6 +2,10 @@
 
 > **Zeitbedarf:** ca. 2–3 Stunden · das generische `useLocalStorage` braucht Ruhe
 
+> **Baust du Schritt für Schritt mit?** Diese Seite gehört zu den Build-Kapiteln
+> [12](../build/12-localstorage-composable.md) und [14](../build/14-klassenspiegel-chart.md) —
+> dort steht, wann du was davon brauchst.
+
 ## Ziel
 
 Du schreibst eigene Composables: gebündelte Statistik zu einer Notenliste, ein generisches
@@ -26,9 +30,9 @@ export function useZaehler(start = 0) {
 }
 ```
 
-Erinnerst du dich an die Closures aus [Kapitel 02](02-js-fortgeschritten.md)? Das ist genau
-dasselbe Prinzip: `stand` lebt weiter, weil die zurückgegebenen Dinge es festhalten. Jeder
-Aufruf von `useZaehler()` erzeugt einen eigenen, unabhängigen Stand.
+Erinnerst du dich an die Closures aus [Funktionen, Module, async](02-js-fortgeschritten.md)? Das
+ist genau dasselbe Prinzip: `stand` lebt weiter, weil die zurückgegebenen Dinge es festhalten.
+Jeder Aufruf von `useZaehler()` erzeugt einen eigenen, unabhängigen Stand.
 
 > **Anders als du es kennst**
 > Ein Composable ist keine Klasse und keine Vererbung. Es ist Wiederverwendung durch
@@ -244,7 +248,7 @@ negativ wird. Die Trefferwahrscheinlichkeit jeder Note ist dann genau ihr Gewich
 2. `src/composables/useGradeStats.ts` — mit `MaybeRefOrGetter` und `toValue`.
 3. `src/composables/useRandomGrades.ts`.
 4. `src/composables/useAcademyTheme.ts` — mit **modulweitem** `previewAcademyId` und der
-   Umschaltung über `data-academy`. Mehr dazu in [Kapitel 12](12-styling-tailwind.md).
+   Umschaltung über `data-academy`. Mehr dazu in [Styling mit Tailwind](12-styling-tailwind.md).
 5. Beide Stores auf `useLocalStorage` umstellen: `auth` speichert nur die ID,
    `grades` die Matrix mit `mergeWithSeed`.
 6. Im Browser prüfen: anmelden, Seite neu laden — du bist noch angemeldet.

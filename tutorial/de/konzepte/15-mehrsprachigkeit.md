@@ -2,15 +2,18 @@
 
 > **Zeitbedarf:** ca. 2–3 Stunden · davon die Hälfte Übersetzen
 
+> **Baust du Schritt für Schritt mit?** Diese Seite gehört zu Build-Kapitel
+> [21](../build/21-i18n.md) — dort steht, wann du was davon brauchst.
+
 ## Ziel
 
 Die App spricht Deutsch und Englisch, umschaltbar über ein Menü — und eine dritte Sprache
 hinzuzufügen ist **eine Datei und sonst nichts**. Kein Import, kein Eintrag in einer Liste,
 keine Codeänderung.
 
-Dies ist ein Erweiterungskapitel: Die App ist nach Kapitel 14 fertig. Hier kommt eine
-Eigenschaft dazu, die man in echten Projekten fast immer nachrüstet statt von Anfang an
-einzuplanen — mit allem, was das an Aufräumarbeit bedeutet.
+Dies ist ein Erweiterungskapitel: Die App ist nach [Build und Deployment](14-build-deployment.md)
+fertig. Hier kommt eine Eigenschaft dazu, die man in echten Projekten fast immer nachrüstet statt
+von Anfang an einzuplanen — mit allem, was das an Aufräumarbeit bedeutet.
 
 ---
 
@@ -199,7 +202,7 @@ export const ACADEMIES = [
 Nur noch die Struktur. Und `Person.roleLabel` ist ganz verschwunden: Die Bezeichnung folgt aus
 Rolle plus Akademie und lebt in den Sprachdateien.
 
-> **Der Grundsatz aus [Kapitel 06](06-domaenenmodell.md) gilt weiter, nur präziser.** Damals
+> **Der Grundsatz aus [Domänenmodell](06-domaenenmodell.md) gilt weiter, nur präziser.** Damals
 > hieß es: alles Sprachliche gehört an einen Ort und wird nicht aus dem Namen abgeleitet. Der
 > Ort war die Akademie-Datei, jetzt sind es die Sprachdateien. Und aus dem Namen abgeleitet
 > wird nach wie vor nichts.

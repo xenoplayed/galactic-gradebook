@@ -2,11 +2,15 @@
 
 > **Zeitbedarf:** ca. 1,5–2 Stunden
 
+> **Baust du Schritt für Schritt mit?** Diese Seite gehört zu den Build-Kapiteln
+> [08](../build/08-auth-store.md), [09](../build/09-router-guards.md) und
+> [10](../build/10-grades-store-und-draft.md) — dort steht, wann du was davon brauchst.
+
 ## Ziel
 
 Anmeldung und Notenmatrix leben in Stores, auf die jede Komponente zugreifen kann. Am Ende
-funktioniert der Login, die Navigation zeigt den Namen, und der Guard aus Kapitel 07 arbeitet
-mit echten Daten.
+funktioniert der Login, die Navigation zeigt den Namen, und der Guard aus [Vue
+Router](07-router.md) arbeitet mit echten Daten.
 
 ---
 
@@ -100,7 +104,7 @@ Store-Objekt bleibt immer reaktiv.
 function login(username: string, password: string): boolean {
   const normalized = toUsername(username)
   // users enthaelt ALLE Personen aller Akademien - deshalb muessen die
-  // Nachnamen akademieuebergreifend eindeutig sein (siehe Kapitel 06).
+  // Nachnamen akademieuebergreifend eindeutig sein (siehe Domänenmodell).
   const match = users.find((user) => toUsername(user.lastName) === normalized)
 
   if (match === undefined || toUsername(password) !== normalized) {
@@ -182,7 +186,7 @@ hereinreicht: im Store landen nur gültige Werte.
 **`book.value = { ...book.value, [subjectId]: row }`** statt
 `book.value[subjectId] = row`. Beides funktioniert in Vue; die Zuweisung eines neuen Objekts
 ist aber eindeutiger und spielt gut mit dem `watch` zusammen, der in
-[Kapitel 09](09-composables.md) für die Persistenz sorgt.
+[Composables](09-composables.md) für die Persistenz sorgt.
 
 ## Store in einer Komponente
 
@@ -215,7 +219,7 @@ function abmelden() {
 2. `src/stores/grades.ts`: `book`, `rosterFor`, `gradesForSubject`, `gradeMapForSubject`,
    `gradesForStudent`, `gradeOf`, `saveSubject`, `resetAll`, `studentCountOf` und ein
    `computed` `gradedCountBySubject` für die Fortschrittsanzeige.
-3. Guard aus Kapitel 07 auf den echten Store umstellen.
+3. Guard aus [Vue Router](07-router.md) auf den echten Store umstellen.
 4. `LoginView` mit `BaseInput`, `BaseButton`, `BaseCard` und einem echten `<form>` mit
    `@submit.prevent`.
 5. `AppNav` zeigt Begrüßung, Rollenbezeichnung und einen Abmelden-Knopf.
@@ -239,7 +243,7 @@ Die Begrüßung nutzt nur den **Vornamen** plus die Rollenbezeichnung aus den Da
 - [ ] Falsches Passwort zeigt eine Meldung, das Passwortfeld wird geleert, kein Zugang
 - [ ] Nach dem Login zeigt die Navigation sofort den Namen (sonst fehlt `storeToRefs`)
 - [ ] Enter im Passwortfeld sendet das Formular ab
-- [ ] Abmelden führt zurück auf `/login`, und `/dozent/faecher` ist wieder gesperrt
+- [ ] Abmelden führt zurück auf `/login`, und `/lecturer/subjects` ist wieder gesperrt
 
 ## In der Referenz
 

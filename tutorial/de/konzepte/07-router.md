@@ -2,9 +2,13 @@
 
 > **Zeitbedarf:** ca. 1,5–2 Stunden
 
+> **Baust du Schritt für Schritt mit?** Diese Seite gehört zu den Build-Kapiteln
+> [06](../build/06-router-zwei-views.md), [07](../build/07-login-mock.md) und
+> [09](../build/09-router-guards.md) — dort steht, wann du was davon brauchst.
+
 ## Ziel
 
-Deine App bekommt echte Adressen: `/login`, `/dozent/faecher`, `/student/noten/f03`. Ein
+Deine App bekommt echte Adressen: `/login`, `/lecturer/subjects`, `/student/grades/f03`. Ein
 Guard sorgt dafür, dass niemand ohne Anmeldung oder mit der falschen Rolle irgendwo landet,
 wo er nichts zu suchen hat.
 
@@ -17,9 +21,9 @@ Eine SPA lädt **eine** HTML-Seite. Der Router entscheidet anhand der URL, welch
 
 ```
 /login                    -> LoginView
-/dozent/faecher           -> SubjectListView
-/dozent/faecher/f03       -> GradeEntryView (subjectId = 'f03')
-/student/noten            -> DashboardView
+/lecturer/subjects           -> SubjectListView
+/lecturer/subjects/f03       -> GradeEntryView (subjectId = 'f03')
+/student/grades            -> DashboardView
 ```
 
 ## Routen definieren
@@ -38,7 +42,7 @@ const router = createRouter({
       meta: { public: true },
     },
     {
-      path: '/dozent/faecher/:subjectId',
+      path: '/lecturer/subjects/:subjectId',
       name: 'lecturer-grade-entry',
       props: true,
       component: () => import('@/views/lecturer/GradeEntryView.vue'),
@@ -69,7 +73,7 @@ aufruft. Beim `npm run build` siehst du das an den vielen kleinen Dateien in `di
 ```
 
 Ändert sich später der Pfad, musst du genau eine Stelle anfassen. Mit
-`:to="`/dozent/faecher/${fach.id}`"` suchst du sie überall.
+`:to="`/lecturer/subjects/${fach.id}`"` suchst du sie überall.
 
 **`props: true`** reicht die Route-Parameter als Props in die Komponente:
 
@@ -185,8 +189,8 @@ onBeforeRouteLeave(() => {
 })
 ```
 
-Das brauchst du in [Kapitel 10](10-dozenten-view.md): wer 15 Noten eingetragen und nicht
-gespeichert hat, soll nicht mit einem Fehlklick alles verlieren. Der Guard hängt an der
+Das brauchst du in [Ansicht der Lehrenden](10-dozenten-view.md): wer 15 Noten eingetragen und
+nicht gespeichert hat, soll nicht mit einem Fehlklick alles verlieren. Der Guard hängt an der
 Komponente und verschwindet mit ihr.
 
 ## Der Rahmen
@@ -218,7 +222,7 @@ rendert `<RouterView />`.
 1. `src/router/index.ts` mit allen Routen: `login`, `home` (leitet weiter), die beiden
    Dozenten-Routen, die beiden Studierenden-Routen, `not-found`.
 2. `meta` per Declaration Merging typisieren.
-3. `beforeEach`-Guard schreiben (der Auth-Store kommt in Kapitel 08 — bis dahin kannst du mit
+3. `beforeEach`-Guard schreiben (der Auth-Store kommt in [Pinia](08-pinia.md) — bis dahin kannst du mit
    einem hartcodierten `const role = 'lecturer'` arbeiten).
 4. `App.vue` auf `<RouterView />` und `AppNav` umbauen.
 5. Platzhalter-Views anlegen, die erst mal nur ihren Namen anzeigen.
@@ -230,13 +234,13 @@ rendert `<RouterView />`.
 | „no active Pinia“ | Store außerhalb des Guards geholt |
 | Endlosschleife beim Umleiten | Guard leitet auf eine Route um, die er selbst wieder umleitet — die Ausnahme für `public`/`login` fehlt |
 | Route-Parameter ist `undefined` | `props: true` vergessen |
-| Direkter URL-Aufruf ergibt 404 im Produktivbetrieb | Server-Konfiguration, siehe [Kapitel 14](14-build-deployment.md) |
-| Ansicht ändert sich beim Fachwechsel nicht | Komponente wird wiederverwendet — Watcher auf den Parameter nötig, siehe Kapitel 10 |
+| Direkter URL-Aufruf ergibt 404 im Produktivbetrieb | Server-Konfiguration, siehe [Build und Deployment](14-build-deployment.md) |
+| Ansicht ändert sich beim Fachwechsel nicht | Komponente wird wiederverwendet — Watcher auf den Parameter nötig, siehe [Ansicht der Lehrenden](10-dozenten-view.md) |
 
 ## Selbstcheck
 
-- [ ] Direkter Aufruf von `/dozent/faecher/f03` zeigt die richtige View
-- [ ] Ohne Anmeldung landest du auf `/login?redirect=/dozent/faecher/f03`
+- [ ] Direkter Aufruf von `/lecturer/subjects/f03` zeigt die richtige View
+- [ ] Ohne Anmeldung landest du auf `/login?redirect=/lecturer/subjects/f03`
 - [ ] `/gibtsnicht` zeigt die 404-View
 - [ ] `npm run build` erzeugt mehrere Dateien in `dist/assets/` (Lazy Loading wirkt)
 

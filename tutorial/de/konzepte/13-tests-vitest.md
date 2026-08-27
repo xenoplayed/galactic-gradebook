@@ -2,6 +2,9 @@
 
 > **Zeitbedarf:** ca. 2–3 Stunden
 
+> **Baust du Schritt für Schritt mit?** Diese Seite gehört zu Build-Kapitel
+> [19](../build/19-tests-vitest.md) — dort steht, wann du was davon brauchst.
+
 ## Ziel
 
 Du testest die vier Schichten deiner App mit je einem Vertreter: reine Funktionen, einen

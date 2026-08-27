@@ -2,6 +2,10 @@
 
 > **Zeitbedarf:** ca. 3–4 Stunden · das Diagramm kostet mehr Zeit als es aussieht
 
+> **Baust du Schritt für Schritt mit?** Diese Seite gehört zu den Build-Kapiteln
+> [13](../build/13-student-dashboard.md) und [14](../build/14-klassenspiegel-chart.md) — dort
+> steht, wann du was davon brauchst.
+
 ## Ziel
 
 Eigene Noten mit Durchschnitt, und je Fach der **Klassenspiegel**: die anonyme Notenverteilung
@@ -36,7 +40,7 @@ Ein Detail beim Zugriff auf rollenspezifische Felder:
 ```
 
 `currentUser` ist `User`, also `Student | Lecturer`. Der `in`-Operator grenzt ein — das ist
-Narrowing aus [Kapitel 03](03-typescript.md) an einer Stelle, an der es wirklich hilft.
+Narrowing aus [TypeScript](03-typescript.md) an einer Stelle, an der es wirklich hilft.
 
 ## Der Klassenspiegel
 
@@ -158,7 +162,7 @@ const BAR_CLASSES: Record<Grade, string> = {
 
 `` `bg-grade-${bar.grade}` `` funktioniert **nicht**. Tailwind durchsucht deinen Quelltext nach
 vollständigen Klassennamen; einen zur Laufzeit zusammengesetzten findet es nie, und die Klasse
-landet nicht im CSS. Mehr dazu in [Kapitel 12](12-styling-tailwind.md).
+landet nicht im CSS. Mehr dazu in [Styling mit Tailwind](12-styling-tailwind.md).
 
 ### Zugänglichkeit
 
@@ -230,9 +234,9 @@ Ein Diagramm aus fünf Nullbalken ist keine gute Antwort auf „es gibt noch nic
 - [ ] Prozentwerte ergeben zusammen ungefähr 100
 - [ ] Unbenotetes Fach zeigt den leeren Zustand, kein Diagramm aus Nullen
 - [ ] Nirgends steht ein fremder Name
-- [ ] `/student/noten/f99` stürzt nicht ab
+- [ ] `/student/grades/f99` stürzt nicht ab
 - [ ] Ein Fach einer fremden Akademie ebenfalls nicht — und zeigt **keine** fremden Daten
-- [ ] Als Studentin `/dozent/faecher` aufrufen → Guard leitet zurück
+- [ ] Als Studentin `/lecturer/subjects` aufrufen → Guard leitet zurück
 
 ## In der Referenz
 

@@ -132,7 +132,7 @@ function anzeige({ name, ects }) {
 
 > **Merke dir das jetzt schon:** Aus einem Pinia-Store darfst du **nicht** so destrukturieren
 > — dabei geht die Reaktivität verloren. Dafür gibt es `storeToRefs`, siehe
-> [Kapitel 08](08-pinia.md).
+> [Pinia](08-pinia.md).
 
 ## Optionales Verketten
 
@@ -199,7 +199,7 @@ Object.hasOwn(obj, 'id')
 ```
 
 `Object.fromEntries(liste.map(x => [x.id, x]))` ist das Standardmuster, um aus einer Liste
-einen Index zu bauen — das brauchst du in Kapitel 06 wieder.
+einen Index zu bauen — das brauchst du beim [Domänenmodell](06-domaenenmodell.md) wieder.
 
 > **Anders als du es kennst**
 > Objektschlüssel sind **immer Strings** (oder Symbole). `obj[1]` und `obj['1']` sind

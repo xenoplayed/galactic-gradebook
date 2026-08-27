@@ -2,6 +2,10 @@
 
 > **Zeitbedarf:** ca. 2–3 Stunden · davon rund eine Stunde reines Fixture-Tippen
 
+> **Baust du Schritt für Schritt mit?** Diese Seite gehört zu den Build-Kapiteln
+> [04](../build/04-seed-und-typen.md), [05](../build/05-fachliste.md) und
+> [15](../build/15-vier-akademien.md) — dort steht, wann du was davon brauchst.
+
 ## Ziel
 
 Du legst die Fachlichkeit an: Typen, feste Testdaten und Funktionen zum Rechnen mit
@@ -84,8 +88,8 @@ export function subjectsOf(academyId: AcademyId): readonly Subject[] { … }
 ```
 
 `filter` und `sortBy` sind deine eigenen Methoden aus `Collection<T>` — du hast sie in
-Kapitel 03 gebaut und brauchst hier keine Zeile neuen Infrastruktur-Code. Genau dafür lohnt
-sich eine kleine, gut geschnittene Klasse.
+[TypeScript](03-typescript.md) gebaut und brauchst hier keine Zeile neuen Infrastruktur-Code.
+Genau dafür lohnt sich eine kleine, gut geschnittene Klasse.
 
 ### Alles Sprachliche an einem Ort
 
@@ -111,7 +115,7 @@ Eintrag in `academies.ts`, Fixtures, eine Farbpalette — fertig. Wenn du irgend
 `if (academy === 'sith')` schreiben musst, gehört dieser Wert stattdessen in die Akademie.
 
 Sobald mehrere Sprachen dazukommen, wandern genau diese Felder in die Sprachdateien
-([Kapitel 15](15-mehrsprachigkeit.md)) — das Prinzip bleibt, der Ort wird präziser.
+([Mehrsprachigkeit](15-mehrsprachigkeit.md)) — das Prinzip bleibt, der Ort wird präziser.
 
 `Record<Grade, string>` ist dabei mehr als Bequemlichkeit: weil `Grade` eine Union von fünf
 Literalen ist, **verlangt** der Compiler alle fünf Schlüssel. Eine vergessene 4 ist ein
@@ -170,9 +174,10 @@ ist ein Compile-Fehler, und du brauchst nirgends eine Bereichsprüfung „von Ha
 („Padawan", „Großmeister"), folgt aus Rolle plus Akademie — und niemals aus dem Vornamen. Aus
 einem Namen lässt sich so etwas nicht erschließen, also wird es auch nicht versucht.
 
-> **Vorgriff auf [Kapitel 15](15-mehrsprachigkeit.md):** In der fertigen Referenz stehen diese
-> Bezeichnungen in den Sprachdateien, weil ein „Großmeister" auf Englisch „Grand Master" heißt.
-> Bau sie fürs Erste als Feld — der Grundsatz bleibt derselbe, nur der Ort ändert sich später.
+> **Vorgriff auf [Mehrsprachigkeit](15-mehrsprachigkeit.md):** In der fertigen Referenz stehen
+> diese Bezeichnungen in den Sprachdateien, weil ein „Großmeister" auf Englisch „Grand Master"
+> heißt. Bau sie fürs Erste als Feld — der Grundsatz bleibt derselbe, nur der Ort ändert sich
+> später.
 
 **`User` ist eine Discriminated Union.** Nach `if (user.role === 'student')` weiß der
 Compiler, dass `matriculationNumber` existiert.
@@ -191,7 +196,7 @@ export function isStudent(user: User): user is Student {
 ## Die generische Sammlung
 
 `src/lib/collection.ts` — das ist die `Register<T>`-Klasse aus
-[Kapitel 03](03-typescript.md), nur unter ihrem richtigen Namen. Sie hält die Stammdaten und
+[TypeScript](03-typescript.md), nur unter ihrem richtigen Namen. Sie hält die Stammdaten und
 bietet `byId`, `require`, `filter`, `sortBy`, `map` und `all`.
 
 Zwei Punkte, die den Unterschied machen:

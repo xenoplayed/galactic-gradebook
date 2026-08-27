@@ -2,6 +2,10 @@
 
 > **Zeitbedarf:** ca. 1,5–2 Stunden · viel Lesen, wenig Tippen
 
+> **Baust du Schritt für Schritt mit?** Diese Seite gehört zu den Build-Kapiteln
+> [01](../build/01-erste-noten.md) und [03](../build/03-eingabe-roh.md) — dort steht, wann du was
+> davon brauchst.
+
 ## Ziel
 
 Du verstehst, wie eine Single-File-Komponente aufgebaut ist, kennst den Unterschied zwischen
@@ -52,7 +56,7 @@ Template sichtbar — kein `return`, kein `this`.
 
 `<style scoped>` begrenzt die Stile auf diese Komponente. Vue hängt dazu ein eindeutiges
 Attribut an die Elemente. (In diesem Projekt nutzen wir überwiegend Tailwind statt `scoped`,
-siehe [Kapitel 12](12-styling-tailwind.md).)
+siehe [Styling mit Tailwind](12-styling-tailwind.md).)
 
 ## `ref` — veränderlicher Zustand
 
@@ -246,7 +250,7 @@ Sobald das läuft, hast du die Bausteine, aus denen der Rest der App besteht.
 - [ ] Note hinzufügen aktualisiert Liste, Durchschnitt und Verteilung gleichzeitig
 - [ ] Bei leerer Liste steht `–` statt `NaN`
 - [ ] Du kannst erklären, wann `computed` und wann `watch` richtig ist
-- [ ] Der Browser aktualisiert ohne Reload (sonst siehe Kapitel 00, `usePolling`)
+- [ ] Der Browser aktualisiert ohne Reload (sonst siehe [Setup](00-setup.md), `usePolling`)
 
 ## In der Referenz
 

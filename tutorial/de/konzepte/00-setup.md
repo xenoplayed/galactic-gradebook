@@ -23,7 +23,7 @@ Bevor du anfängst: **dein Projekt gehört nicht in dieses Repo.** Leg es danebe
 
 Der Grund ist nicht Ordnungsliebe: dein Nachbau soll eine eigene Git-Historie bekommen, und du
 sollst ihn wegwerfen und neu anfangen können, ohne dieses Repo anzufassen. Die Vorlagen in
-[`vorlagen/`](../vorlagen/) sind genau dafür da.
+[`vorlagen/`](../../vorlagen/) sind genau dafür da.
 
 Dieses Repo hat übrigens **einen** DevContainer an der Wurzel, der Referenz und Playground
 zusammen bedient. Deiner wird einer für ein einzelnes Projekt — das ist der Normalfall und
@@ -39,7 +39,7 @@ du Build-Jobs containerisierst.
 ## Die Konfiguration
 
 Lege in deinem neuen Projektordner `.devcontainer/devcontainer.json` an. Die fertige Vorlage
-liegt in [`vorlagen/.devcontainer/`](../vorlagen/.devcontainer/); hier ist sie Stück für Stück.
+liegt in [`vorlagen/.devcontainer/`](../../vorlagen/.devcontainer/); hier ist sie Stück für Stück.
 
 ```jsonc
 {
@@ -239,7 +239,7 @@ npm install -D tailwindcss @tailwindcss/vite
 
 Tailwind 4 wird als **Vite-Plugin** eingebunden und **in CSS** konfiguriert. Eine
 `tailwind.config.js` gibt es nicht mehr — falls du auf ein Tutorial stößt, das eine anlegt,
-ist es für Version 3. Details in [Kapitel 12](12-styling-tailwind.md).
+ist es für Version 3. Details in [Styling mit Tailwind](12-styling-tailwind.md).
 
 ## Vite für den Container konfigurieren
 
@@ -277,7 +277,7 @@ Jede Zeile hat einen Grund:
 ## Deine Aufgabe
 
 1. Projektordner anlegen, `.devcontainer/devcontainer.json` und `post-create.sh` aus
-   [`vorlagen/`](../vorlagen/) übernehmen.
+   [`vorlagen/`](../../vorlagen/) übernehmen.
 2. Container starten.
 3. Vue-Projekt scaffolden, Tailwind ergänzen, `vite.config.ts` anpassen.
 4. `npm run dev` und im Browser deines Rechners <http://localhost:5173> öffnen.

@@ -64,7 +64,7 @@ type MitZeit = Fach & { stand: Date }   // Schnittmenge
 
 Faustregel: `interface` für Objektformen, `type` für alles andere (Unions, Aliase,
 Funktionstypen). `interface` lässt sich zusätzlich nachträglich erweitern — genau das nutzt
-der Router in [Kapitel 07](07-router.md), um `meta` zu typisieren.
+der Router in [Vue Router](07-router.md), um `meta` zu typisieren.
 
 ## Literal- und Union-Typen — das nützlichste Werkzeug
 
@@ -124,7 +124,7 @@ if (user.role === 'student') {
 ```
 
 Ein gemeinsames Feld mit Literaltypen genügt. Das ist das Rückgrat des Domänenmodells in
-[Kapitel 06](06-domaenenmodell.md).
+[Domänenmodell](06-domaenenmodell.md).
 
 ### Type Guards — der Weg von außen nach innen
 
@@ -259,8 +259,8 @@ if (erste !== undefined) { ... }
 const wert = map[id] ?? null
 ```
 
-Genau daran wirst du in [Kapitel 10](10-dozenten-view.md) noch stolpern, wenn `v-model` auf
-einem Index-Zugriff nicht typprüft.
+Genau daran wirst du in [Ansicht der Lehrenden](10-dozenten-view.md) noch stolpern, wenn `v-model`
+auf einem Index-Zugriff nicht typprüft.
 
 ## Umgang mit `as`
 

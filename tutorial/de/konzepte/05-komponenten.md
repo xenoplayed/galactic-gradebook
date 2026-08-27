@@ -2,6 +2,10 @@
 
 > **Zeitbedarf:** ca. 2–3 Stunden · vier eigene Komponenten
 
+> **Baust du Schritt für Schritt mit?** Diese Seite gehört zu den Build-Kapiteln
+> [02](../build/02-erste-komponente.md), [03](../build/03-eingabe-roh.md) und
+> [16](../build/16-base-components.md) — dort steht, wann du was davon brauchst.
+
 ## Ziel
 
 Du kannst Komponenten schreiben, die Daten entgegennehmen (Props), Ereignisse melden (Emits)
@@ -106,7 +110,7 @@ const model = defineModel<string>({ required: true })
 — das Ereignis nach oben löst Vue selbst aus.
 
 Es lohnt sich, die ausgeschriebene Form zu kennen. In
-[Kapitel 10](10-dozenten-view.md) brauchst du sie, weil du den Wert beim Hineinreichen
+[Ansicht der Lehrenden](10-dozenten-view.md) brauchst du sie, weil du den Wert beim Hineinreichen
 normalisieren musst.
 
 ## Slots: Markup hinein
@@ -204,8 +208,8 @@ unterscheidet den Rand vom Inhalt, der in Kindelementen liegt.
 bei `inset: 0`. Tailwinds Preflight setzt aber `margin: 0` auf alles — ohne `m-auto` klebt
 dein Fenster in der oberen linken Ecke. Genau das ist mir beim Bauen der Referenz passiert.
 
-> **Und ein Hinweis für Kapitel 13:** jsdom, die Testumgebung, kennt `showModal()` nicht.
-> Der Test braucht deshalb einen kleinen Ersatz — nachzulesen dort.
+> **Und ein Hinweis für [Tests mit Vitest](13-tests-vitest.md):** jsdom, die Testumgebung, kennt
+> `showModal()` nicht. Der Test braucht deshalb einen kleinen Ersatz — nachzulesen dort.
 
 ## Warum überhaupt Basiskomponenten
 
@@ -277,8 +281,8 @@ Lege `src/components/base/` an und baue:
 5. **`BaseDialog.vue`** — `defineModel<boolean>()` für offen/zu, Prop `title`, Standard-Slot.
    Prüf danach zu Fuß: Escape schließt, Klick daneben schließt, Tab bleibt im Fenster.
 
-Baue sie in deinem Bildschirm aus Kapitel 04 ein und prüfe, dass `@click` auf `BaseButton`
-funktioniert, obwohl die Komponente kein `click`-Emit deklariert.
+Baue sie in deinem Bildschirm aus [Vue-Reaktivität](04-vue-reactivity.md) ein und prüfe, dass
+`@click` auf `BaseButton` funktioniert, obwohl die Komponente kein `click`-Emit deklariert.
 
 ## Stolperfallen
 
@@ -287,7 +291,7 @@ funktioniert, obwohl die Komponente kein `click`-Emit deklariert.
   Skript camelCase.
 - Slot vergessen zu prüfen (`$slots.header`) und einen leeren Rahmen erzeugen.
 - Klassennamen zur Laufzeit zusammenbauen (`bg-grade-${note}`). Tailwind findet die nie —
-  mehr dazu in [Kapitel 12](12-styling-tailwind.md).
+  mehr dazu in [Styling mit Tailwind](12-styling-tailwind.md).
 
 ## Selbstcheck
 

@@ -2,6 +2,10 @@
 
 > **Zeitbedarf:** ca. 3–4 Stunden · das umfangreichste Kapitel
 
+> **Baust du Schritt für Schritt mit?** Diese Seite gehört zu den Build-Kapiteln
+> [10](../build/10-grades-store-und-draft.md) und [11](../build/11-grade-input.md) — dort steht,
+> wann du was davon brauchst.
+
 ## Ziel
 
 Die Fächerliste mit Fortschrittsanzeige und das Bewertungsformular: eine Zeile je lernender
@@ -86,7 +90,7 @@ watch(() => props.subjectId, loadDraft, { immediate: true })
 ```
 
 Ohne diese Zeile ist die Ansicht kaputt, und zwar auf eine Weise, die man leicht übersieht:
-Wechselst du von `/dozent/faecher/f02` zu `/f03`, **wird die Komponente wiederverwendet**. Vue
+Wechselst du von `/lecturer/subjects/f02` zu `/f03`, **wird die Komponente wiederverwendet**. Vue
 erzeugt sie nicht neu, weil dieselbe Route mit anderen Parametern gilt. `<script setup>` läuft
 also nicht erneut, und der alte Entwurf bleibt stehen — du trägst Noten für das falsche Fach
 ein.
@@ -119,11 +123,11 @@ function save() {
 
 Danach ist `isDirty` automatisch `false` — es vergleicht ja gegen den Store. Du musst nichts
 zurücksetzen; der abgeleitete Wert stimmt von selbst. Das ist der Gewinn aus der Regel in
-[Kapitel 04](04-vue-reactivity.md): ableiten statt mitpflegen.
+[Vue-Reaktivität](04-vue-reactivity.md): ableiten statt mitpflegen.
 
 ## `v-model` auf einem Index-Zugriff
 
-Hier stolperst du über `noUncheckedIndexedAccess` aus [Kapitel 03](03-typescript.md):
+Hier stolperst du über `noUncheckedIndexedAccess` aus [TypeScript](03-typescript.md):
 
 ```vue
 <!-- Typfehler: draft[student.id] ist Grade | null | undefined,
@@ -141,7 +145,7 @@ Die Lösung ist, `v-model` in seine beiden Hälften aufzulösen:
 />
 ```
 
-Deshalb war es in [Kapitel 05](05-komponenten.md) die Mühe wert, die ausgeschriebene Form zu
+Deshalb war es in [Komponenten](05-komponenten.md) die Mühe wert, die ausgeschriebene Form zu
 kennen: sobald der Wert beim Hineingeben angepasst werden muss, reicht die Kurzform nicht.
 
 Das `:label` ist kein Beiwerk. Zehn Eingabefelder ohne sichtbares Label brauchen ein
@@ -216,8 +220,8 @@ alle auf dieselbe zeigen.
 
 **`components/GradeInput.vue`:** wie oben beschrieben.
 
-**Unbekanntes *und fremdes* Fach abfangen:** `/dozent/faecher/f99` darf nicht abstürzen — und
-`/dozent/faecher/<Sith-Fach>` als Jedi ebenfalls nicht funktionieren:
+**Unbekanntes *und fremdes* Fach abfangen:** `/lecturer/subjects/f99` darf nicht abstürzen — und
+`/lecturer/subjects/<Sith-Fach>` als Jedi ebenfalls nicht funktionieren:
 
 ```ts
 const subject = computed(() => {
@@ -255,7 +259,7 @@ const subject = computed(() => {
 - [ ] Feld leeren → wird als „nicht benotet“ gespeichert
 - [ ] Bei ungespeicherten Änderungen wegnavigieren → Rückfrage
 - [ ] Fachwechsel über die Liste zeigt die richtigen Noten
-- [ ] `/dozent/faecher/f99` zeigt eine freundliche Meldung
+- [ ] `/lecturer/subjects/f99` zeigt eine freundliche Meldung
 - [ ] Ein Fach einer **fremden** Akademie über die Adresszeile ebenfalls
 
 ## In der Referenz

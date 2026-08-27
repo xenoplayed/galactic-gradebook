@@ -88,7 +88,7 @@ next()   // 12
 hält die Variable am Leben. Jeder Aufruf von `zaehler(...)` erzeugt einen **eigenen** Stand.
 
 Das ist keine Kuriosität — es ist genau das Prinzip, auf dem Composables in
-[Kapitel 09](09-composables.md) beruhen.
+[Composables](09-composables.md) beruhen.
 
 ### Standardwerte und Rest
 
@@ -236,4 +236,4 @@ wird er rot. Genau das ist der Punkt der Aufgabe.
 - `reference/src/composables/useLocalStorage.ts` — Closure über `key` und `fallback`
 - Eine Service-Ebene für Netzwerkzugriffe gibt es in der Referenz nicht — die App holt keine
   Daten über das Netz. `async` brauchst du trotzdem, sobald du in
-  [Kapitel 14](14-build-deployment.md) über ein echtes Backend nachdenkst.
+  [Build und Deployment](14-build-deployment.md) über ein echtes Backend nachdenkst.

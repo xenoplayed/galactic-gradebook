@@ -2,6 +2,9 @@
 
 > **Zeitbedarf:** ca. 1–1,5 Stunden · vertrautes Terrain für dich
 
+> **Baust du Schritt für Schritt mit?** Diese Seite gehört zu Build-Kapitel
+> [20](../build/20-build-deployment.md) — dort steht, wann du was davon brauchst.
+
 ## Ziel
 
 Aus deinem Projekt wird ein Produktions-Build, daraus ein Container-Image mit nginx, und du
@@ -53,10 +56,10 @@ Stellen anders als der Dev-Server (Minifizierung, echtes Tree-Shaking, `import.m
 
 Das ist die Sache, die man einmal übersieht und dann nie wieder.
 
-Deine App kennt `/dozent/faecher/f03`. Auf der Platte existiert diese Datei nicht — die Route
+Deine App kennt `/lecturer/subjects/f03`. Auf der Platte existiert diese Datei nicht — die Route
 kennt nur der Router **im Browser**. Klickt jemand innerhalb der App dorthin, passiert nichts
 Serverseitiges. Ruft aber jemand die URL direkt auf oder lädt neu, fragt der Browser den
-Server nach `/dozent/faecher/f03`, und der findet nichts.
+Server nach `/lecturer/subjects/f03`, und der findet nichts.
 
 Die Lösung: alles Unbekannte auf `index.html` umleiten.
 
@@ -74,7 +77,7 @@ Caddy `try_files {path} /index.html`, Netlify/Vercel eine Rewrite-Regel `/* -> /
 > Hier entspricht **jede** URL derselben Datei. Der Server liefert immer die gleiche Hülle;
 > was darin passiert, entscheidet der Router im Browser.
 
-Die Alternative wäre `createWebHashHistory()` (`/#/dozent/faecher/f03`) — funktioniert ohne
+Die Alternative wäre `createWebHashHistory()` (`/#/lecturer/subjects/f03`) — funktioniert ohne
 Serverkonfiguration, sieht aber schlechter aus und ist für Suchmaschinen ungünstig. Nimm den
 Fallback.
 
@@ -197,7 +200,7 @@ Was du dafür anfassen müsstest — und was nicht:
 | `src/views/`, `src/components/`, `src/lib/` | **nichts** |
 
 Dass die letzte Zeile so aussieht, ist genau der Ertrag der Trennung aus
-[Kapitel 06](06-domaenenmodell.md). Die Views sprechen mit Stores, nicht mit Datenquellen.
+[Domänenmodell](06-domaenenmodell.md). Die Views sprechen mit Stores, nicht mit Datenquellen.
 
 ---
 
@@ -207,7 +210,7 @@ Dass die letzte Zeile so aussieht, ist genau der Ertrag der Trennung aus
    durchklicken.
 2. `Containerfile`, `nginx.conf` und `.containerignore` anlegen.
 3. `podman build` und `podman run`.
-4. **Den Fallback beweisen:** ruf `http://localhost:8080/dozent/faecher/f03` direkt auf. Dann
+4. **Den Fallback beweisen:** ruf `http://localhost:8080/lecturer/subjects/f03` direkt auf. Dann
    kommentier `try_files` aus, bau neu — und sieh dir den 404 an. Diesen Fehler willst du
    einmal bewusst gesehen haben.
 5. Prüf die Header:

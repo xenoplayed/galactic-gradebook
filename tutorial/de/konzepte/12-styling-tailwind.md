@@ -2,6 +2,10 @@
 
 > **Zeitbedarf:** ca. 3–4 Stunden · Design frisst Zeit, das ist normal
 
+> **Baust du Schritt für Schritt mit?** Diese Seite gehört zu den Build-Kapiteln
+> [17](../build/17-tailwind-layout.md) und [18](../build/18-academy-themes.md) — dort steht, wann
+> du was davon brauchst.
+
 ## Ziel
 
 Du verstehst, wie Tailwind 4 konfiguriert wird (nämlich in CSS), definierst eigene
@@ -113,7 +117,7 @@ anzufassen.
 Umgeschaltet wird in einem Composable:
 
 ```ts
-// Modulweit: EIN Wert fuer die ganze App (siehe Kapitel 09).
+// Modulweit: EIN Wert fuer die ganze App (siehe Composables).
 const previewAcademyId = ref<AcademyId>('jedi')
 
 export function useAcademyPreview() {
